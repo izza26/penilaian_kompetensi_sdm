@@ -1,0 +1,169 @@
+.page-card{
+    background:#fff;
+    border-radius:28px;
+    padding:30px;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:25px;
+}
+
+.page-title h2{
+    font-size:24px;
+    font-weight:700;
+    color:#222;
+    margin-bottom:8px;
+}
+
+.page-title p{
+    color:#7A7A7A;
+    font-size:15px;
+}
+
+.btn-back{
+    background:#F5F1EC;
+    color:#444;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:14px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.detail-card{
+    background:#fff;
+    border:1px solid #E8E1D9;
+    border-radius:28px;
+    padding:28px;
+    margin-bottom:22px;
+}
+
+.pegawai-summary{
+    display:flex;
+    align-items:center;
+    gap:22px;
+}
+
+.avatar{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:#A15D33;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:700;
+    flex-shrink:0;
+}
+
+.pegawai-info h3{
+    font-size:18px;
+    font-weight:700;
+    color:#2B2926;
+    margin-bottom:4px;
+}
+
+.pegawai-info p{
+    color:#777;
+    margin-bottom:10px;
+}
+
+.status{
+    background:#E6F4EA;
+    color:#198754;
+    padding:8px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.section-title{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:24px;
+}
+
+.detail-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:28px 50px;
+}
+
+.detail-item label{
+    display:block;
+    font-size:14px;
+    color:#8C8C8C;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.detail-item span{
+    font-size:16px;
+    font-weight:600;
+    color:#222;
+    line-height:1.6;
+}
+
+.question-box,
+.instruction-box{
+    background:#F8F6F3;
+    border:1px solid #E8E1D9;
+    border-radius:22px;
+    padding:26px;
+}
+
+.question-box ul{
+    margin:0;
+    padding-left:24px;
+}
+
+.question-box li{
+    margin-bottom:18px;
+    font-size:15px;
+    line-height:1.8;
+    color:#444;
+}
+
+.question-box li:last-child{
+    margin-bottom:0;
+}
+
+.instruction-box{
+    font-size:18px;
+    font-weight:500;
+    color:#333;
+    line-height:1.8;
+}
+
+@media(max-width:768px){
+
+    .detail-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+.pegawai-info{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+.pegawai-info h3{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:8px;
+    color:#222;
+}
+
+.pegawai-info p{
+    color:#6F6F6F;
+    margin-bottom:12px;
+}

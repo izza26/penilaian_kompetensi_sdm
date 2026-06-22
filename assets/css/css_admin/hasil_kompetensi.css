@@ -1,0 +1,365 @@
+.page-header{
+    margin-bottom:25px;
+}
+
+.page-title h2{
+    font-size:28px;
+    font-weight:700;
+    color:#2B2926;
+}
+
+.page-title p{
+    margin-top:6px;
+    color:#777;
+}
+
+/* =======================
+   STATISTIC CARD
+======================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-top:30px;
+    margin-bottom:28px;
+}
+
+.stat-card{
+    background:#fff;
+    border:1px solid #ECE8E3;
+    border-radius:18px;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.stat-icon{
+    width:55px;
+    height:55px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+}
+
+.brown{
+    background:#F6E8DD;
+    color:#A15D33;
+}
+
+.green{
+    background:#E9F7EF;
+    color:#1E8E5A;
+}
+
+.red{
+    background:#FDECEC;
+    color:#DC2626;
+}
+
+.blue{
+    background:#E8F1FF;
+    color:#2D6CDF;
+}
+
+.stat-card h3{
+    font-size:24px;
+    margin-bottom:4px;
+    color:#2B2926;
+}
+
+.stat-card span{
+    color:#777;
+    font-size:14px;
+}
+
+/* =======================
+   PEGAWAI TERBAIK
+======================= */
+
+.best-employee-card{
+    background:#fff;
+    border:1px solid #ECE8E3;
+    border-radius:20px;
+
+    padding:28px 42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:28px;
+}
+
+.best-avatar{
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    background:#A15D33;
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:24px;
+    font-weight:700;
+}
+
+.best-info{
+    flex:1;
+    margin-left:28px;
+}
+
+.best-label{
+    display:inline-block;
+
+    background:#FFF4E5;
+    color:#D97706;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+    font-weight:600;
+
+    margin-bottom:10px;
+}
+
+.best-info h3{
+    font-size:24px;
+    font-weight:700;
+    color:#2B2926;
+    margin-bottom:4px;
+}
+
+.best-info p{
+    color:#777;
+}
+
+.best-score{
+    width:180px;
+    text-align:right;
+    margin-right:10px;
+}
+
+.best-score span{
+    color:#888;
+    font-size:14px;
+}
+
+.best-score h2{
+    font-size:38px;
+    color:#A15D33;
+    margin:8px 0;
+}
+
+.result-card{
+    background:#fff;
+    border:1px solid #ECE8E3;
+    border-radius:20px;
+    padding:25px;
+}
+
+.result-header{
+    margin-bottom:22px;
+}
+
+.result-header h3{
+    font-size:28px;
+    font-weight:700;
+    color:#2B2926;
+    margin-bottom:6px;
+}
+
+.result-header p{
+    color:#777;
+    font-size:15px;
+}
+/* =======================
+   SEARCH
+======================= */
+
+.table-tools{
+    margin-bottom:20px;
+}
+
+.search-input{
+    width:450px;
+    padding:12px 15px;
+    border:1px solid #EAE6E1;
+    border-radius:12px;
+    outline:none;
+}
+
+/* =======================
+   TABLE
+======================= */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.data-table thead{
+    background:#F7F4EF;
+}
+
+.data-table th{
+    padding:15px;
+    text-align:left;
+    font-size:14px;
+    font-weight:600;
+}
+
+.data-table td{
+    padding:15px;
+    border-top:1px solid #ECE8E3;
+    font-size:15px;
+}
+
+.status{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.kompeten{
+    background:#E9F7EF;
+    color:#1E8E5A;
+}
+
+.belum{
+    /* background:#FDECEC;
+    color:#DC2626; */
+
+    background:#FDECEC;
+    color:#D85757;
+}
+
+.nilai{
+    font-weight:700;
+    color:#2B2926;
+    font-size:16px;
+}
+
+/* =======================
+   ACTION
+======================= */
+
+.action-group{
+    display:flex;
+    gap:10px;
+}
+
+.action-btn{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.action-btn:hover{
+    transform:translateY(-2px);
+}
+
+.view-btn{
+    background:#E8F1FF;
+    color:#2D6CDF;
+}
+
+.print-btn{
+    background:#FFF4E5;
+    color:#D97706;
+}
+
+.print-btn:hover{
+    background:#FFE7C7;
+}
+
+/* =======================
+   PAGINATION
+======================= */
+
+.pagination{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:25px;
+    padding-top:20px;
+    border-top:1px solid #ECE8E3;
+}
+
+.page-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:none;
+    background:#F7F4EF;
+    color:#555;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:500;
+}
+
+.page-numbers{
+    display:flex;
+    gap:8px;
+}
+
+.page-number{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:10px;
+    background:#F7F4EF;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.page-number.active{
+    background:#A15D33;
+    color:white;
+}
+
+/* =======================
+   RESPONSIVE
+======================= */
+
+@media(max-width:992px){
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:768px){
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .search-input{
+        width:100%;
+    }
+
+}

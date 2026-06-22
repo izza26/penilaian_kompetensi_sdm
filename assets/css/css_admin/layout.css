@@ -1,0 +1,374 @@
+/* ==========================
+   RESET
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins', sans-serif;
+    background:#F7F4EF;
+    color:#2B2926;
+}
+
+/* ==========================
+   APP LAYOUT
+========================== */
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* ==========================
+   SIDEBAR
+========================== */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    background:#2B2926;
+    color:#ffffff;
+    position:fixed;
+    left:0;
+    top:0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    flex-direction:column;
+}
+
+.sidebar-header{
+    padding:25px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+
+.sidebar-title{
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#ffffff;
+}
+
+.sidebar-subtitle{
+    margin-top:6px;
+    font-size:12px;
+    color:#c7c7c7;
+    line-height:1.5;
+}
+
+/* ==========================
+   MENU
+========================== */
+
+.sidebar-menu{
+    padding:15px 0;
+    flex:1;
+    overflow-y: auto; /* INI KUNCINYA: Membiarkan area menu bisa di-scroll */
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15); 
+    border-radius: 10px;
+}
+.sidebar-menu::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+.menu-title{
+    padding:0 25px;
+    margin-bottom:15px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#A9A9A9;
+}
+
+.sidebar-menu ul{
+    list-style:none;
+}
+
+.sidebar-menu ul li{
+    margin-bottom:5px;
+}
+
+.sidebar-menu ul li a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:10px 18px;
+
+    text-decoration:none;
+    color:#EAEAEA;
+    margin:3px 10px;
+    font-size:15px;
+    font-weight:500;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.sidebar-menu ul li a:hover{
+    background:rgba(255,255,255,0.08);
+}
+
+.sidebar-menu ul li a.active{
+    background:#A15D33;
+    color:#ffffff;
+
+    border-left:none;
+}
+
+.menu-divider{
+    height:1px;
+    background:rgba(255,255,255,0.08);
+    margin:15px 20px;
+}
+
+/* ==========================
+   LOGOUT
+========================== */
+
+.sidebar-footer{
+    margin-top:auto;
+    padding:10px 20px 20px;
+}
+
+.logout-link{
+    display:flex;
+    align-items:center;
+
+    padding:12px 20px;
+
+    margin:10px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    color:#ffffff;
+
+    transition:0.3s;
+}
+
+.logout-link:hover{
+    background:rgba(255,255,255,0.08);
+}
+
+/* ==========================
+   CONTENT AREA
+========================== */
+
+.main-content{
+    margin-left:260px;
+    width:calc(100% - 260px);
+    padding:2px 30px 20px;
+}
+
+/* ==========================
+   CARD GLOBAL
+========================== */
+
+.card{
+    background:#FFFFFF;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:
+    0 3px 12px rgba(0,0,0,0.04);
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:992px){
+
+    .sidebar{
+        width:100%;
+        position:relative;
+        min-height:auto;
+    }
+
+    .main-content{
+        width:100%;
+        margin-left:0;
+    }
+
+    .app{
+        flex-direction:column;
+    }
+
+}
+
+/* ==========================
+   HEADER
+========================== */
+
+.top-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    padding:20px 0;
+    margin-bottom:30px;
+    border-bottom:1px solid #E5DFD8;
+    border-radius:14px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:#F7F4EF;
+    backdrop-filter:blur(8px);
+    box-shadow:0 4px 12px rgba(0,0,0,0.04);
+}
+
+/* ==========================
+   HEADER LEFT
+========================== */
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.header-logo img{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+}
+
+.header-title h1{
+    font-size:28px;
+    font-weight:700;
+    color:#2B2926;
+}
+
+.header-title p{
+    margin-top:4px;
+    color:#777;
+    font-size:14px;
+}
+
+/* ==========================
+   HEADER RIGHT
+========================== */
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+/* ==========================
+   SEARCH
+========================== */
+
+.search-box{
+    width:280px;
+    height:48px;
+
+    background:#F7F4EF;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 15px;
+
+    gap:10px;
+}
+
+.search-box i{
+    color:#888;
+}
+
+.search-box input{
+    width:100%;
+
+    border:none;
+    background:transparent;
+
+    outline:none;
+
+    font-size:14px;
+}
+
+/* ==========================
+   ICON BUTTON
+========================== */
+
+.header-icon{
+    width:48px;
+    height:48px;
+
+    border:none;
+
+    background:#F7F4EF;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:18px;
+}
+
+/* ==========================
+   PROFILE
+========================== */
+
+.profile-box{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-info{
+    display:flex;
+    flex-direction:column;
+    text-align:right;
+}
+
+.profile-name{
+    font-size:14px;
+    font-weight:600;
+}
+
+.profile-role{
+    font-size:12px;
+    color:#777;
+}
+
+.profile-avatar{
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    background:#A15D33;
+
+    color:#fff;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-weight:700;
+}

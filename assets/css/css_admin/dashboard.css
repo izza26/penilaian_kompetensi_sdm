@@ -1,0 +1,390 @@
+/* ==========================
+   KPI CARDS
+========================== */
+
+.kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+
+    margin-bottom:25px;
+}
+
+.kpi-card{
+    background:#ffffff;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    transition:0.3s;
+}
+
+.kpi-card:hover{
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 20px rgba(0,0,0,0.06);
+}
+
+.kpi-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:18px;
+}
+
+.kpi-icon{
+    width:50px;
+    height:50px;
+
+    border-radius:12px;
+
+    background:#F7F4EF;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:#A15D33;
+
+    font-size:20px;
+}
+
+.kpi-label{
+    font-size:13px;
+    color:#888;
+}
+
+.kpi-value{
+    font-size:36px;
+    font-weight:700;
+    color:#2B2926;
+
+    margin-bottom:5px;
+}
+
+.kpi-desc{
+    font-size:14px;
+    color:#777;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:1200px){
+
+    .kpi-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:768px){
+
+    .kpi-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+/* ==========================
+   FLOW PENILAIAN
+========================== */
+
+.flow-card{
+    background:#ffffff;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    margin-bottom:25px;
+}
+
+.flow-header h2{
+    font-size:24px;
+    font-weight:700;
+
+    color:#2B2926;
+
+    margin-bottom:5px;
+}
+
+.flow-header p{
+    color:#777;
+    font-size:14px;
+}
+
+/* ==========================
+   STEPS
+========================== */
+
+.flow-steps{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-top:40px;
+}
+
+.flow-step{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    min-width:140px;
+}
+
+.step-number{
+    width:55px;
+    height:55px;
+
+    border-radius:15px;
+
+    background:#ECE8E3;
+
+    color:#777;
+
+    font-size:22px;
+    font-weight:700;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    margin-bottom:15px;
+}
+
+.flow-step.active .step-number{
+    background:#A15D33;
+    color:#fff;
+}
+
+.step-title{
+    text-align:center;
+
+    font-size:15px;
+    font-weight:600;
+
+    color:#2B2926;
+}
+
+.flow-line{
+    flex:1;
+
+    height:2px;
+
+    background:#E5DFD8;
+
+    margin:0 10px;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:992px){
+
+    .flow-steps{
+        flex-direction:column;
+        gap:20px;
+    }
+
+    .flow-line{
+        display:none;
+    }
+
+}
+
+/* ==========================
+   STATISTIK KOMPETENSI
+========================== */
+
+.stats-card{
+    background:#ffffff;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    margin-bottom:25px;
+}
+
+.stats-header{
+    margin-bottom:25px;
+}
+
+.stats-header h2{
+    font-size:24px;
+    font-weight:700;
+
+    color:#2B2926;
+
+    margin-bottom:5px;
+}
+
+.stats-header p{
+    color:#777;
+    font-size:14px;
+}
+
+.stats-item{
+    margin-bottom:25px;
+}
+
+.stats-item:last-child{
+    margin-bottom:0;
+}
+
+.stats-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:10px;
+
+    font-size:15px;
+    font-weight:600;
+}
+
+.progress{
+    width:100%;
+    height:12px;
+
+    background:#ECE8E3;
+
+    border-radius:999px;
+
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    border-radius:999px;
+}
+
+.kompeten{
+    width:80%;
+    background:#A15D33;
+}
+
+.cukup{
+    width:65%;
+    background:#C28B56;
+}
+
+.pembinaan{
+    width:20%;
+    background:#D8B18A;
+}
+
+/* ==========================
+   AKTIVITAS TERBARU
+========================== */
+
+.activity-card{
+    background:#ffffff;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    margin-bottom:30px;
+}
+
+.activity-header{
+    margin-bottom:25px;
+}
+
+.activity-header h2{
+    font-size:24px;
+    font-weight:700;
+
+    color:#2B2926;
+
+    margin-bottom:5px;
+}
+
+.activity-header p{
+    color:#777;
+    font-size:14px;
+}
+
+.activity-list{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.activity-item{
+    display:flex;
+    align-items:flex-start;
+    gap:15px;
+    padding-bottom:15px;
+    border-bottom:1px solid #F0ECE7;
+}
+
+.activity-item:last-child{
+    border-bottom:none;
+    padding-bottom:0;
+}
+
+.activity-icon{
+    width:48px;
+    height:48px;
+
+    border-radius:12px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:18px;
+
+    flex-shrink:0;
+}
+
+.success{
+    background:#E9F7EF;
+    color:#1E8E5A;
+}
+
+.info{
+    background:#E8F1FF;
+    color:#2D6CDF;
+}
+
+.warning{
+    background:#FFF4E5;
+    color:#D97706;
+}
+
+.primary{
+    background:#F4EDE7;
+    color:#A15D33;
+}
+
+.activity-title{
+    font-size:15px;
+    font-weight:600;
+
+    color:#2B2926;
+
+    margin-bottom:4px;
+}
+
+.activity-time{
+    font-size:13px;
+    color:#888;
+}

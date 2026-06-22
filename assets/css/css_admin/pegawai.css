@@ -1,0 +1,226 @@
+/* ==========================
+   PAGE HEADER
+========================== */
+
+.page-card{
+    background:#ffffff;
+    border:1px solid #EAE6E1;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.page-title h2{
+    font-size:28px;
+    font-weight:700;
+    color:#2B2926;
+}
+
+.page-title p{
+    color:#777;
+    margin-top:5px;
+}
+
+/* ==========================
+   BUTTON
+========================== */
+
+.btn-primary{
+    background:#A15D33;
+    color:#fff;
+    border:none;
+    padding:12px 18px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    text-decoration:none;
+}
+
+.btn-primary,
+.action-btn,
+.logout-link{
+    text-decoration:none;
+}
+
+/* ==========================
+   SEARCH
+========================== */
+
+.table-tools{
+    margin-bottom:20px;
+}
+
+.search-input{
+    width:350px;
+
+    padding:12px 15px;
+
+    border:1px solid #EAE6E1;
+
+    border-radius:12px;
+
+    outline:none;
+}
+
+/* ==========================
+   TABLE
+========================== */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.data-table thead{
+    background:#F7F4EF;
+}
+
+.data-table th{
+    padding:15px;
+    text-align:left;
+
+    font-size:14px;
+    font-weight:600;
+}
+
+.data-table td{
+    padding:15px;
+
+    border-top:1px solid #ECE8E3;
+}
+
+.status{
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#E9F7EF;
+
+    color:#1E8E5A;
+
+    font-size:12px;
+
+    font-weight:600;
+}
+
+.action-btn{
+    border:none;
+    cursor:pointer;
+    margin-right:10px;
+    font-size:16px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    transition:.3s;
+    text-decoration:none;
+}
+
+.view-btn{
+    background:#E8F1FF;
+    color:#2D6CDF;
+}
+
+.edit-btn{
+    background:#FFF4E5;
+    color:#D97706;
+}
+
+.delete-btn{
+    background:#FDECEC;
+    color:#DC2626;
+}
+
+.action-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* ==========================
+   PAGINATION
+========================== */
+
+.pagination{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-top:25px;
+
+    padding-top:20px;
+
+    border-top:1px solid #ECE8E3;
+}
+
+.page-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    border:none;
+
+    background:#F7F4EF;
+
+    color:#555;
+
+    padding:10px 16px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:14px;
+    font-weight:500;
+
+    transition:.3s;
+}
+
+.page-btn:hover{
+    background:#ECE8E3;
+}
+
+.page-numbers{
+    display:flex;
+    gap:8px;
+}
+
+.page-number{
+    width:40px;
+    height:40px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#F7F4EF;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.page-number:hover{
+    background:#ECE8E3;
+}
+
+.page-number.active{
+    background:#A15D33;
+    color:white;
+}
