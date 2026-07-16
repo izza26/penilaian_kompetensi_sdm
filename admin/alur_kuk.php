@@ -80,16 +80,6 @@ if (!$result) {
 
         <div class="page-card">
             <div class="page-header">
-                <div class="page-title">
-                    <h2>Daftar Alur KUK</h2>
-                    <p>Kelola aktivitas kompetensi, evidence, dan instrumen penilaian.</p>
-                </div>
-                <a href="tambah_alur_kuk.php" class="btn-primary">
-                    + Tambah Alur KUK
-                </a>
-            </div>
-
-            <div class="table-tools">
                 <form method="GET" action="">
                     <input 
                         type="text" 
@@ -100,6 +90,10 @@ if (!$result) {
                         onchange="this.form.submit()"
                     >
                 </form>
+                
+                <a href="tambah_alur_kuk.php" class="btn-primary">
+                    + Tambah Alur KUK
+                </a>
             </div>
 
             <div class="table-wrapper">

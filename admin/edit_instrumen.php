@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/koneksi.php';
 
-$page_title = "Edit Instrumen";
+$page_title = "Edit KUK";
 $page_subtitle = "Perbarui instrumen penilaian kompetensi";
 
 $id_aktivitas = isset($_GET['id']) ? $_GET['id'] : null;
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan_instrumen'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Instrumen</title>
+    <title>Edit KUK</title>
     <link rel="stylesheet" href="../assets/css/css_admin/layout.css">
     <link rel="stylesheet" href="../assets/css/css_admin/pegawai.css">
     <link rel="stylesheet" href="../assets/css/css_admin/edit_instrumen.css">
@@ -79,19 +79,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan_instrumen'])) {
 <body>
 
 <div class="app">
-    <?php include '../layouts/sidebar_admin.php'; ?>
+    <?php include '../layouts/sidebar_admin.php'; 
+    $btn_kembali = "instrumen.php";
+    ?>
 
     <div class="main-content">
         <?php include '../layouts/header.php'; ?>
 
         <div class="page-card">
-            <div class="page-header">
+            <!-- <div class="page-header">
                 <div class="page-title">
                     <h2>Edit Instrumen</h2>
                     <p>Perbarui rubrik penilaian dan spesifikasi aktivitas.</p>
                 </div>
                 <a href="detail_instrumen.php?id=<?= $data['aktivitas_id'] ?>" class="btn-secondary">Batal / Kembali</a>
-            </div>
+            </div> -->
 
             <form method="POST" action="">
                 <div class="form-grid">

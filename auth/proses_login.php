@@ -20,9 +20,21 @@ if (pg_num_rows($result) > 0) {
     $_SESSION['nip_nik']      = $data['nip_nik'];
     $_SESSION['nama_pegawai'] = $data['pegawai_nama'];
     $_SESSION['unit_kerja']   = $data['unit_kerja'];
+    
+    // --- INI OBATNYA: Bersihkan spasi dan jadikan huruf kecil semua ---
+    $_SESSION['role'] = trim(strtolower($data['role'])); 
 
-    // HAPUS echo atau var_dump debugging tadi, ganti balik ke header redirect
-    header("Location: ../admin/dashboard.php");
+    // Redirect sesuai role
+    if ($_SESSION['role'] == 'admin') {
+        header("Location: ../admin/dashboard.php");
+    } elseif ($_SESSION['role'] == 'pegawai') {
+        header("Location: ../pegawai/dashboard.php");
+    } elseif ($_SESSION['role'] == 'pimpinan') {
+        header("Location: ../pimpinan/dashboard.php");
+    } else {
+        header("Location: login.php?pesan=role_tidak_dikenal");
+    }
+
     exit();
 } else {
     header("Location: login.php?pesan=gagal");

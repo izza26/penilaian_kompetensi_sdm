@@ -1,0 +1,139 @@
+/* =====================================================
+   HERO SECTION LAYOUT (2 KOLOM)
+===================================================== */
+.hero-card { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #ffffff; 
+    border-radius: 16px; 
+    padding: 25px 30px; 
+    margin-bottom: 30px; 
+    border: 1px solid #e2e8f0; 
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06); 
+    gap: 20px;
+}
+
+.hero-left { flex: 1; }
+.hero-label { display: inline-block; background: #fffbeb; color: #b45309; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 12px; border: 1px solid #fde68a;}
+.hero-left h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; }
+.hero-left p { color: #475569; font-size: 13px; line-height: 1.6; margin: 0; max-width: 500px;}
+
+.hero-right { min-width: 320px; }
+
+/* =====================================================
+   KOTAK INFO PERIODE (DESAIN MODERN)
+===================================================== */
+.periode-card-modern {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.periode-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.periode-icon {
+    width: 40px; height: 40px;
+    background: #eff6ff; color: #3b82f6;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+}
+
+.periode-teks { display: flex; flex-direction: column; }
+.periode-teks .label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 2px; }
+.periode-teks .value { font-size: 14px; font-weight: 700; color: #1e293b; }
+
+.periode-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge-date {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #475569; font-weight: 500;
+    background: #f8fafc; padding: 6px 12px;
+    border-radius: 8px; border: 1px solid #f1f5f9;
+}
+
+.badge-status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #16a34a;
+    background: #f0fdf4; padding: 6px 12px;
+    border-radius: 8px; border: 1px solid #bbf7d0;
+}
+.badge-status i { font-size: 8px; }
+
+/* Responsif untuk layar HP */
+@media (max-width: 768px) {
+    .hero-card { flex-direction: column; align-items: flex-start; }
+    .hero-right { width: 100%; }
+}
+
+        /* =====================================================
+           SECTION TITLE
+        ===================================================== */
+        .section-title { margin-bottom: 20px; }
+        .section-title span { font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; margin-bottom: 4px;}
+        .section-title span i { color: #3b82f6; }
+        .section-title p { color: #64748b; font-size: 13px; margin: 0;}
+
+        /* =====================================================
+           CARDS (COMPACT & CLEAN)
+        ===================================================== */
+        .penilaian-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;}
+        .penilaian-card { background: #ffffff; border-radius: 16px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06); transition: 0.3s; display: flex; flex-direction: column;}
+        .penilaian-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(15, 23, 42, 0.1);}
+        
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
+        .card-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 18px;}
+        .card-progress span { font-size: 18px; font-weight: 700; color: #0f172a;}
+        
+        .penilaian-card h3 { font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; line-height: 1.4;}
+        .penilaian-card p { font-size: 12px; color: #64748b; line-height: 1.5; margin: 0 0 15px 0; flex-grow: 1;}
+        
+        .progress-bar { width: 100%; height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; margin-bottom: 15px;}
+        .fill { height: 100%; border-radius: 10px; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 15px; margin-top: auto;}
+        
+        /* Status Badges */
+        .status { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;}
+        .status.running { background: #eff6ff; color: #2b5ecb; }
+        .status.waiting { background: #f3f9fa; color: #0F414A; }
+        .status.success { background: #fdf4ff; color: #d946ef; } /* Ganti dari hijau ke ungu krn Pimpinan warna Biru */
+        
+        /* Tema Warna per Card */
+        .pimpinan .card-icon { background: #eff6ff; color: #2b5ecb; }
+        .pimpinan .fill-blue { background: #2b5ecb; }
+        
+        .rekan .card-icon { background: #f3f9fa; color: #0F414A; }
+        .rekan .fill-purple { background: #EBCDB7; }
+        
+        .diri .card-icon { background: #fff7ed; color: #f97316; }
+        .diri .fill-orange { background: #f97316; }
+        .diri .status.success { background: #fff7ed; color: #ea580c; } /* Khusus untuk card Diri Sendiri */
+        
+        /* Tombol Aksi */
+        .btn-lihat { background: #bda572; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; transition: 0.2s;}
+        .btn-lihat:hover { background: #8A4F2A; transform: translateY(-1px);}
+
+        /* RESPONSIVE */
+        @media(max-width: 992px){ 
+            .penilaian-grid { grid-template-columns: repeat(2, 1fr); } 
+            .hero-card { flex-direction: column; text-align: center; gap: 15px;}
+            .hero-left p { margin: 0 auto;}
+        }
+        @media(max-width: 768px){ 
+            .penilaian-grid { grid-template-columns: 1fr; } 
+        }

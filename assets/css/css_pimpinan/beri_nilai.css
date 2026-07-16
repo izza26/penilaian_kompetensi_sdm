@@ -1,0 +1,62 @@
+/* HEADER HALAMAN SKORING */
+.page-header-skoring { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: white; padding: 20px 25px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06); }
+.page-title h2 { margin: 0 0 6px 0; color: #0f172a; font-size: 20px; }
+.page-title p { margin: 0; color: #64748b; font-size: 13px; }
+.unit-code-badge { color: #1e3a8a; font-weight: 700; background: #eff6ff; padding: 4px 8px; border-radius: 6px; border: 1px solid #bfdbfe; }
+
+/* Lebar sidebar kanan dikecilkan dari 360px ke 310px, gap dikecilkan */
+.score-layout { display: grid; grid-template-columns: minmax(0,1fr) 310px; gap: 14px; align-items: start;}
+.score-side { position: sticky; top: 16px; display: grid; gap: 12px; }
+
+/* Filter Box Lebih Slim */
+.filter-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px 16px; border-radius: 12px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px;}
+.filter-box label { font-weight: 700; color: #1e293b; font-size: 13px; display: flex; align-items: center; gap: 6px;}
+.filter-box select { width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 13px; color: #334155; font-weight: 500; outline: none; cursor: pointer; transition: 0.2s;}
+.filter-box select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+/* Card Aktivitas Dibuat Lebih Compact */
+.activity-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
+.activity-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+
+/* ID Aktivitas Dibuat Biru Gelap (Pop Out) */
+.activity-id { color: #1e3a8a; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 6px; background: #eff6ff; padding: 4px 8px; border-radius: 6px; border: 1px solid #bfdbfe;}
+
+.badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.badge.green { background: #ecfdf5; color: #059669; }
+.badge.blue { background: #eff6ff; color: #2563eb; }
+.badge.red { background: #fff1f2; color: #be123c; }
+.badge.yellow { background: #fffbeb; color: #b45309; }
+
+/* Kotak Info (Kriteria, Rekomendasi) */
+.info-box { background: #f8fafc; border-radius: 10px; padding: 12px; font-size: 12px; line-height: 1.5; color: #475569; border: 1px solid #e2e8f0; margin-bottom: 12px;}
+.info-box b { display: block; color: #1e293b; margin-bottom: 4px; font-size: 13px;}
+
+/* Tombol Cek Dokumen */
+.btn-doc { display: inline-flex; align-items: center; gap: 6px; background: #bda572; color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; transition: 0.2s; margin-top: 8px;}
+.btn-doc:hover { background: #A08348; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(59,130,246,.3);}
+
+/* Kotak Skor 1-5 */
+.score-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px; margin-bottom: 12px;}
+.score-card { border: 1px solid #e2e8f0; background: white; border-radius: 12px; padding: 10px; cursor: pointer; text-align: center; transition: transform .15s, box-shadow .15s, border-color .15s; min-height: 115px; display: flex; flex-direction: column;}
+.score-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15,23,42,.06); }
+.score-card.active { border-color: #0f172a; outline: 2px solid #0f172a; background: #f8fafc;}
+.score-head { border-radius: 8px; padding: 5px 6px; text-align: center; font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+
+.score-1 { background: #fff1f2; color: #be123c; }
+.score-2 { background: #fff7ed; color: #c2410c; }
+.score-3 { background: #fffbeb; color: #b45309; }
+.score-4 { background: #ecfdf5; color: #059669; }
+.score-5 { background: #f0fdfa; color: #0f766e; }
+
+.score-text { font-size: 11px; color: #334155; line-height: 1.35; flex-grow: 1;}
+.selected-badge { margin-top: 8px; background: #0f172a; color: white; text-align: center; border-radius: 6px; padding: 4px; font-size: 10px; font-weight: 800; display: none; }
+.score-card.active .selected-badge { display: block; }
+
+/* Sidebar Kanan */
+.side-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
+.result-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; font-size: 13px; border: 1px solid #f1f5f9;}
+.result-row span { color: #64748b; font-weight: 600;}
+.result-row b { color: #0f172a; font-size: 14px;}
+
+.btn-submit { background: #0f172a; color: white; border: none; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.2s; width: 100%;}
+.btn-submit:hover { background: #1e293b; box-shadow: 0 4px 10px rgba(15,23,42,.15);}

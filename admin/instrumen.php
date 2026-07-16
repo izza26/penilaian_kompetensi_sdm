@@ -2,8 +2,8 @@
 session_start();
 require_once '../config/koneksi.php';
 
-$page_title = "Instrumen";
-$page_subtitle = "Kelola instrumen penilaian kompetensi";
+$page_title = "Alur Kriteria Unjuk Kinerja";
+$page_subtitle = "Kelola KUK penilaian kompetensi";
 
 $kata_kunci = isset($_GET['cari']) ? $_GET['cari'] : '';
 
@@ -53,7 +53,7 @@ if (!$result) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Instrumen</title>
+    <title>Alur KUK</title>
     <link rel="stylesheet" href="../assets/css/css_admin/layout.css">
     <link rel="stylesheet" href="../assets/css/css_admin/pegawai.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -68,12 +68,6 @@ if (!$result) {
         <?php include '../layouts/header.php'; ?>
 
         <div class="page-card">
-            <div class="page-header">
-                <div class="page-title">
-                    <h2>Daftar Instrumen</h2>
-                    <p>Kelola pertanyaan instrumen penilaian berdasarkan aktivitas kompetensi.</p>
-                </div>
-            </div>
 
             <?php if($error_db != ""): ?>
                 <div style='background-color: #ffebee; color: #c62828; padding: 15px; margin-bottom: 20px; border-radius: 8px;'>
@@ -82,7 +76,8 @@ if (!$result) {
             <?php endif; ?>
 
             <div class="table-tools">
-                <form method="GET" action="">
+                
+                <!-- <form method="GET" action="">
                     <input 
                         type="text" 
                         name="cari"
@@ -91,7 +86,7 @@ if (!$result) {
                         value="<?= htmlspecialchars($kata_kunci) ?>"
                         onchange="this.form.submit()"
                     >
-                </form>
+                </form> -->
             </div>
 
             <div class="table-wrapper">
@@ -103,7 +98,7 @@ if (!$result) {
                             <th>Kode Unit</th>
                             <th>Elemen</th>
                             <th>Aktivitas</th>
-                            <th>Jumlah Instrumen</th>
+                            <!-- <th>Jumlah Instrumen</th> -->
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -123,9 +118,9 @@ if (!$result) {
                                     <td><?= htmlspecialchars($row['elemen_kompetensi'] ?? '-') ?></td>
                                     <td><?= htmlspecialchars($row['detail_aktivitas'] ?? '-') ?></td>
                                     
-                                    <td>
+                                    <!-- <td>
                                         <?= htmlspecialchars($row['jumlah_instrumen'] ?? '0') ?> Pertanyaan
-                                    </td>
+                                    </td> -->
                                     
                                     <td>
                                         <span class="status"><?= htmlspecialchars($status_text) ?></span>

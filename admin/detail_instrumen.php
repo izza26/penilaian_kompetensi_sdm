@@ -3,8 +3,8 @@ session_start();
 require_once '../auth/cek_login.php';
 require_once '../config/koneksi.php';
 
-$page_title = "Detail Instrumen";
-$page_subtitle = "Informasi lengkap instrumen penilaian";
+$page_title = "Detail Unit Kompetensi";
+$page_subtitle = "Informasi lengkap unit kompetensi penilaian";
 
 $id_aktivitas = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -50,7 +50,7 @@ $inisial = substr($inisial, 0, 2);
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Detail Instrumen</title>
+    <title>Detail Unit Kompetensi</title>
     <link rel="stylesheet" href="../assets/css/css_admin/layout.css">
     <link rel="stylesheet" href="../assets/css/css_admin/pegawai.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -68,23 +68,13 @@ $inisial = substr($inisial, 0, 2);
 <body>
 
 <div class="app">
-    <?php include '../layouts/sidebar_admin.php'; ?>
+    <?php include '../layouts/sidebar_admin.php'; 
+    $btn_kembali = "instrumen.php";
+    ?>
     <div class="main-content">
         <?php include '../layouts/header.php'; ?>
 
         <div class="page-card" style="padding: 30px;">
-            <div class="page-header">
-                <div class="page-title">
-                    <h2>Detail Instrumen</h2>
-                    <p>Informasi lengkap instrumen penilaian kompetensi (Rubrik SKKNI).</p>
-                </div>
-                
-                <div class="detail-header-actions">
-                    <a href="instrumen.php" class="btn-secondary" style="background:#f1f3f5; color:#333; padding:10px 20px; border-radius:8px; text-decoration:none;">
-                        <i class="bi bi-arrow-left"></i> Kembali
-                    </a>
-                </div>
-            </div>
 
             <div class="card-header-flex">
                 <div class="avatar-box"><?= $inisial ?></div>
@@ -93,6 +83,7 @@ $inisial = substr($inisial, 0, 2);
                     <p style="margin:0 0 10px 0; color:#6c757d; font-size:14px;">ID Aktivitas: <strong><?= htmlspecialchars($data['aktivitas_id']) ?></strong></p>
                 </div>
             </div>
+            
 
             <h4 style="margin-bottom:15px; font-size:16px;">Informasi Aktivitas</h4>
             <div class="info-grid" style="margin-bottom: 30px;">

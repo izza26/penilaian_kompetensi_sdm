@@ -53,7 +53,9 @@ $result_aktivitas = pg_query_params($koneksi, $query_aktivitas, array($elemen_id
 <body>
 
 <div class="app">
-    <?php include '../layouts/sidebar_admin.php'; ?>
+    <?php include '../layouts/sidebar_admin.php'; 
+    $btn_kembali = "instrumen.php";
+    ?>
 
     <div class="main-content">
         <?php include '../layouts/header.php'; ?>

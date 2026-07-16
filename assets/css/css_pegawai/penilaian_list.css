@@ -1,0 +1,199 @@
+/* =====================================================
+   TOMBOL KEMBALI
+===================================================== */
+.back-link {
+    display: inline-flex; align-items: center;
+    padding: 10px 16px; border-radius: 8px; background: #ffffff; color: #475569;
+    text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s;
+    border: 1px solid #e2e8f0; margin-bottom: 20px;
+}
+.back-link:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
+
+/* =====================================================
+   UPGRADED HERO SECTION (SLIM & CLEAN)
+===================================================== */
+.custom-hero {
+    background: #ffffff; border-radius: 16px; padding: 20px 25px;
+    display: flex; align-items: flex-start; gap: 20px;
+    border: 1px solid #e2e8f0; box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+    margin-bottom: 25px;
+}
+.custom-hero-icon {
+    width: 50px; height: 50px; background: #eff6ff; color: #3b82f6;
+    border-radius: 12px; display: flex; justify-content: center; align-items: center;
+    font-size: 24px; flex-shrink: 0;
+}
+.custom-hero-text { flex: 1; }
+.custom-hero-text h2 { margin: 0 0 6px 0; font-size: 18px; font-weight: 700; color: #0f172a; }
+.custom-hero-text p { margin: 0; font-size: 13px; color: #64748b; line-height: 1.5; }
+.custom-hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f8fafc; color: #334155; padding: 6px 12px;
+    border-radius: 6px; font-size: 11px; font-weight: 700;
+    margin-top: 12px; border: 1px solid #e2e8f0;
+}
+/* =====================================================
+   HERO LAYOUT
+===================================================== */
+.custom-hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.custom-hero-left{
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+    flex:1;
+}
+/* =====================================================
+   HERO BUTTON
+===================================================== */
+.hero-back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 18px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    background:#fff;
+    color:#334155;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    transition:.2s;
+    flex-shrink:0;
+}
+
+.hero-back-btn:hover{
+    background:#f8fafc;
+    border-color:#94a3b8;
+    color:#1B2D46;
+}
+
+/* =====================================================
+   FILTER BOX
+===================================================== */
+.filter-box {
+    background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px 16px;
+    border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+.filter-box form { display: flex; gap: 10px; align-items: center; width: 100%; }
+.filter-box form select {
+    flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1;
+    font-family: inherit; font-size: 13px; color: #334155; font-weight: 500;
+    outline: none; cursor: pointer; transition: 0.2s;
+}
+.filter-box form select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+/* Kotak Empty State */
+.empty-state { padding: 60px 0; text-align: center; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+.empty-state i { font-size: 48px; color: #94a3b8; }
+.empty-state h3 { margin-top: 15px; color: #1e293b; font-size: 16px; margin-bottom: 5px;}
+.empty-state p { color: #64748b; font-size: 13px; margin: 0;}
+
+/* =====================================================
+   STYLING TABEL & CARD EVIDENCE
+===================================================== */
+.unit-card { background: #fff; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; overflow: hidden; }
+.unit-header { background: #f8fafc; padding: 14px 16px; border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 4px; }
+.unit-header h3 { margin: 0; font-size: 14px; color: #0f172a; font-weight: 700; line-height: 1.4; }
+.unit-header span { font-size: 12px; font-weight: 700; color: #1e3a8a; display: inline-flex; align-items: center; gap: 5px; background: #eff6ff; padding: 4px 8px; border-radius: 6px; border: 1px solid #bfdbfe; align-self: flex-start; }
+
+/* --- Tabel --- */
+.styled-table { width: 100%; border-collapse: collapse; }
+.styled-table th { background-color: #fff; color: #64748b; padding: 12px 15px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; font-weight: 700; letter-spacing: 0.5px; }
+.styled-table td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; font-size: 12px; color: #334155; }
+.styled-table tr:last-child td { border-bottom: none; }
+.styled-table tr:hover { background-color: #f8fafc; }
+
+/* --- Badge Status --- */
+.badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+
+/* --- Tombol Aksi --- */
+.btn-upload {
+    background-color: #3b82f6 !important; color: white !important; padding: 6px 12px; border-radius: 6px;
+    text-decoration: none; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; border: none;
+}
+.btn-upload:hover { background-color: #2563eb !important; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(59,130,246,.3); }
+
+.btn-locked {
+    background: #f1f5f9; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px; cursor: not-allowed; white-space: nowrap; border: 1px solid #e2e8f0;
+}
+
+/* =====================================================
+   PAGINATION & TABLE FOOTER
+===================================================== */
+.table-footer { margin-top: 15px; padding: 15px 16px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; border-top: 1px solid #e2e8f0;}
+.table-info { color: #64748b; font-size: 12px; font-weight: 500; }
+.pagination { display: flex; align-items: center; gap: 6px; }
+.page-btn {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff;
+    display: flex; justify-content: center; align-items: center; text-decoration: none; color: #475569;
+    transition: 0.2s; font-size: 12px; font-weight: 600;
+}
+.page-btn:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
+.page-btn.active { background: #1B2D46; color: #fff; border-color: #1B2D46; } /* Yankees Blue for active page */
+
+
+/* Meminjam sedikit style filter-box dari aktivitas_saya.php agar identik */
+.filter-box { background: #fff; padding: 12px 18px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.02);}
+.filter-box label { font-weight: 700; color: #1e293b; font-size: 13px; display: flex; align-items: center; gap: 6px;}
+.filter-box select { width: 100%; padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 13px; color: #334155; font-weight: 600; outline: none; cursor: pointer; transition: 0.2s;}
+.filter-box select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
+
+.back-link-wrapper{
+    display:flex;
+    justify-content:flex-start;
+    margin-bottom:20px;
+}
+
+.back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 18px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    color:#475569;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    width:auto;
+    flex:none;
+    transition:.2s;
+}
+
+.back-link:hover{
+    background:#f8fafc;
+    border-color:#cbd5e1;
+    color:#1B2D46;
+}
+
+.page-dots{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 4px;
+    font-weight:700;
+    color:#64748b;
+}
+
+@media(max-width:768px){
+    .custom-hero{
+        flex-direction:column;
+        gap:18px;
+    }
+
+    .hero-back-btn{
+        align-self:flex-start;
+    }
+
+}

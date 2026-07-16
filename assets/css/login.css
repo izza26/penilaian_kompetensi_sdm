@@ -1,188 +1,349 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:'Poppins',sans-serif;
-    background:#F7F4EF;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
 }
 
-.login-container{
-    display:flex;
-    min-height:100vh;
-}
-
-/* ==================================
-   LEFT PANEL
-================================== */
-
-.left-panel{
-    width:50%;
-    position:relative;
-
-    background:
-    linear-gradient(
-        rgba(43,41,38,0.85),
-        rgba(43,41,38,0.85)
-    ),
-    url('../img/bg-login.jpeg');
-
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:60px;
-}
-
-.left-content{
-    color:white;
-    max-width:500px;
-    z-index:2;
-}
-
-.logo{
-    width:120px;
-    margin-bottom:25px;
-}
-
-.left-content h1{
-    font-size:42px;
-    font-weight:700;
-    line-height:1.3;
-    margin-bottom:15px;
-}
-
-.left-content p{
-    font-size:20px;
-    color:#D9C8BC;
-    margin-bottom:15px;
-}
-
-.left-content span{
-    font-size:15px;
-    line-height:1.8;
-    color:#F5F5F5;
+.login-container {
+    display: flex;
+    min-height: 100vh;
 }
 
 /* ==================================
-   RIGHT PANEL
+   LEFT PANEL (YANKEES BLUE #182A3A)
 ================================== */
-
-.right-panel{
-    width:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#F7F4EF;
+.left-panel {
+    width: 50%;
+    position: relative;
+    /* Gradasi Yankees Blue ke Deep Space Sparkle */
+    background: linear-gradient(135deg, rgba(24, 42, 58, 0.92) 0%, rgba(66, 91, 111, 0.85) 100%), url('../img/bg-login.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
 }
 
-.login-box{
-    width:100%;
-    max-width:450px;
-    background:#FFFFFF;
-
-    padding:50px;
-
-    border-radius:20px;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
+.left-content {
+    color: white;
+    max-width: 550px;
+    z-index: 2;
+    animation: fadeIn 1s ease-out;
 }
 
-.login-box h2{
-    font-size:34px;
-    color:#2B2926;
-    margin-bottom:10px;
+.logo {
+    width: 140px;
+    margin-bottom: 35px;
+    /* INI MAGIC-NYA: Mengubah gambar hitam jadi putih terang 100% */
+    filter: brightness(0) invert(1) drop-shadow(0 4px 8px rgba(0,0,0,0.3));
 }
 
-.login-box p{
-    color:#777;
-    margin-bottom:35px;
+.left-content h1 {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
 }
 
-.input-group{
-    margin-bottom:20px;
+.left-content p {
+    font-size: 22px;
+    color: #D6BB80; /* Burlywood Accent */
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
-.input-group label{
-    display:block;
-    margin-bottom:8px;
-    font-size:14px;
-    font-weight:500;
-    color:#444;
-}
-
-.input-group input{
-    width:100%;
-    height:55px;
-
-    border:1px solid #E5E5E5;
-
-    border-radius:12px;
-
-    padding:0 15px;
-
-    font-size:15px;
-
-    transition:0.3s;
-}
-
-.input-group input:focus{
-    outline:none;
-    border-color:#A15D33;
-}
-
-.login-btn{
-    width:100%;
-    height:55px;
-
-    border:none;
-
-    background:#A15D33;
-    color:white;
-
-    border-radius:12px;
-
-    font-size:16px;
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:0.3s;
-
-    margin-top:10px;
-}
-
-.login-btn:hover{
-    background:#8A4F2C;
+.left-content span {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #e2e8f0;
+    display: block;
+    max-width: 450px;
 }
 
 /* ==================================
-   RESPONSIVE
+   RIGHT PANEL (ORNAMEN BLUR & GLASSMORPHISM)
 ================================== */
+.right-panel {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8fafc; /* Latar abu-abu sangat soft */
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
 
-@media(max-width:992px){
+/* Ornamen Blur Emas (Burlywood) di Kanan Atas */
+.right-panel::before {
+    content: '';
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    background: rgba(214, 187, 128, 0.35); /* Warna Burlywood transparan */
+    border-radius: 50%;
+    top: -120px;
+    right: -100px;
+    filter: blur(80px);
+    z-index: -1;
+}
 
-    .login-container{
-        flex-direction:column;
-    }
+/* Ornamen Blur Biru Gelap (Yankees Blue) di Kiri Bawah */
+.right-panel::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(24, 42, 58, 0.2); /* Warna Yankees Blue transparan */
+    border-radius: 50%;
+    bottom: -100px;
+    left: -100px;
+    filter: blur(80px);
+    z-index: -1;
+}
 
-    .left-panel{
-        width:100%;
-        min-height:300px;
-    }
+/* KOTAK LOGIN BERGAYA GLASSMORPHISM */
+.login-box {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255, 255, 255, 0.85); /* Semi transparan biar nembus blur */
+    backdrop-filter: blur(16px); /* Efek Kaca / Embun */
+    -webkit-backdrop-filter: blur(16px);
+    padding: 55px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.8); /* Border putih tipis */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04); 
+    animation: slideUp 0.6s ease-out;
+}
 
-    .right-panel{
-        width:100%;
-        padding:30px 20px;
-    }
+/* Variasi lebar untuk Register */
+.register-box {
+    max-width: 650px;
+    padding: 45px 50px;
+}
 
-    .left-content h1{
-        font-size:30px;
-    }
+.login-box h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #182A3A; /* Yankees Blue */
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.login-box p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 35px;
+}
+
+/* ==================================
+   TAMBAHAN UNTUK ICON MATA (PASSWORD)
+================================== */
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    left: auto !important; /* Membatalkan left:16px dari icon bawaan */
+    font-size: 18px;
+    color: #94a3b8 !important;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle-password:hover {
+    color: #182A3A !important;
+}
+
+/* Memberi jarak kanan agar teks tidak tertutup icon mata */
+.password-field {
+    padding-right: 45px !important;
+}
+
+/* ==================================
+   INPUT FIELDS DENGAN ICON
+================================== */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+}
+
+.input-group {
+    margin-bottom: 22px;
+    position: relative;
+}
+
+.input-group.full-width {
+    grid-column: span 2;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 16px;
+    font-size: 18px;
+    color: #182A3A; /* Berubah jadi Biru Gelap (Yankees Blue) */
+    transition: 0.3s;
+}
+
+.input-group input, .input-group select {
+    width: 100%;
+    height: 52px;
+    background: #ffffff; /* Berubah jadi putih bersih */
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 0 16px 0 45px; 
+    font-size: 14px;
+    color: #0f172a;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    appearance: none;
+}
+
+/* MENGHILANGKAN BACKGROUND BIRU DARI AUTOFILL BROWSER */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+
+/* Select khusus untuk Register */
+.input-group select {
+    padding: 0 40px 0 45px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.input-group input:focus, .input-group select:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #182A3A; /* Highlight border jadi Biru Gelap */
+    box-shadow: 0 0 0 4px rgba(24, 42, 58, 0.15); /* Shadow Biru Gelap Transparan */
+}
+
+.input-group input:focus + i, .input-wrapper:focus-within i {
+    color: #3b82f6; /* Icon nyala jadi biru cerah saat diketik */
+}
+
+.input-group input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+/* ==================================
+   LINKS & BUTTONS
+================================== */
+.forgot-pass {
+    display: block;
+    text-align: right;
+    font-size: 13px;
+    color: #A08348;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: -10px;
+    margin-bottom: 25px;
+    transition: 0.2s;
+}
+
+.forgot-pass:hover {
+    color: #182A3A;
+}
+
+.login-btn {
+    width: 100%;
+    height: 52px;
+    border: none;
+    background: #182A3A; /* Dark Tan */
+    color: white;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(160, 131, 72, 0.2);
+}
+
+.login-btn:hover {
+    background: #bda572; /* Hover ke Yankees Blue */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(24, 42, 58, 0.25);
+}
+
+.register-link {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.register-link a {
+    color: #A08348;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.register-link a:hover {
+    color: #182A3A;
+    text-decoration: underline;
+}
+
+/* Alert Pesan */
+.alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.alert-error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.alert-success { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+
+/* ==================================
+   ANIMATIONS & RESPONSIVE
+================================== */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+@media(max-width: 992px) {
+    .login-container { flex-direction: column; }
+    .left-panel { width: 100%; min-height: 40vh; padding: 50px 30px; text-align: center; align-items: center; }
+    .left-content p, .left-content span { margin-left: auto; margin-right: auto; }
+    .right-panel { width: 100%; padding: 40px 20px; background: #ffffff; }
+    .login-box { padding: 40px 25px; box-shadow: none; border: none; }
+    .form-grid { grid-template-columns: 1fr; gap: 0; }
+    .input-group.full-width { grid-column: span 1; }
 }

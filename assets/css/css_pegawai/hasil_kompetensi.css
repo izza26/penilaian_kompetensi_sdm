@@ -1,0 +1,525 @@
+:root {
+    /* PRIMARY COLORS Bawaan Tema Baru */
+    --primary: #1B2D46;       /* Yankees Blue */
+    --secondary: #425B6F;     /* Deep Space Sparkle */
+    --accent: #3b82f6;        /* Modern Blue */
+    --bg: #f8fafc;
+    --card: #FFFFFF;
+    --text: #0f172a;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+}
+
+/* ======================================================
+   CONTAINER
+====================================================== */
+.hasil-container {
+    padding: 0 5px 25px 5px; 
+}
+
+.mt-40 {
+    margin-top: 30px;
+}
+
+/* ======================================================
+   HERO & FILTER (Tema Gold Elegan & Bersih)
+====================================================== */
+.hero-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    background: linear-gradient(135deg, #D6BB80 0%, #A08348 100%);
+    border-radius: 12px;
+    padding: 30px 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(160, 131, 72, 0.2);
+    color: #fff;
+}
+
+.hero-label {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    backdrop-filter: blur(4px);
+}
+
+.hero-left h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.hero-left p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    max-width: 600px;
+    font-size: 14px;
+}
+
+.filter-card {
+    width: 280px;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.filter-title {
+    display: block;
+    color: var(--text-light);
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.select-periode {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f8fafc;
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    outline: none;
+    transition: 0.2s;
+}
+
+.select-periode:focus {
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* ======================================================
+   SECTION TITLE
+====================================================== */
+.section-title {
+    margin-bottom: 20px;
+}
+
+.section-title span {
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+}
+
+.section-title span i {
+    color: var(--accent);
+}
+
+.section-title p {
+    color: var(--text-light);
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+/* ======================================================
+   SUMMARY GRID & CARD
+====================================================== */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.summary-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: .2s;
+}
+
+.summary-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-color: #cbd5e1;
+}
+
+.summary-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    background: #eff6ff;
+    color: var(--accent);
+}
+
+.summary-icon.icon-green {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.summary-icon.icon-red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.summary-info span {
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.summary-info h2 {
+    font-size: 30px;
+    color: var(--text);
+    margin-top: 4px;
+    font-weight: 700;
+}
+
+/* ======================================================
+   TABLE & DETAIL (CLEAN MODERN)
+====================================================== */
+.table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.custom-table th {
+    background: #f8fafc;
+    color: var(--text-light);
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.custom-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text);
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.custom-table tr:hover td {
+    background-color: #f8fafc;
+}
+
+/* --- Keterangan ID Styling --- */
+.td-keterangan {
+    min-width: 250px;
+}
+
+.id-item {
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.id-item:last-child {
+    margin-bottom: 0;
+}
+
+.id-label {
+    background: #f1f5f9;
+    color: var(--text-light);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 65px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.id-value {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.td-rekomendasi {
+    min-width: 200px;
+    color: var(--text-light);
+    line-height: 1.5;
+    font-style: italic;
+}
+
+/* ======================================================
+   UTILITIES & STATUS
+====================================================== */
+.text-center { text-align: center; }
+.fw-bold { font-weight: 700; }
+.text-green { color: #10b981 !important; font-weight: 700; }
+.text-red { color: #ef4444 !important; font-weight: 700; }
+.text-orange { color: #f59e0b !important; }
+
+/* Menyorot Skor Akhir */
+.skor-highlight {
+    font-size: 14px;
+    color: var(--accent);
+    background: #eff6ff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #bfdbfe;
+    display: inline-block;
+    font-weight: 700;
+}
+
+/* Badges Status */
+.badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+/* ======================================================
+   EMPTY STATES
+====================================================== */
+.empty-state-card {
+    text-align: center;
+    background: var(--card);
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 60px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.empty-state-card i {
+    font-size: 45px;
+    color: #94a3b8;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.empty-state-card h3 {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.empty-state-card p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.empty-state i {
+    font-size: 35px;
+    color: #cbd5e1;
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+@media(max-width: 992px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .hero-card { flex-direction: column; align-items: flex-start; }
+    .filter-card { width: 100%; }
+}
+@media(max-width: 768px) {
+    .hero-left h1 { font-size: 26px; }
+}
+
+.unit-code{
+    display:inline-block;
+    padding:4px 10px;
+    background:#eef4ff;
+    color:#2563eb;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.unit-name{
+    font-size:14px;
+    font-weight:600;
+    color:#1e293b;
+    line-height:1.5;
+}
+
+.score-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:60px;
+    padding:8px 12px;
+    border-radius:10px;
+    background:#eff6ff;
+    color:#2563eb;
+    font-weight:700;
+    border:1px solid #bfdbfe;
+}
+
+/* ==========================
+   PAGINATION
+========================== */
+/* ==========================================
+   TABLE FOOTER
+========================================== */
+
+.table-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:16px 22px;
+
+    border-top:1px solid #edf2f7;
+
+    background:#fbfcfe;
+
+    margin-top:0;
+
+}
+
+.pagination-info{
+
+    font-size:14px;
+
+    color:#64748b;
+
+}
+
+.pagination-info strong{
+
+    color:#0f172a;
+
+    font-weight:700;
+
+}
+
+.pagination{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+}
+
+.page-btn{
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:10px;
+
+    border:1px solid #d9e3ef;
+
+    background:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-decoration:none;
+
+    color:#475569;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.2s;
+
+}
+
+.page-btn:hover{
+
+    background:#edf4ff;
+
+    border-color:#3b82f6;
+
+    color:#2563eb;
+
+}
+
+.page-btn.active{
+
+    background:#1e3a5f;
+
+    border-color:#1e3a5f;
+
+    color:#fff;
+
+}
+
+.dots{
+
+    width:24px;
+
+    text-align:center;
+
+    color:#94a3b8;
+
+    font-weight:700;
+
+}

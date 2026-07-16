@@ -47,16 +47,6 @@ if (!$result) {
 
         <div class="page-card">
             <div class="page-header">
-                <div class="page-title">
-                    <h2>Daftar User</h2>
-                    <p>Kelola akun administrator, assessor, dan pimpinan yang memiliki akses ke sistem.</p>
-                </div>
-                <a href="tambah_user.php" class="btn-primary">
-                    + Tambah User
-                </a>
-            </div>
-
-            <div class="table-tools">
                 <form method="GET" action="">
                     <input 
                         type="text" 
@@ -67,6 +57,10 @@ if (!$result) {
                         onchange="this.form.submit()"
                     >
                 </form>
+
+                <a href="tambah_user.php" class="btn-primary">
+                    + Tambah User
+                </a>
             </div>
 
             <div class="table-wrapper">

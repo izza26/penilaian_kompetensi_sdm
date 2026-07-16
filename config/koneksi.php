@@ -1,6 +1,6 @@
 <?php
 // Railway akan membaca variabel DB_PASSWORD dari tab Variables yang tadi kita isi
-$password = getenv('DB_PASSWORD'); 
+$password = "AdminSKKNI2026"; 
 
 $conn_string = "host=aws-1-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres user=postgres.wdixqhymjgbruywjcamn password=$password sslmode=require";
 
