@@ -19,7 +19,7 @@
 
 <div class="app">
     <!-- Memanggil file sidebar yang tadi dibuat -->
-    @include('layouts.sidebar_' . Auth::user()->role)
+    @include('layouts.sidebar_' . strtolower(Auth::user()->role))
 
     <div class="main-content">
         <!-- Memanggil file header yang tadi dibuat -->
