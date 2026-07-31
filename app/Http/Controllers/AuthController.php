@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash; // <-- Wajib ditambahkan untuk memanggil fungsi Hash
 use App\Models\Pegawai;
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
-        // Akan memanggil file login.blade.php nanti
         return view('auth.login'); 
     }
 
@@ -24,25 +24,43 @@ class AuthController extends Controller
         // Cari pegawai berdasarkan nip_nik (username)
         $pegawai = Pegawai::where('nip_nik', $request->username)->first();
 
-        // Cek manual karena password di DB adalah plain text (tidak di-hash)
-        if ($pegawai && $pegawai->password === $request->password) {
-            
-            // Daftarkan session login ke sistem Laravel
-            Auth::login($pegawai);
+        if ($pegawai) {
+            $isPasswordValid = false;
 
-            $role = trim(strtolower($pegawai->role));
+            // LOGIKA BARU: Cek apakah password di database sudah berupa Hash (dimulai dengan $2y$)
+            if (str_starts_with($pegawai->password, '$2y$')) {
+                // Gunakan Hash::check untuk membandingkan password yang dienkripsi
+                $isPasswordValid = Hash::check($request->password, $pegawai->password);
+            } else {
+                // Jika belum di-hash, cek dengan plain text (untuk user dari sistem lama)
+                if ($pegawai->password === $request->password) {
+                    $isPasswordValid = true;
+                    
+                    // OTOMATIS MIGRASI: Langsung update password plain text ini menjadi Hash 
+                    // agar ke depannya akun ini lebih aman dan menggunakan format baru
+                    $pegawai->update(['password' => Hash::make($request->password)]);
+                }
+            }
 
-            // Redirect sesuai role
-            if ($role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            } elseif ($role === 'pegawai') {
-                return redirect()->route('pegawai.dashboard');
-            } elseif ($role === 'pimpinan') {
-                return redirect()->route('pimpinan.dashboard');
+            // Jika password terbukti valid (baik dari hash maupun plain text)
+            if ($isPasswordValid) {
+                // Daftarkan session login ke sistem Laravel
+                Auth::login($pegawai);
+
+                $role = trim(strtolower($pegawai->role));
+
+                // Redirect sesuai role
+                if ($role === 'admin') {
+                    return redirect()->route('admin.dashboard');
+                } elseif ($role === 'pegawai') {
+                    return redirect()->route('pegawai.dashboard');
+                } elseif ($role === 'pimpinan') {
+                    return redirect()->route('pimpinan.dashboard');
+                }
             }
         }
 
-        // Jika username/password salah
+        // Jika username tidak ditemukan atau password salah
         return back()->with('error', 'Username atau Password salah!');
     }
 
@@ -62,9 +80,8 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // Validasi input dari form
         $request->validate([
-            'nip_nik'      => 'required|unique:pegawai,nip_nik', // Otomatis ngecek duplikat di DB!
+            'nip_nik'      => 'required|unique:pegawai,nip_nik',
             'pegawai_nama' => 'required',
             'email'        => 'required|email',
             'no_hp'        => 'required',
@@ -73,14 +90,11 @@ class AuthController extends Controller
             'unit_kerja'   => 'required',
             'password'     => 'required|min:6',
         ], [
-            // Pesan error custom jika NIK sudah ada
             'nip_nik.unique' => 'Pendaftaran Gagal! NIP / NIK tersebut sudah terdaftar.'
         ]);
 
-        // Generate ID Baru (Cari ID tertinggi + 1)
         $new_id = Pegawai::max('pegawai_id') + 1;
 
-        // Insert data ke database menggunakan Eloquent
         Pegawai::create([
             'pegawai_id'   => $new_id,
             'nip_nik'      => $request->nip_nik,
@@ -89,12 +103,11 @@ class AuthController extends Controller
             'no_hp'        => $request->no_hp,
             'jabatan'      => $request->jabatan,
             'unit_kerja'   => $request->unit_kerja,
-            'password'     => $request->password, // Tetap plain text menyesuaikan sistem lama
+            'password'     => Hash::make($request->password), // <-- PERBAIKAN: Ubah menjadi Hash
             'role'         => trim(strtolower($request->role)),
             'status_aktif' => 'Aktif'
         ]);
 
-        // Lempar kembali ke halaman login dengan pesan sukses
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 }
