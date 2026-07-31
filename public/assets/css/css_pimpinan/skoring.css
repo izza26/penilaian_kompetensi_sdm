@@ -1,0 +1,49 @@
+:root{
+    /* PRIMARY COLORS */
+    --primary:#182A3A;       /* Yankees Blue */
+    --secondary:#425B6F;     /* Deep Space Sparkle */
+    --accent:#A08348;        /* Dark Tan */
+    --light-accent:#D6BB80;  /* Burlywood */
+
+    /* SUPPORT */
+    --bg:#F7F8FA;
+    --card:#FFFFFF;
+    --text:#263238;
+    --text-light:#6B7280;
+    --border:#E5E7EB;
+}
+
+body{
+    background:var(--bg);
+}
+
+.search-bar { background: #fff; padding: 12px 18px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 5px rgba(0,0,0,0.02);}
+.search-bar input { width: 100%; border: none; outline: none; font-family: inherit; font-size: 13px; color: #334155;}
+
+/* Card Utama (Pegawai) */
+.pegawai-card { background: #fff; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; overflow: hidden;}
+
+/* Header Pegawai (Level 1) */
+.pegawai-header { background: #f8fafc; padding: 15px 20px; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;}
+.pegawai-header h3 { margin: 0; font-size: 16px; color: #0f172a; display: flex; align-items: center; gap: 8px;}
+.pegawai-header span { font-size: 13px; font-weight: 500; background: #e2e8f0; padding: 4px 10px; border-radius: 20px;}
+
+/* Sub-Bagian Unit (Level 2) */
+.unit-section { padding: 20px; border-bottom: 1px dashed #cbd5e1; }
+.unit-section:last-child { border-bottom: none; }
+.unit-section-header { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 15px;}
+
+.header-info-unit { flex: 1; }
+.header-info-unit h4 { margin: 0 0 4px 0; font-size: 14px; color: #1e293b; line-height: 1.4;}
+.header-info-unit span { font-size: 12px; font-weight: 700; color: #A08348; display: flex; align-items: center; gap: 5px;}
+
+/* Table Styles */
+.styled-table { width: 100%; border-collapse: collapse; }
+.styled-table th { color: #64748b; padding: 10px 15px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; background: transparent;}
+.styled-table td { padding: 12px 15px; border-bottom: 1px solid #f1f5f9; vertical-align: top; font-size: 13px; color: #334155;}
+.styled-table tr:last-child td { border-bottom: none;}
+.styled-table tr:hover { background-color: #f8fafc; }
+
+/* Buttons */
+.btn-buka { background: #fce4e4; color: #be123c; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap;}
+.btn-buka:hover { background: #fbcfe8; }

@@ -1,0 +1,67 @@
+@extends('layouts.app')
+@section('title', 'Detail Pegawai')
+@section('page_title', 'Detail Pegawai')
+@section('page_subtitle', 'Informasi lengkap pegawai Museum Geologi')
+@section('back_url', route('admin.pegawai.index'))
+
+@push('styles')
+    <style>
+        .page-card { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; }
+        .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px; }
+        .page-title h2 { margin: 0 0 5px 0; font-size: 22px; color: #0f172a; font-weight: 700; }
+        .page-title p { margin: 0; font-size: 14px; color: #64748b; }
+        
+        .btn-kembali { background: #f1f5f9; color: #475569; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.2s; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 6px;}
+        .btn-kembali:hover { background: #e2e8f0; color: #0f172a; }
+
+        .pegawai-summary { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
+        .avatar { width: 75px; height: 75px; background: #b56c35; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; font-weight: 700; }
+        .pegawai-info h3 { margin: 0 0 5px 0; font-size: 20px; color: #0f172a; font-weight: 700;}
+        .pegawai-info p { margin: 0 0 8px 0; font-size: 14px; color: #64748b; }
+        .status-badge { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block;}
+        
+        .detail-divider { height: 1px; background: #e2e8f0; margin-bottom: 25px; }
+        
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .detail-item { display: flex; flex-direction: column; gap: 5px; }
+        .detail-item label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+        .detail-item span { font-size: 15px; color: #0f172a; font-weight: 600; }
+    </style>
+@endpush
+
+@section('content')
+@php
+    $kata_nama = explode(' ', trim($pegawai->pegawai_nama));
+    $inisial = count($kata_nama) >= 2 ? strtoupper(substr($kata_nama[0], 0, 1) . substr($kata_nama[1], 0, 1)) : strtoupper(substr($kata_nama[0], 0, 2));
+@endphp
+<div class="page-card">
+    <div class="page-header">
+        <div class="page-title">
+            <h2>Detail Pegawai</h2>
+            <p>Informasi lengkap pegawai yang terlibat dalam proses penilaian kompetensi.</p>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="pegawai-summary">
+            <div class="avatar">{{ $inisial }}</div>
+            <div class="pegawai-info">
+                <h3>{{ $pegawai->pegawai_nama }}</h3>
+                <p>{{ $pegawai->jabatan ?? '-' }}</p>
+                <span class="status-badge">{{ $pegawai->status_aktif ?? 'Aktif' }}</span>
+            </div>
+        </div>
+
+        <div class="detail-divider"></div>
+
+        <div class="detail-grid">
+            <div class="detail-item"><label>NIP</label><span>{{ $pegawai->nip_nik }}</span></div>
+            <div class="detail-item"><label>Nama Pegawai</label><span>{{ $pegawai->pegawai_nama }}</span></div>
+            <div class="detail-item"><label>Email</label><span>{{ $pegawai->email ?? '-' }}</span></div>
+            <div class="detail-item"><label>No. WhatsApp</label><span>{{ $pegawai->no_hp ?? '-' }}</span></div>
+            <div class="detail-item"><label>Jabatan Teknis</label><span>{{ $pegawai->jabatan ?? '-' }}</span></div>
+            <div class="detail-item"><label>Unit Kerja</label><span>{{ $pegawai->unit_kerja }}</span></div>
+        </div>
+    </div>
+</div>
+@endsection

@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --bg-body: #f1f5f9; /* Ini kunci background jadi abu-abu kebiruan soft */
+    --sidebar-bg-top: #1B2D46; /* Yankees Blue */
+    --sidebar-bg-bot: #0f1c2e; /* Darker Blue */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ================= BACKGROUND GLOBAL FIX ================= */
+body { 
+    font-family: 'Poppins', sans-serif; 
+    background-color: var(--bg-body) !important; 
+    color: #0f172a; 
+}
+
+.app { 
+    display: flex; 
+    width: 100%; 
+    min-height: 100vh; 
+    background-color: var(--bg-body) !important; 
+}
+
+/* ================= CONTENT SHIFT ================= */
+.main-content {
+    margin-left: 280px !important; /* Lebar sidebar */
+    padding: 20px 30px !important;
+    width: calc(100% - 280px);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= SHADOW & CARD FIX ================= */
+.page-card, 
+.pegawai-kpi-card, 
+.progress-card, 
+.profile-summary, 
+.timeline-card, 
+.table-card, 
+
+
+.pegawai-kpi-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* ================= MODERN SIDEBAR ================= */
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, var(--sidebar-bg-top), var(--sidebar-bg-bot));
+    color: white;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+}
+
+/* HEADER ATAS SIDEBAR */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 15px !important; /* Jarak antara ikon dan teks */
+    padding-top: 15px !important; /* INI SOLUSI BIAR GAK MEPET ATAS */
+    padding-bottom: 20px !important;
+    margin-bottom: 10px !important;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.sidebar-logo {
+    width: 42px !important;
+    height: 42px !important;
+    background: rgba(214, 187, 128, 0.15); /* Efek kotak transparan warna emas */
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.sidebar-logo i {
+    font-size: 22px !important;
+    color: #D6BB80; /* Warna emas Burlywood senada dengan menu */
+}
+
+.sidebar-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.sidebar-title-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-title {
+    font-size: 16px !important;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 2px;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-subtitle {
+    font-size: 11px !important;
+    margin-top: 2px !important;
+    line-height: 1.4;
+    color: #cbd5e1;
+}
+
+/* SECTION MENU */
+.sidebar-menu {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none; /* Hilangkan scrollbar Firefox */
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    display: none; /* Hilangkan scrollbar Chrome/Webkit */
+}
+
+.sidebar-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.menu-section {
+    font-size: 11px !important;
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 12px 0 8px !important;
+    text-transform: uppercase;
+}
+
+/* MENU ITEM */
+.sidebar-menu li {
+    margin-bottom: 5px !important;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 42px !important;
+    padding: 0 14px !important;
+    border-radius: 10px !important;
+    text-decoration: none;
+    color: #e2e8f0;
+    font-size: 13px !important;
+    font-weight: 500;
+    transition: .3s ease;
+}
+
+.sidebar-menu a i {
+    font-size: 16px !important;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* HOVER MENU */
+.sidebar-menu a:hover {
+    background: rgba(255,255,255,.08);
+    transform: translateX(4px);
+    color: #fff;
+}
+
+/* ACTIVE MENU */
+.sidebar-menu a.active {
+    background: #D6BB80 !important; /* Warna Burlywood/Emas */
+    color: #0f172a !important; /* Teks jadi gelap agar kontras dan terbaca jelas */
+    box-shadow: 0 4px 15px rgba(214, 187, 128, 0.45) !important; /* Bayangan glowing warna emas */
+    font-weight: 700 !important;
+}
+
+/* Pastikan icon di menu aktif juga berwarna gelap */
+.sidebar-menu a.active i {
+    color: #0f172a !important;
+}
+
+/* FOOTER / LOGOUT */
+.sidebar-footer {
+    padding-top: 12px !important;
+    border-top: 1px solid rgba(255,255,255,.08);
+    margin-top: auto;
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: #e2e8f0;
+    padding: 10px 14px !important;
+    border-radius: 10px;
+    transition: .3s;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.logout-link i {
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.logout-link:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateX(4px);
+}

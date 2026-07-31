@@ -1,0 +1,105 @@
+:root{
+    /* PRIMARY COLORS */
+    --primary:#182A3A;       /* Yankees Blue */
+    --secondary:#425B6F;     /* Deep Space Sparkle */
+    --accent:#A08348;        /* Dark Tan */
+    --light-accent:#D6BB80;  /* Burlywood */
+    --smoke: #7A7E74;
+
+    /* SUPPORT */
+    --bg:#F7F8FA;
+    --card:#FFFFFF;
+    --text:#263238;
+    --text-light:#6B7280;
+    --border:#E5E7EB;
+}
+
+body{
+    background:var(--bg);
+}
+
+.page-card { padding: 25px; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+/* TABEL UTAMA (LEVEL 1) */
+.styled-table { width: 100%; border-collapse: collapse; }
+
+.styled-table th { 
+    background-color: #f8fafc; 
+    color: #475569; 
+    padding: 12px 15px; 
+    border-bottom: 2px solid #e2e8f0;
+    text-align: center; 
+    font-size: 13px; /* <-- INI UNTUK KECILIN FONT HEADER TABEL */
+    font-weight: 700;
+    letter-spacing: 0.5px; /* Tambahan dikit biar teksnya lega */
+}
+
+.styled-table td { 
+    padding: 12px 15px; 
+    border-bottom: 1px solid #e2e8f0; 
+    vertical-align: middle; 
+    font-size: 13px; /* <-- INI UNTUK KECILIN FONT ISI TABEL */
+    color: #334155; 
+}
+
+.clickable-row { cursor: pointer; transition: background-color 0.2s; }
+.clickable-row:hover { background-color: #f8fafc; }
+.row-expanded { background-color: #f1f5f9 !important; border-left: 4px solid #425B6F; }
+.clickable-row { cursor: pointer; transition: background-color 0.2s; }
+.clickable-row:hover { background-color: #f8fafc; }
+.row-expanded { background-color: #f1f5f9 !important; border-left: 4px solid #425B6F; }
+
+/* CONTAINER ELEMEN (LEVEL 2) */
+.sub-table-container { display: none; background: #f8fafc; }
+.elemen-wrapper { padding: 20px; border-bottom: 1px solid #cbd5e1; }
+.elemen-title-header { display: flex; justify-content: space-between; align-items: center; margin: 0 0 15px 0; font-size: 13px; color: #64748b; font-weight: 600; }
+
+.elemen-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+.elemen-header { display: flex; align-items: flex-start; padding: 15px; cursor: pointer; border-left: 4px solid #3498db; transition: 0.2s; }
+.elemen-header:hover { background-color: #f1f5f9; }
+.elemen-info { flex: 1; margin-left: 15px; }
+.elemen-info h4 { margin: 0 0 5px 0; font-size: 14px; color: #1e293b; line-height: 1.4; }
+
+/* TABEL AKTIVITAS (LEVEL 3) */
+.aktivitas-container { display: none; padding: 15px; border-top: 1px solid #e2e8f0; background: #fff; }
+.clean-table { width: 100%; border-collapse: collapse; }
+.clean-table th { background: transparent; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 8px 10px; text-align: left; border-bottom: 2px solid #f1f5f9; }
+.clean-table td { padding: 12px 10px; font-size: 13px; color: #334155; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+.clean-table tr:last-child td { border-bottom: none; }
+
+/* BUTTONS */
+.btn-action { background: none; border: none; padding: 5px; cursor: pointer; border-radius: 4px; font-size: 14px; transition: 0.2s; }
+.btn-edit { color: #f39c12; } .btn-edit:hover { background: #fef5e7; }
+.btn-delete { color: #e74c3c; } .btn-delete:hover { background: #fdedec; }
+
+/* Tombol Tambah Kecil (Untuk Elemen & Aktivitas di dalam tabel) */
+.btn-add { background: #bda572; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.2s; font-weight: bold;}
+.btn-add:hover { background: #A08348; }
+
+/* Tombol Tambah Utama (Untuk "Tambah Unit Baru" di atas) */
+.btn-add-main { background: #bda572; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+.btn-add-main:hover { background: #A08348; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); }
+
+.badge-evidence { background: #fff3cd; color: #d35400; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.no-propagate { position: relative; z-index: 10; }
+
+/* MODAL */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+.modal-content { background-color: #fefefe; margin: 5% auto; padding: 25px; border-radius: 12px; width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative;}
+.close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+.close-modal:hover { color: black; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: #444;}
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; font-family: inherit;}
+.btn-submit { background: #bda572; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px;}
+.btn-submit:hover { background: #A08348; }
+
+.badge-jenis{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:500;
+}

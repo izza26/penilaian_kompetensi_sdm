@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.page-card{
+    background:#fff;
+    border:1px solid #E8E2DB;
+    border-radius:24px;
+    padding:25px;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:25px;
+}
+
+.page-title h2{
+    font-size:28px;
+    font-weight:700;
+    color:#2B2926;
+    margin-bottom:8px;
+}
+
+.page-title p{
+    color:#777;
+    margin-top:5px;
+}
+
+.btn-primary{
+    background:#A86432;
+    color:#fff;
+    text-decoration:none;
+    padding:14px 24px;
+    border-radius:14px;
+    font-weight:600;
+}
+
+.table-tools{
+    margin-bottom:20px;
+}
+
+.search-input{
+    width:350px;
+    height:46px;
+    border:1px solid #E6E1DA;
+    border-radius:14px;
+    padding:0 16px;
+    font-size:14px;
+    outline:none;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.data-table thead{
+    background:#F4F1ED;
+}
+
+.data-table th{
+    padding:18px 14px;
+    text-align:left;
+    font-size:15px;
+    font-weight:600;
+}
+
+.data-table td{
+    padding:24px 14px;
+    border-bottom:1px solid #ECE8E3;
+    vertical-align:middle;
+}
+
+.status{
+    background:#EAF7EE;
+    color:#1D9A56;
+    padding:8px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.action-btn{
+    width:36px;
+    height:36px;
+    border:none;
+    border-radius:12px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    margin-right:6px;
+}
+
+.view-btn{
+    background:#EAF0FF;
+    color:#3F6AE0;
+}
+
+.edit-btn{
+    background:#FFF3E6;
+    color:#F08A00;
+}
+
+.delete-btn{
+    background:#FFECEC;
+    color:#FF4D4F;
+    cursor:pointer;
+}
+
+.pagination{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:25px;
+}
+
+.page-btn{
+    border:none;
+    background:#F3F0EC;
+    padding:12px 18px;
+    border-radius:12px;
+    cursor:pointer;
+}
+
+.page-numbers{
+    display:flex;
+    gap:10px;
+}
+
+.page-number{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:12px;
+    background:#F3F0EC;
+    cursor:pointer;
+}
+
+.page-number.active{
+    background:#A86432;
+    color:#fff;
+}
+
+.action-group{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.action-group .action-btn{
+    flex-shrink:0;
+}
+
+.data-table td:last-child{
+    width:140px;
+}

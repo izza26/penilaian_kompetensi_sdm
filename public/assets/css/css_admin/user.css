@@ -1,0 +1,45 @@
+/* ==========================
+   ROLE BADGE
+========================== */
+
+.role{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.admin-role{
+
+    background:#E8EEF9;
+
+    color:#3764C7;
+
+}
+
+.assessor-role{
+
+    background:#F3EBE3;
+
+    color:#A15D33;
+
+}
+
+.pimpinan-role{
+
+    background:#F0E9F8;
+
+    color:#7A4CC7;
+
+}

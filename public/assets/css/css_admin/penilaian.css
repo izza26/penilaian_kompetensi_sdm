@@ -1,0 +1,214 @@
+.page-header{
+    margin-bottom:28px;
+}
+
+.page-title h2{
+    font-size:28px;
+    font-weight:700;
+    color:#2B2926;
+    margin-bottom:8px;
+}
+
+.page-title p{
+    margin-top:5px;
+    color:#6F6A64;
+}
+
+.table-tools{
+    margin-bottom:24px;
+}
+
+.search-input{
+    width:350px;
+    border:1px solid #E6E1DA;
+    border-radius:14px;
+    padding:12px 15px;
+    font-family:'Poppins',sans-serif;
+    font-size:14px;
+    background:#fff;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.data-table thead th{
+    background:#F3EFEA;
+    padding:15px;
+    text-align:left;
+    font-size:14px;
+    font-weight:600;
+    color:#2B2926;
+}
+
+.data-table tbody td{
+    padding:15px;
+    border-bottom:1px solid #EFEAE4;
+    vertical-align:middle;
+    color:#2B2926;
+    font-size:14px;
+}
+
+.data-table tbody tr:hover{
+    background:#FCFBF9;
+}
+
+/* STATUS */
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:110px;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.pending{
+    background:#FFF1D6;
+    color:#D48A00;
+}
+
+.success{
+    background:#DFF2E6;
+    color:#149954;
+}
+
+/* KOLOM AKSI */
+
+.action-cell{
+    width:180px;
+}
+
+.action-group{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-height:42px;
+}
+
+.action-btn{
+    width:38px;
+    height:38px;
+    min-width:38px;
+    border:none;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    transition:.2s;
+}
+
+.action-btn:hover{
+    transform:translateY(-2px);
+}
+
+.view-btn{
+    background:#EAF0FF;
+    color:#3F6AE0;
+}
+
+.edit-btn{
+    background:#FFF3E6;
+    color:#F08A00;
+}
+
+/* MULAI PENILAIAN */
+
+.btn-start-assessment{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    padding:8px 14px;
+
+    border-radius:12px;
+
+    background:#E8F7ED;
+    color:#1FA750;
+
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.btn-start-assessment:hover{
+    transform:translateY(-2px);
+}
+
+/* PAGINATION */
+
+.pagination{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:28px;
+}
+
+.page-btn{
+    border:none;
+    background:#F3EFEA;
+    padding:12px 18px;
+    border-radius:12px;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+    font-size:14px;
+    color:#4F4A45;
+}
+
+.page-btn:hover{
+    background:#ECE5DD;
+}
+
+.page-numbers{
+    display:flex;
+    gap:10px;
+}
+
+.page-number{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:12px;
+    background:#F3EFEA;
+    font-weight:600;
+    cursor:pointer;
+    color:#2B2926;
+}
+
+.page-number.active{
+    background:#B16A35;
+    color:#fff;
+}
+
+.page-number:hover:not(.active){
+    background:#ECE5DD;
+}
+
+@media(max-width:768px){
+
+    .search-input{
+        width:100%;
+    }
+
+    .badge{
+        min-width:auto;
+        padding:8px 14px;
+        font-size:13px;
+    }
+
+    .action-cell{
+        width:auto;
+    }
+
+}
