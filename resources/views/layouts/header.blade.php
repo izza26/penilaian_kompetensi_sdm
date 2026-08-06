@@ -22,7 +22,7 @@
     .profile-info { display: flex; flex-direction: column; align-items: flex-end; }
     .profile-name { font-size: 13px; font-weight: 700; color: #0f172a; margin: 0; }
     .profile-role { font-size: 11px; font-weight: 500; color: #64748b; margin-top: 2px;}
-    .profile-avatar { width: 38px; height: 38px; font-size: 13px; background-color: #1B2D46; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .profile-avatar { width: 38px; height: 38px; font-size: 13px; background-color: #183851; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
 </style>
 
 <div class="top-header">
@@ -52,7 +52,7 @@
         <a href="{{ route(strtolower(Auth::user()->role) . '.profil.index') }}" class="profile-box" title="Lihat Profil Saya">
             <div class="profile-info">
                 <span class="profile-name">{{ Auth::user()->pegawai_nama }}</span>
-                <span class="profile-role">{{ ucfirst(Auth::user()->role) }}</span>
+                <span class="profile-role">{{ Auth::user()->jabatan ?? ucfirst(Auth::user()->role) }}</span>
             </div>
 
             <!-- Inisial Nama Otomatis -->

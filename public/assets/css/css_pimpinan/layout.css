@@ -3,14 +3,7 @@
 /* ===== RAPATKAN SIDEBAR AGAR FIT TANPA SCROLL ===== */
 
 .sidebar{
-
-    background:
-    linear-gradient(
-    180deg,
-    #0F172A,
-    #1E293B
-    );
-
+    background: #183851 !important;
 }
 
 /* HEADER ATAS */
@@ -148,19 +141,11 @@
 
 /* active menu */
 
-.sidebar-menu a.active{
-
-    background:
-    linear-gradient(
-    135deg,
-    #A08348,
-    #A08348
-    );
-
-    box-shadow:
-    0 8px 25px
-    #7A7E74(37,99,235,.35);
-
+.sidebar-menu a.active {
+    background: #e7dabd !important;
+    color: #0f172a !important; /* Teks dihitamkan sedikit agar terbaca di atas warna terang */
+    box-shadow: 0 4px 15px rgba(231, 218, 189, 0.45) !important; /* Format shadow diperbaiki */
+    font-weight: 700 !important;
 }
 
 /* FOOTER */

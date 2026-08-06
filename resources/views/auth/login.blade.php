@@ -46,10 +46,10 @@
                 @csrf <!-- Wajib ada di Laravel untuk mencegah serangan CSRF -->
 
                 <div class="input-group">
-                    <label>Username (NIP)</label>
+                    <label>Username</label>
                     <div class="input-wrapper">
                         <i class="bi bi-person-fill"></i>
-                        <input type="text" name="username" placeholder="Masukkan NIP atau NIK" required autocomplete="off">
+                        <input type="text" name="username" placeholder="Masukkan Username atau NIP" required autocomplete="off">
                     </div>
                 </div>
 

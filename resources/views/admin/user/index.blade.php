@@ -11,6 +11,8 @@
         .admin-role { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
         .assessor-role { background: #fef9e8; color: #b45309; border: 1px solid #fde68a; }
         .pimpinan-role { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+        /* Tampilan Khusus Badge Role Pegawai (Warna Kuning/Emas) */
+        .pegawai-role { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
     </style>
 @endpush
 
@@ -41,19 +43,23 @@
                         if (str_contains($role_db, 'admin')) $role_class = 'admin-role';
                         elseif (str_contains($role_db, 'assessor')) $role_class = 'assessor-role';
                         elseif (str_contains($role_db, 'pimpinan')) $role_class = 'pimpinan-role';
+                        elseif (str_contains($role_db, 'pegawai')) $role_class = 'pegawai-role';
                     @endphp
                     <tr>
                         <td>{{ $users->firstItem() + $index }}</td>
                         <td>{{ $user->username }}</td>
-                        <td>{{ $user->nama_lengkap }}</td>
+                        <td>{{ $user->nama_lengkap ?? $user->pegawai_nama }}</td>
                         <td><span class="role {{ $role_class }}">{{ ucwords($user->role) }}</span></td>
-                        <td><span class="status-badge aktif">{{ $user->status ?? 'Aktif' }}</span></td>
+                        <td><span class="status-badge aktif">{{ $user->status ?? $user->status_aktif ?? 'Aktif' }}</span></td>
                         <td class="action-buttons">
-                            <a href="{{ route('admin.user.show', $user->id) }}" class="action-btn view-btn"><i class="bi bi-eye"></i></a>
-                            <a href="{{ route('admin.user.edit', $user->id) }}" class="action-btn edit-btn"><i class="bi bi-pencil-square"></i></a>
-                            <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" style="display:inline;">
+                            <!-- ID Diamankan, TAPI CLASS UI BUTTON TETAP MEMAKAI BAWAAN ASLI -->
+                            @php $idAman = $user->id ?? $user->user_id ?? $user->pegawai_id; @endphp
+                            
+                            <a href="{{ route('admin.user.show', $idAman) }}" class="action-btn view-btn"><i class="bi bi-eye"></i></a>
+                            <a href="{{ route('admin.user.edit', $idAman) }}" class="action-btn edit-btn"><i class="bi bi-pencil-square"></i></a>
+                            <form action="{{ route('admin.user.destroy', $idAman) }}" method="POST" style="display:inline;">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="action-btn delete-btn" onclick="return confirm('Yakin ingin menghapus user {{ $user->username }}?');"><i class="bi bi-trash"></i></button>
+                                <button type="submit" class="action-btn delete-btn" onclick="return confirm('Yakin ingin menghapus user ini?');"><i class="bi bi-trash"></i></button>
                             </form>
                         </td>
                     </tr>

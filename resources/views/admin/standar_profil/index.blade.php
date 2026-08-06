@@ -10,10 +10,10 @@
         .filter-group { flex: 1; }
         .filter-group label { display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px; }
         .filter-group select { width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; background: #f8fafc; font-size: 13px; cursor: pointer; }
-        .filter-group select:focus { border-color: #A08348; background: #fff; }
+        .filter-group select:focus { border-color: #bda572; background: #fff; }
         
-        .btn-tampilkan { background: #d4b572; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; height: 40px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-tampilkan:hover { background: #A08348; }
+        .btn-tampilkan { background: #ebdbb6; color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; height: 40px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-tampilkan:hover { background: #bda572; }
 
         .table-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); overflow: hidden; padding: 20px; }
         .styled-table { width: 100%; border-collapse: collapse; }
@@ -24,7 +24,7 @@
         .input-target:focus { border-color: #3b82f6; }
         .select-faktor { padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 12px; outline: none; font-weight: 500; cursor: pointer;}
         
-        .btn-simpan { background: #A08348; color: white; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .btn-simpan { background: #bda572; color: white; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
         .btn-simpan:hover { background: #826835; }
         
         .empty-state { text-align: center; padding: 40px 20px; color: #94a3b8; }
@@ -44,7 +44,7 @@
     <!-- Filter Jabatan -->
     <form action="{{ route('admin.standar_profil.index') }}" method="GET" class="filter-card">
         <div class="filter-group">
-            <label><i class="bi bi-briefcase-fill" style="color: #A08348;"></i> Pilih Jabatan untuk Diatur Targetnya:</label>
+            <label><i class="bi bi-briefcase-fill" style="color: #bda572;"></i> Pilih Jabatan untuk Diatur Targetnya:</label>
             <select name="jabatan" onchange="this.form.submit()">
                 <option value="">-- Silakan Pilih Jabatan --</option>
                 @foreach($list_jabatan as $jab)
@@ -77,7 +77,7 @@
                             @foreach ($list_aktivitas as $index => $ak)
                             <tr>
                                 <td style="text-align: center; font-weight: 600; color: #64748b;">{{ $index + 1 }}</td>
-                                <td><span style="font-size: 11px; font-weight: 800; color: #A08348; background: #fffbeb; padding: 4px 8px; border-radius: 6px;">{{ $ak->kode_unit }}</span></td>
+                                <td><span style="font-size: 11px; font-weight: 800; color: #183851; background: #fffbeb; padding: 4px 8px; border-radius: 6px;">{{ $ak->kode_unit }}</span></td>
                                 <td style="line-height: 1.5; font-weight: 500;">{{ $ak->detail_aktivitas }}</td>
                                 <td style="text-align: center;">
                                     <input type="number" name="target[{{ $ak->aktivitas_id }}]" class="input-target" min="1" max="5" value="{{ $ak->target_skor ?? 4 }}" required>

@@ -20,7 +20,7 @@ body {
    WELCOME CARD (GOLD ELEGANT)
 ================================================== */
 .welcome-card {
-    background: linear-gradient(135deg, #D6BB80 0%, #A08348 100%);
+    background: linear-gradient(135deg, #ebdbb6 0%, #D6BB80 100%);
     color: #fff;
     border-radius: 12px;
     padding: 20px 25px;
@@ -33,9 +33,9 @@ body {
     overflow: hidden;
 }
 .welcome-text { position: relative; z-index: 2; }
-.welcome-text h2 { margin: 0 0 6px 0; font-size: 20px; font-weight: 700; }
-.welcome-text p { margin: 0; font-size: 13px; opacity: 0.9; line-height: 1.4; max-width: 600px;}
-.welcome-date { display: inline-block; background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 11px; margin-bottom: 10px; font-weight: 600; color: #fff;}
+.welcome-text h2 { margin: 0 0 6px 0; font-size: 20px; font-weight: 700; color: black}
+.welcome-text p { margin: 0; font-size: 13px; opacity: 0.9; line-height: 1.4; max-width: 600px; color: black}
+.welcome-date { display: inline-block; background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 11px; margin-bottom: 10px; font-weight: 600; color: black;}
 .welcome-icon { font-size: 60px; opacity: 0.1; position: absolute; right: 20px; bottom: -15px; transform: rotate(-10deg); z-index: 1;}
 
 /* =====================================================

@@ -29,18 +29,18 @@
     justify-content: space-between;
     align-items: center;
     gap: 30px;
-    background: linear-gradient(135deg, #D6BB80 0%, #A08348 100%);
+    background: linear-gradient(135deg, #ebdbb6 0%, #D6BB80 100%);
     border-radius: 12px;
     padding: 30px 35px;
     margin-bottom: 30px;
     box-shadow: 0 4px 15px rgba(160, 131, 72, 0.2);
-    color: #fff;
+    color: #000000;
 }
 
 .hero-label {
     display: inline-block;
     background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    color: #000000;
     padding: 6px 14px;
     border-radius: 999px;
     font-size: 12px;
@@ -52,12 +52,12 @@
 .hero-left h1 {
     font-size: 32px;
     margin-bottom: 10px;
-    color: #fff;
+    color: #000000;
     font-weight: 700;
 }
 
 .hero-left p {
-    color: rgba(255, 255, 255, 0.9);
+    color: #000000;
     line-height: 1.6;
     max-width: 600px;
     font-size: 14px;

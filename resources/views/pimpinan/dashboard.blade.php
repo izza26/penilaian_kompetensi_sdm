@@ -45,7 +45,7 @@
     @endif
 
     <!-- WELCOME CARD -->
-    <div class="welcome-card" style="background: linear-gradient(135deg, #D6BB80 0%, #A08348 100%);">
+    <div class="welcome-card" style="background: linear-gradient(135deg, #ebdbb6 0%, #D6BB80 100%);">
         <div class="welcome-text">
             <h2>Halo, {{ $pimpinan->pegawai_nama }}</h2>
             <div class="welcome-date">{{ date('d F Y') }}</div>

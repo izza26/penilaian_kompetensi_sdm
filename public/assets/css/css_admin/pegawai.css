@@ -3,8 +3,8 @@
     --primary: #1B2D46;       /* Yankees Blue */
     --secondary: #425B6F;     /* Deep Space Sparkle */
     --accent: #3b82f6;        /* Modern Blue */
-    --gold: #A08348;          /* Gold */
-    --light-gold: #bda572;    /* Burlywood/Light Gold */
+    --gold: #bda572;          /* Gold */
+    --light-gold: #ebdbb6;    /* Burlywood/Light Gold */
 
     /* SUPPORT */
     --bg: #f8fafc;
@@ -78,7 +78,7 @@ body {
 
 .btn-primary {
     background: var(--light-gold);
-    color: #fff;
+    color: black;
     border: none;
     padding: 10px 16px;
     border-radius: 8px;
@@ -230,3 +230,56 @@ body {
     color: white;
     border-color: var(--primary);
 }
+
+/* --- CUSTOM PAGINATION LARAVEL --- */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 30px 0 10px 0;
+        gap: 8px;
+    }
+    .pagination li {
+        margin: 0;
+        padding: 0;
+        list-style: none; /* Menghilangkan titik hitam yang berantakan */
+    }
+    .pagination li a, 
+    .pagination li span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        padding: 0 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .pagination li a:hover {
+        background: #f8fafc;
+        color: #182A3A;
+        border-color: #94a3b8;
+        transform: translateY(-2px);
+    }
+    /* Halaman yang sedang aktif */
+    .pagination li.active span {
+        background: #ebdbb6; /* Warna emas elegan */
+        color: #ffffff;
+        border-color: #ebdbb6;
+        box-shadow: 0 4px 10px rgba(189, 165, 114, 0.3);
+    }
+    /* Tombol prev/next yang tidak bisa diklik */
+    .pagination li.disabled span {
+        color: #94a3b8;
+        background: #f1f5f9;
+        border-color: #e2e8f0;
+        cursor: not-allowed;
+    }

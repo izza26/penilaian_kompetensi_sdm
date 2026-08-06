@@ -4,17 +4,66 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Pegawai;
 
 class HasilKompetensiController extends Controller
 {
-    // --- 1. TAMPILAN UTAMA (hasil_kompetensi.php) ---
+    private function getFilterBawahan()
+    {
+        $userLogin = Auth::user();
+        if (isset($userLogin->jabatan)) {
+            $pimpinan = $userLogin; 
+        } else {
+            $nip = $userLogin->username ?? $userLogin->nip_nik;
+            $pimpinan = Pegawai::where('nip_nik', $nip)->orWhere('username', $nip)->first();
+        }
+
+        $jabatanPimpinan = trim($pimpinan->jabatan ?? '');
+        $filterJabatanBawahan = [];
+
+        if (str_contains($jabatanPimpinan, 'Kepala Museum')) {
+            $filterJabatanBawahan = ['Koordinator', 'Manajer', 'Kurator'];
+        } elseif (str_contains($jabatanPimpinan, 'Registrasi') || str_contains($jabatanPimpinan, 'Konservasi')) {
+            $filterJabatanBawahan = ['Konservator', 'Register'];
+        } elseif (str_contains($jabatanPimpinan, 'Edukasi') || str_contains($jabatanPimpinan, 'Program Publik')) {
+            $filterJabatanBawahan = ['Edukator', 'Penata Pameran'];
+        } elseif (str_contains($jabatanPimpinan, 'Humas') || str_contains($jabatanPimpinan, 'Pemasaran')) {
+            $filterJabatanBawahan = ['Humas', 'Hubungan Masyarakat'];
+        } elseif (str_contains($jabatanPimpinan, 'Kurator')) {
+            $filterJabatanBawahan = ['Kurator'];
+        }
+
+        return $filterJabatanBawahan;
+    }
+
     public function index(Request $request)
     {
         $filter_periode = $request->periode ?? 'ALL';
         $filter_bulan = $request->bulan ?? 'ALL';
         $filter_tahun = $request->tahun ?? 'ALL';
 
-        $list_periode = DB::table('periode_penilaian')->select('nama_periode')->distinct()->orderBy('nama_periode', 'asc')->get();
+        $filterJabatanBawahan = $this->getFilterBawahan();
+        
+        // KUNCI PERBAIKAN: Gunakan ID agar kebal dari masalah NIP vs Username
+        $userLogin = Auth::user();
+        $idPimpinan = $userLogin->pegawai_id;
+
+        $list_periode = DB::table('pegawai')
+            ->select('jabatan as nama_periode')
+            ->where('pegawai_id', '!=', $idPimpinan) // Pengecualian pakai ID
+            ->where(function($q) use ($filterJabatanBawahan) {
+                if (empty($filterJabatanBawahan)) {
+                    $q->whereRaw('1=0'); 
+                } else {
+                    foreach ($filterJabatanBawahan as $jab) {
+                        $q->orWhere('jabatan', 'LIKE', '%' . $jab . '%');
+                    }
+                }
+            })
+            ->distinct()
+            ->orderBy('jabatan', 'asc')
+            ->get();
         
         $arr_bulan = [
             '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
@@ -25,12 +74,22 @@ class HasilKompetensiController extends Controller
         $tahun_sekarang = date('Y');
         $arr_tahun = range(2024, $tahun_sekarang + 1);
 
-        // Query Builder dengan Filter Dinamis[cite: 31]
         $query = DB::table('penilaian_header as ph')
             ->join('pegawai as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
             ->join('unit_kompetensi as uk', 'ph.kode_unit', '=', 'uk.kode_unit')
             ->where('ph.status', 'Selesai')
+            ->where('p.pegawai_id', '!=', $idPimpinan) // Pengecualian pakai ID
             ->select('ph.penilaian_id', 'ph.pegawai_id', 'p.pegawai_nama', 'p.jabatan', 'ph.kode_unit', 'uk.judul_unit', 'ph.nilai_akhir', 'ph.kategori', 'ph.waktu_submit', 'ph.rekomendasi');
+
+        $query->where(function($q) use ($filterJabatanBawahan) {
+            if (empty($filterJabatanBawahan)) {
+                $q->whereRaw('1=0');
+            } else {
+                foreach ($filterJabatanBawahan as $jab) {
+                    $q->orWhere('p.jabatan', 'LIKE', '%' . $jab . '%');
+                }
+            }
+        });
 
         if ($filter_periode !== 'ALL') {
             $query->where('p.jabatan', $filter_periode);
@@ -44,7 +103,6 @@ class HasilKompetensiController extends Controller
 
         $list_riwayat = $query->orderBy('ph.waktu_submit', 'desc')->get();
 
-        // Kalkulasi Widget[cite: 31]
         $stat_sangat_kompeten = $list_riwayat->where('kategori', 'Sangat Kompeten')->count();
         $stat_kompeten = $list_riwayat->where('kategori', 'Kompeten')->count();
         $stat_cukup_kompeten = $list_riwayat->where('kategori', 'Cukup Kompeten')->count();
@@ -57,7 +115,6 @@ class HasilKompetensiController extends Controller
         ));
     }
 
-    // --- 2. HALAMAN DETAIL (detail_hasil_kompetensi.php) ---
     public function show($id)
     {
         $header = DB::table('penilaian_header as ph')
@@ -76,7 +133,6 @@ class HasilKompetensiController extends Controller
             ->orderBy('ak.aktivitas_id', 'asc')
             ->get();
 
-        // DUMMY LOGIC REKOMENDASI UNTUK PIMPINAN
         $roles = ['Kurator', 'Edukator', 'Konservator', 'Penata Pameran', 'Register', 'Hubungan Masyarakat dan Pemasaran'];
         $match_scores = [];
         
@@ -96,7 +152,6 @@ class HasilKompetensiController extends Controller
         return view('pimpinan.hasil_kompetensi.show', compact('header', 'details', 'match_scores', 'best_match_role', 'is_match'));
     }
 
-    // --- 3. HAPUS PENILAIAN ---
     public function destroy($id)
     {
         DB::table('penilaian_detail')->where('penilaian_id', $id)->delete();
@@ -104,17 +159,32 @@ class HasilKompetensiController extends Controller
         return redirect()->route('pimpinan.hasil_kompetensi.index')->with('success', 'Riwayat penilaian berhasil dihapus permanen.');
     }
 
-    // --- 4. CETAK EXCEL (cetak_excel.php) ---
     public function exportExcel(Request $request)
     {
         $periode = $request->periode ?? 'ALL';
         $nama_file = ($periode !== 'ALL') ? "Rekap_Penilaian_" . str_replace(" ", "_", $periode) . ".xls" : "Rekap_Penilaian_Semua_Pegawai.xls";
 
+        $filterJabatanBawahan = $this->getFilterBawahan();
+        
+        $userLogin = Auth::user();
+        $idPimpinan = $userLogin->pegawai_id;
+
         $query = DB::table('penilaian_header as ph')
             ->join('pegawai as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
             ->join('unit_kompetensi as uk', 'ph.kode_unit', '=', 'uk.kode_unit')
             ->where('ph.status', 'Selesai')
+            ->where('p.pegawai_id', '!=', $idPimpinan) // Pengecualian pakai ID
             ->select('ph.penilaian_id', 'p.pegawai_nama', 'p.jabatan', 'ph.kode_unit', 'uk.judul_unit', 'ph.nilai_akhir', 'ph.kategori', 'ph.rekomendasi', 'ph.waktu_submit');
+
+        $query->where(function($q) use ($filterJabatanBawahan) {
+            if (empty($filterJabatanBawahan)) {
+                $q->whereRaw('1=0');
+            } else {
+                foreach ($filterJabatanBawahan as $jab) {
+                    $q->orWhere('p.jabatan', 'LIKE', '%' . $jab . '%');
+                }
+            }
+        });
 
         if ($periode !== 'ALL') {
             $query->where('p.jabatan', $periode);
@@ -128,7 +198,6 @@ class HasilKompetensiController extends Controller
 
         $list_data = $query->orderBy('p.jabatan', 'asc')->orderBy('p.pegawai_nama', 'asc')->orderBy('ph.waktu_submit', 'desc')->get();
 
-        // Pakai response bawaan Laravel untuk memaksa download
         return response(view('pimpinan.hasil_kompetensi.excel', compact('list_data', 'periode')))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="'.$nama_file.'"')

@@ -4,9 +4,157 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Pegawai;
+use Illuminate\Support\Facades\Auth;
 
 class SkoringController extends Controller
 {
+    public function timSaya(\Illuminate\Http\Request $request)
+    {
+        // 1. Ambil data pimpinan yang login
+        $userLogin = \Illuminate\Support\Facades\Auth::user();
+        if (isset($userLogin->jabatan)) {
+            $pimpinan = $userLogin; 
+        } else {
+            $nip = $userLogin->username ?? $userLogin->nip_nik;
+            $pimpinan = \App\Models\Pegawai::where('nip_nik', $nip)->first();
+        }
+
+        if (!$pimpinan) {
+            return redirect()->route('pimpinan.dashboard')->with('error', 'Data pegawai Anda tidak ditemukan!');
+        }
+
+        $jabatanPimpinan = trim($pimpinan->jabatan ?? '');
+        $filterJabatan = [];
+
+        // 2. Tentukan Bawahan Sesuai Jabatan Pimpinan
+        if (str_contains($jabatanPimpinan, 'Kepala Museum')) {
+            $filterJabatan = ['Koordinator', 'Manajer', 'Kurator'];
+        } elseif (str_contains($jabatanPimpinan, 'Registrasi') || str_contains($jabatanPimpinan, 'Konservasi')) {
+            $filterJabatan = ['Konservator', 'Register'];
+        } elseif (str_contains($jabatanPimpinan, 'Edukasi') || str_contains($jabatanPimpinan, 'Program Publik')) {
+            $filterJabatan = ['Edukator', 'Penata Pameran'];
+        } elseif (str_contains($jabatanPimpinan, 'Humas') || str_contains($jabatanPimpinan, 'Pemasaran')) {
+            $filterJabatan = ['Humas'];
+            
+        // --- TAMBAHKAN BARIS INI ---
+        } elseif (str_contains($jabatanPimpinan, 'Kurator')) {
+            $filterJabatan = ['Kurator'];
+        }
+
+        // 3. Query Super: Ambil Data Bawahan
+        $bawahanRaw = \Illuminate\Support\Facades\DB::table('pegawai')
+            ->where('pegawai_id', '!=', $pimpinan->pegawai_id) // KUNCI 1: Hapus diri sendiri (Kasus Pak Hendra)
+            ->where(function($query) use ($filterJabatan) {
+                if (empty($filterJabatan)) {
+                    // KUNCI 2: Jika tidak punya bawahan (Kasus Bu Siti Aminah), KOSONGKAN TABEL!
+                    $query->whereRaw('1=0'); 
+                } else {
+                    foreach ($filterJabatan as $jab) {
+                        $query->orWhere('jabatan', 'LIKE', '%' . $jab . '%');
+                    }
+                }
+            })->get();
+
+        $data_pegawai = [];
+
+        // Peta Distribusi 34 UK Berdasarkan Jabatan Fungsional
+        $mapUK = [
+            'Kurator' => ['001', '002', '003', '004', '005', '006', '007'],
+            'Register' => ['008', '009', '010', '011', '012', '013'],
+            'Konservator' => ['014', '015', '016', '017', '018'],
+            'Edukator' => ['019', '020', '021', '022', '023'],
+            'Penata Pameran' => ['024', '025', '026', '027', '028'],
+            'Humas' => ['029', '030', '031', '032', '033', '034']
+        ];
+
+        foreach ($bawahanRaw as $row) {
+            $pid = $row->pegawai_id;
+            $jabatanBawahan = $row->jabatan;
+            
+            $data_pegawai[$pid] = [
+                'pegawai_id' => $row->pegawai_id,
+                'pegawai_nama' => $row->pegawai_nama,
+                'nip_nik' => $row->nip_nik,
+                'jabatan' => $jabatanBawahan,
+                'total_target' => 0,
+                'total_terkumpul' => 0,
+                'total_uk' => 0,
+                'uk_dinilai' => 0,
+                'uks' => [],
+                'first_uk_to_score' => 'UK-DEFAULT'
+            ];
+
+            $allowed_codes = [];
+            if (str_contains($jabatanBawahan, 'Kurator')) $allowed_codes = $mapUK['Kurator'];
+            elseif (str_contains($jabatanBawahan, 'Register')) $allowed_codes = $mapUK['Register'];
+            elseif (str_contains($jabatanBawahan, 'Konservator')) $allowed_codes = $mapUK['Konservator'];
+            elseif (str_contains($jabatanBawahan, 'Edukator')) $allowed_codes = $mapUK['Edukator'];
+            elseif (str_contains($jabatanBawahan, 'Penata Pameran')) $allowed_codes = $mapUK['Penata Pameran'];
+            elseif (str_contains($jabatanBawahan, 'Humas') || str_contains($jabatanBawahan, 'Pemasaran')) $allowed_codes = $mapUK['Humas'];
+
+            $ukQuery = "
+                SELECT DISTINCT uk.kode_unit, uk.judul_unit, 
+                    COALESCE(SUM(ak.jumlah_evidence_wa), 0) AS target_dokumen
+                FROM unit_kompetensi uk
+                JOIN elemen_kompetensi ek ON uk.kode_unit = ek.kode_unit
+                JOIN aktivitas_kompeten ak ON ek.elemen_id = ak.elemen_id
+                WHERE ak.aktif = 'Y' 
+            ";
+
+            if (!empty($allowed_codes)) {
+                $likeConditions = [];
+                foreach ($allowed_codes as $code) {
+                    $likeConditions[] = "uk.kode_unit LIKE '%$code%'";
+                }
+                $ukQuery .= " AND (" . implode(' OR ', $likeConditions) . ")";
+            } else {
+                $ukQuery .= " AND 1=0"; 
+            }
+
+            $ukQuery .= " GROUP BY uk.kode_unit, uk.judul_unit ORDER BY uk.kode_unit ASC";
+            $ukList = \Illuminate\Support\Facades\DB::select($ukQuery);
+
+            foreach ($ukList as $uk) {
+                $uploadData = \Illuminate\Support\Facades\DB::selectOne("
+                    SELECT 
+                        COUNT(bp.bukti_id) AS total_upload,
+                        MAX(bp.tanggal_upload) AS waktu_terakhir
+                    FROM bukti_pegawai bp
+                    JOIN aktivitas_kompeten ak ON bp.aktivitas_id = ak.aktivitas_id
+                    JOIN elemen_kompetensi ek ON ak.elemen_id = ek.elemen_id
+                    WHERE bp.pegawai_id = ? AND ek.kode_unit = ?
+                ", [$pid, $uk->kode_unit]);
+
+                $is_dinilai = \Illuminate\Support\Facades\DB::table('penilaian_header')
+                                ->where('pegawai_id', $pid)
+                                ->where('kode_unit', $uk->kode_unit)
+                                ->where('status', 'Selesai')
+                                ->exists();
+
+                $data_pegawai[$pid]['uks'][] = [
+                    'kode_unit' => $uk->kode_unit,
+                    'judul_unit' => $uk->judul_unit,
+                    'target' => $uk->target_dokumen,
+                    'terkumpul' => $uploadData->total_upload ?? 0,
+                    'waktu_terakhir' => $uploadData->waktu_terakhir,
+                    'is_dinilai' => $is_dinilai
+                ];
+
+                $data_pegawai[$pid]['total_target'] += $uk->target_dokumen;
+                $data_pegawai[$pid]['total_terkumpul'] += ($uploadData->total_upload ?? 0);
+                $data_pegawai[$pid]['total_uk'] += 1;
+                
+                if ($is_dinilai) {
+                    $data_pegawai[$pid]['uk_dinilai'] += 1;
+                } elseif ($data_pegawai[$pid]['first_uk_to_score'] === 'UK-DEFAULT') {
+                    $data_pegawai[$pid]['first_uk_to_score'] = $uk->kode_unit;
+                }
+            }
+        }
+
+        return view('pimpinan.tim_saya.index', compact('data_pegawai', 'pimpinan'));
+    }
     // --- 1. HALAMAN LIST PEGAWAI & UNIT KOMPETENSI ---
     public function index(Request $request)
     {
@@ -326,7 +474,7 @@ class SkoringController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('pimpinan.skoring.index')->with('success', 'Koreksi Penilaian Profile Matching Berhasil Disimpan!');
+            return redirect()->route('pimpinan.tim_saya.index')->with('success', 'Koreksi Penilaian Profile Matching Berhasil Disimpan!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan sistem!');

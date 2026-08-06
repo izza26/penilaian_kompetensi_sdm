@@ -109,10 +109,10 @@ Route::middleware(['auth', 'role:pimpinan'])->prefix('pimpinan')->name('pimpinan
     Route::get('/manajemen-evidence', [ManajemenEvidenceController::class, 'index'])->name('manajemen_evidence.index');
     Route::get('/manajemen-evidence/{id}/edit', [ManajemenEvidenceController::class, 'edit'])->name('manajemen_evidence.edit');
     Route::post('/manajemen-evidence/{id}/update', [ManajemenEvidenceController::class, 'update'])->name('manajemen_evidence.update');
-    // SKORING (PENILAIAN EVIDENCE)
-    Route::get('/skoring', [SkoringController::class, 'index'])->name('skoring.index');
-    Route::get('/skoring/nilai/{pegawai_id}/{kode_unit}', [SkoringController::class, 'beriNilai'])->name('skoring.beri_nilai');
-    Route::post('/skoring/nilai/{pegawai_id}/{kode_unit}', [SkoringController::class, 'simpanNilai'])->name('skoring.simpan_nilai');
+    // TIM SAYA & SKORING (Sudah digabung)
+    Route::get('/tim-saya', [SkoringController::class, 'timSaya'])->name('tim_saya.index');
+    Route::get('/tim-saya/nilai/{pegawai_id}/{kode_unit}', [SkoringController::class, 'beriNilai'])->name('tim_saya.beri_nilai');
+    Route::post('/tim-saya/nilai/{pegawai_id}/{kode_unit}', [SkoringController::class, 'simpanNilai'])->name('tim_saya.simpan_nilai');
     // HASIL KOMPETENSI
     Route::get('/hasil-kompetensi', [HasilKompetensiController::class, 'index'])->name('hasil_kompetensi.index');
     Route::get('/hasil-kompetensi/export', [HasilKompetensiController::class, 'exportExcel'])->name('hasil_kompetensi.export');

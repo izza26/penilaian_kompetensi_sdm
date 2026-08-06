@@ -12,23 +12,23 @@
         .unit-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 25px; overflow: hidden; }
         .unit-card-header { background: #f8fafc; padding: 18px 25px; border-bottom: 1px solid #e2e8f0; }
         .unit-card-header h3 { margin: 0 0 4px 0; font-size: 16px; color: #1e293b;}
-        .unit-card-header span { font-size: 12px; font-weight: 700; color: #A08348; background: #fffbeb; padding: 4px 10px; border-radius: 6px; border: 1px solid #fde68a;}
+        .unit-card-header span { font-size: 12px; font-weight: 700; color: #bda572; background: #fffbeb; padding: 4px 10px; border-radius: 6px; border: 1px solid #fde68a;}
         .styled-table { width: 100%; border-collapse: collapse; }
         .styled-table th { background: #ffffff; color: #475569; padding: 14px 25px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
         .styled-table td { padding: 16px 25px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; vertical-align: top; }
         .inline-edit-row { transition: 0.2s; cursor: pointer; }
         .inline-edit-row:hover { background-color: #f8fafc; }
-        .text-id { font-size: 13px; font-weight: 700; color: #A08348; margin-bottom: 4px; display: block;}
+        .text-id { font-size: 13px; font-weight: 700; color: #bda572; margin-bottom: 4px; display: block;}
         .text-detail { font-size: 14px; font-weight: 600; color: #0f172a; line-height: 1.4; display: block;}
         .text-kriteria { font-size: 13px; color: #475569; line-height: 1.5;}
         .badge-evidence { background: #fffbeb; color: #b45309; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid #fde68a; display: inline-block; margin-bottom: 10px;}
         .ev-group { margin-bottom: 12px; }
         .ev-group-title { font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;}
         .ev-list { padding-left: 18px; margin: 0; color: #0f172a; font-size: 13px; font-weight: 500;}
-        .ev-list li::marker { color: #A08348; }
+        .ev-list li::marker { color: #bda572; }
         .badge-kosong { background: #fef2f2; color: #dc2626; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid #fecaca; display: inline-block; }
-        .btn-atur { display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: 600; background: #bda572; padding: 8px 16px; border-radius: 8px; border: 1px solid #bda572;}
-        .btn-atur:hover { background: #A08348; transform: translateY(-2px);}
+        .btn-atur { display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: black; text-decoration: none; font-size: 13px; font-weight: 600; background: #ebdbb6; padding: 8px 16px; border-radius: 8px; border: 1px solid #ebdbb6;}
+        .btn-atur:hover { background: #bda572; transform: translateY(-2px);}
     </style>
 @endpush
 

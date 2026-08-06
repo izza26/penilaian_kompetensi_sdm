@@ -16,7 +16,7 @@ body {
 }
 
 /* ==================================
-   LEFT PANEL (YANKEES BLUE #182A3A)
+   LEFT PANEL (YANKEES BLUE #183851)
 ================================== */
 .left-panel {
     width: 50%;
@@ -56,7 +56,7 @@ body {
 
 .left-content p {
     font-size: 22px;
-    color: #D6BB80; /* Burlywood Accent */
+    color: #ebdbb6; /* Burlywood Accent */
     font-weight: 600;
     margin-bottom: 20px;
 }
@@ -134,7 +134,7 @@ body {
 .login-box h2 {
     font-size: 32px;
     font-weight: 800;
-    color: #182A3A; /* Yankees Blue */
+    color: #183851; /* Yankees Blue */
     margin-bottom: 8px;
     letter-spacing: -0.5px;
 }
@@ -159,7 +159,7 @@ body {
 }
 
 .toggle-password:hover {
-    color: #182A3A !important;
+    color: #183851 !important;
 }
 
 /* Memberi jarak kanan agar teks tidak tertutup icon mata */
@@ -205,7 +205,7 @@ body {
     position: absolute;
     left: 16px;
     font-size: 18px;
-    color: #182A3A; /* Berubah jadi Biru Gelap (Yankees Blue) */
+    color: #183851; /* Berubah jadi Biru Gelap (Yankees Blue) */
     transition: 0.3s;
 }
 
@@ -245,7 +245,7 @@ input:-webkit-autofill:active{
 .input-group input:focus, .input-group select:focus {
     outline: none;
     background: #ffffff;
-    border-color: #182A3A; /* Highlight border jadi Biru Gelap */
+    border-color: #183851; /* Highlight border jadi Biru Gelap */
     box-shadow: 0 0 0 4px rgba(24, 42, 58, 0.15); /* Shadow Biru Gelap Transparan */
 }
 
@@ -274,14 +274,14 @@ input:-webkit-autofill:active{
 }
 
 .forgot-pass:hover {
-    color: #182A3A;
+    color: #183851;
 }
 
 .login-btn {
     width: 100%;
     height: 52px;
     border: none;
-    background: #182A3A; /* Dark Tan */
+    background: #183851; /* Dark Tan */
     color: white;
     border-radius: 12px;
     font-size: 15px;
@@ -314,7 +314,7 @@ input:-webkit-autofill:active{
 }
 
 .register-link a:hover {
-    color: #182A3A;
+    color: #183851;
     text-decoration: underline;
 }
 

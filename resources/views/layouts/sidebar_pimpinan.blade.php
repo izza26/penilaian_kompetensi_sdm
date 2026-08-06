@@ -39,10 +39,13 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('pimpinan.skoring.index') }}" class="{{ request()->routeIs('pimpinan.skoring*') ? 'active' : '' }}">
-                    <i class="bi bi-ui-checks"></i> Skoring
+                <a href="{{ route('pimpinan.tim_saya.index') }}" class="{{ request()->routeIs('pimpinan.tim_saya*') ? 'active' : '' }}">
+                    <i class="bi bi-people-fill"></i> Tim Saya
                 </a>
             </li>
+            
+            <!-- MENU SKORING SUDAH DIHAPUS DARI SINI -->
+
             <li>
                 <a href="{{ route('pimpinan.hasil_kompetensi.index') }}" class="{{ request()->routeIs('pimpinan.hasil_kompetensi*') ? 'active' : '' }}">
                     <i class="bi bi-award"></i> Hasil Kompetensi

@@ -10,62 +10,119 @@ class DashboardController extends Controller
 {
     public function pimpinan()
     {
-        $pimpinan = Auth::user();
+        // 1. Ambil data pimpinan yang login
+        $userLogin = \Illuminate\Support\Facades\Auth::user();
+        if (isset($userLogin->jabatan)) {
+            $pimpinan = $userLogin; 
+        } else {
+            $nip = $userLogin->username ?? $userLogin->nip_nik;
+            $pimpinan = \App\Models\Pegawai::where('nip_nik', $nip)->first();
+        }
 
-        // 1. Cek Periode Penilaian
-        $periodeAktif = DB::table('periode_penilaian')->where('status_aktif', 'Y')->first();
-        $is_open = false;
-        $pesan_periode = "Belum ada periode penilaian yang aktif saat ini.";
-        $badge_class = "danger";
+        $jabatanPimpinan = trim($pimpinan->jabatan ?? '');
+        $filterJabatanBawahan = [];
 
-        if ($periodeAktif) {
+        // 2. Mapping Jabatan Bawahan
+        if (str_contains($jabatanPimpinan, 'Kepala Museum')) {
+            $filterJabatanBawahan = ['Koordinator', 'Manajer', 'Kurator'];
+        } elseif (str_contains($jabatanPimpinan, 'Registrasi') || str_contains($jabatanPimpinan, 'Konservasi')) {
+            $filterJabatanBawahan = ['Konservator', 'Register'];
+        } elseif (str_contains($jabatanPimpinan, 'Edukasi') || str_contains($jabatanPimpinan, 'Program Publik')) {
+            $filterJabatanBawahan = ['Edukator', 'Penata Pameran'];
+        } elseif (str_contains($jabatanPimpinan, 'Humas') || str_contains($jabatanPimpinan, 'Pemasaran')) {
+            $filterJabatanBawahan = ['Humas', 'Hubungan Masyarakat'];
+        
+        // --- TAMBAHKAN BARIS INI ---
+        } elseif (str_contains($jabatanPimpinan, 'Kurator')) {
+            $filterJabatanBawahan = ['Kurator'];
+        }
+
+        // 3. Tarik ID Bawahan (KECUALI DIRI SENDIRI)
+        $bawahanRaw = \App\Models\Pegawai::where('pegawai_id', '!=', $pimpinan->pegawai_id)
+            ->where(function($q) use ($filterJabatanBawahan) {
+            if (empty($filterJabatanBawahan)) {
+                $q->whereRaw('1=0');
+            } else {
+                foreach ($filterJabatanBawahan as $jab) {
+                    $q->orWhere('jabatan', 'LIKE', '%' . $jab . '%');
+                }
+            }
+        })->get();
+        
+        $bawahan_ids = $bawahanRaw->pluck('pegawai_id')->toArray();
+        $tot_pegawai = count($bawahan_ids);
+
+        // 4. Kalkulasi KPI Default
+        $tot_dokumen = 0; $belum_dinilai = 0; $tot_dinilai = 0;
+        $pct_kompeten = 0; $pct_cukup = 0; $pct_bina = 0;
+        $timeline = [];
+
+        // Hitung Data HANYA JIKA punya bawahan
+        if (!empty($bawahan_ids)) {
+            $tot_dokumen = \Illuminate\Support\Facades\DB::table('bukti_pegawai')->whereIn('pegawai_id', $bawahan_ids)->count();
+            
+            $tot_dinilai = \Illuminate\Support\Facades\DB::table('penilaian_header')
+                            ->whereIn('pegawai_id', $bawahan_ids)
+                            ->where('status', 'Selesai')
+                            ->count();
+                            
+            $bukti_divalidasi = \Illuminate\Support\Facades\DB::table('penilaian_detail')
+                            ->join('penilaian_header', 'penilaian_detail.penilaian_id', '=', 'penilaian_header.penilaian_id')
+                            ->whereIn('penilaian_header.pegawai_id', $bawahan_ids)
+                            ->count();
+                            
+            $belum_dinilai = max(0, $tot_dokumen - $bukti_divalidasi);
+
+            $kompeten = \Illuminate\Support\Facades\DB::table('penilaian_header')->whereIn('pegawai_id', $bawahan_ids)->where('nilai_akhir', '>=', 70)->count();
+            $cukup = \Illuminate\Support\Facades\DB::table('penilaian_header')->whereIn('pegawai_id', $bawahan_ids)->whereBetween('nilai_akhir', [55, 69.99])->count();
+            $bina = \Illuminate\Support\Facades\DB::table('penilaian_header')->whereIn('pegawai_id', $bawahan_ids)->where('nilai_akhir', '<', 55)->count();
+            
+            $tot_dinilai_stat = $kompeten + $cukup + $bina;
+            if ($tot_dinilai_stat > 0) {
+                $pct_kompeten = round(($kompeten / $tot_dinilai_stat) * 100);
+                $pct_cukup = round(($cukup / $tot_dinilai_stat) * 100);
+                $pct_bina = round(($bina / $tot_dinilai_stat) * 100);
+            }
+
+            $timeline = \Illuminate\Support\Facades\DB::table('bukti_pegawai as bp')
+                ->join('pegawai as p', 'bp.pegawai_id', '=', 'p.pegawai_id')
+                ->join('aktivitas_kompeten as ak', 'bp.aktivitas_id', '=', 'ak.aktivitas_id')
+                ->join('elemen_kompetensi as ek', 'ak.elemen_id', '=', 'ek.elemen_id')
+                ->join('unit_kompetensi as uk', 'ek.kode_unit', '=', 'uk.kode_unit')
+                ->whereIn('bp.pegawai_id', $bawahan_ids)
+                ->select('p.pegawai_nama', 'uk.judul_unit', 'bp.tanggal_upload')
+                ->orderBy('bp.tanggal_upload', 'desc')
+                ->limit(5)->get();
+        }
+
+        // 5. Cek Periode Aktif Khusus Bawahan
+        $periodeAktif = \Illuminate\Support\Facades\DB::table('periode_penilaian')
+            ->whereIn('nama_periode', $filterJabatanBawahan)
+            ->orderBy('tanggal_mulai', 'asc')
+            ->first();
+
+        $badge_class = 'info'; $is_open = false; $pesan_periode = '';
+        if ($periodeAktif && !empty($periodeAktif->tanggal_mulai) && strpos($periodeAktif->tanggal_mulai, '1970') === false) {
             $tgl_mulai = strtotime($periodeAktif->tanggal_mulai);
             $tgl_selesai = strtotime($periodeAktif->tanggal_selesai . ' 23:59:59');
-            $sekarang = time();
+            $now = time();
 
-            if ($sekarang >= $tgl_mulai && $sekarang <= $tgl_selesai) {
-                $is_open = true;
-                $pesan_periode = "Periode Penilaian sedang berlangsung: <b>" . date('d M Y', $tgl_mulai) . "</b> s/d <b>" . date('d M Y', $tgl_selesai) . "</b>.";
-                $badge_class = "success";
-            } elseif ($sekarang < $tgl_mulai) {
-                $pesan_periode = "Periode Penilaian baru akan dibuka pada tanggal <b>" . date('d M Y', $tgl_mulai) . "</b>.";
-                $badge_class = "warning";
+            if ($now < $tgl_mulai) {
+                $badge_class = 'warning'; $is_open = false;
+                $pesan_periode = "Periode Penilaian untuk tim Anda akan dimulai pada: <b>" . date('d M Y', $tgl_mulai) . "</b>.";
+            } elseif ($now > $tgl_selesai) {
+                $badge_class = 'danger'; $is_open = false;
+                $pesan_periode = "Periode Penilaian untuk tim Anda telah DITUTUP sejak <b>" . date('d M Y', $tgl_selesai) . "</b>.";
             } else {
-                $pesan_periode = "Periode Penilaian telah DITUTUP sejak <b>" . date('d M Y', $tgl_selesai) . "</b>.";
-                $badge_class = "danger";
+                $badge_class = 'success'; $is_open = true;
+                $pesan_periode = "Periode Penilaian tim Anda sedang berlangsung: <b>" . date('d M Y', $tgl_mulai) . " s/d " . date('d M Y', $tgl_selesai) . "</b>.";
             }
         }
 
-        // 2. Statistik Pegawai & Dokumen
-        $tot_pegawai = DB::table('pegawai')->where('role', 'pegawai')->count();
-        $tot_dokumen = DB::table('bukti_pegawai')->count();
-        $tot_dinilai = DB::table('penilaian_header')->count();
-        $belum_dinilai = ($tot_dokumen > $tot_dinilai) ? ($tot_dokumen - $tot_dinilai) : 0;
-
-        $kompeten = DB::table('penilaian_header')->where('nilai_akhir', '>=', 70)->count();
-        $cukup    = DB::table('penilaian_header')->whereBetween('nilai_akhir', [55, 69.99])->count();
-        $bina     = DB::table('penilaian_header')->where('nilai_akhir', '<', 55)->count();
-
-        $pct_kompeten = ($tot_dinilai > 0) ? round(($kompeten / $tot_dinilai) * 100) : 0;
-        $pct_cukup    = ($tot_dinilai > 0) ? round(($cukup / $tot_dinilai) * 100) : 0;
-        $pct_bina     = ($tot_dinilai > 0) ? round(($bina / $tot_dinilai) * 100) : 0;
-
-        // 3. Timeline Antrean Upload Terbaru
-        $timeline = DB::table('bukti_pegawai as bp')
-            ->join('pegawai as p', 'bp.pegawai_id', '=', 'p.pegawai_id')
-            ->join('aktivitas_kompeten as ak', 'bp.aktivitas_id', '=', 'ak.aktivitas_id')
-            ->join('elemen_kompetensi as ek', 'ak.elemen_id', '=', 'ek.elemen_id')
-            ->join('unit_kompetensi as uk', 'ek.kode_unit', '=', 'uk.kode_unit')
-            ->select('p.pegawai_nama', 'uk.judul_unit', 'bp.tanggal_upload')
-            ->orderBy('bp.tanggal_upload', 'desc')
-            ->limit(5)
-            ->get();
-
-        // 4. Lempar Data ke View Blade
         return view('pimpinan.dashboard', compact(
-            'pimpinan', 'periodeAktif', 'is_open', 'pesan_periode', 'badge_class',
-            'tot_pegawai', 'tot_dokumen', 'tot_dinilai', 'belum_dinilai',
-            'pct_kompeten', 'pct_cukup', 'pct_bina', 'timeline'
+            'pimpinan', 'tot_pegawai', 'tot_dokumen', 'belum_dinilai', 'tot_dinilai', 
+            'pct_kompeten', 'pct_cukup', 'pct_bina', 'timeline',
+            'periodeAktif', 'badge_class', 'is_open', 'pesan_periode'
         ));
     }
 

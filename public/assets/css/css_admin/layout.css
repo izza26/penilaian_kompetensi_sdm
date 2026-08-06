@@ -53,7 +53,7 @@ body {
 /* ================= MODERN SIDEBAR ================= */
 .sidebar {
     width: 280px;
-    background: linear-gradient(180deg, var(--sidebar-bg-top), var(--sidebar-bg-bot));
+    background: #183851 !important;
     color: white;
     height: 100vh;
     position: fixed;
@@ -90,7 +90,7 @@ body {
 
 .sidebar-logo i {
     font-size: 22px !important;
-    color: #D6BB80; /* Warna emas Burlywood senada dengan menu */
+    color: #ebdbb6; /* Warna emas Burlywood senada dengan menu */
 }
 
 .sidebar-logo img {
@@ -180,9 +180,9 @@ body {
 
 /* ACTIVE MENU */
 .sidebar-menu a.active {
-    background: #D6BB80 !important; /* Warna Burlywood/Emas */
-    color: #0f172a !important; /* Teks jadi gelap agar kontras dan terbaca jelas */
-    box-shadow: 0 4px 15px rgba(214, 187, 128, 0.45) !important; /* Bayangan glowing warna emas */
+    background: #ebdbb6 !important;
+    color: #0f172a !important; /* Teks dihitamkan sedikit agar terbaca di atas warna terang */
+    box-shadow: 0 4px 15px rgba(231, 218, 189, 0.45) !important; /* Format shadow diperbaiki */
     font-weight: 700 !important;
 }
 

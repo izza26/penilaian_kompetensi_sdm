@@ -6,6 +6,46 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/css_pimpinan/master_unit.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* --- WARNA TOMBOL AKSI MENGIKUTI STANDAR ADMIN --- */
+        .btn-action {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 6px !important;
+            transition: 0.2s !important;
+            border: none !important;
+            cursor: pointer !important;
+            margin-right: 4px !important;
+            font-size: 14px !important;
+            padding: 0 !important;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px) !important;
+        }
+
+        /* Warna Kuning/Emas untuk Edit */
+        .btn-edit { 
+            background: #fef3c7 !important; 
+            color: #d97706 !important; 
+        }
+        .btn-edit:hover { 
+            background: #fde68a !important; 
+        }
+
+        /* Warna Merah untuk Delete */
+        .btn-delete { 
+            background: #fee2e2 !important; 
+            color: #dc2626 !important; 
+            margin-right: 0 !important; 
+        }
+        .btn-delete:hover { 
+            background: #fecaca !important; 
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -200,7 +240,6 @@
 
 @push('scripts')
 <script>
-// Javascript asli milikmu, tidak ada yang diubah fungsinya
 function toggleRow(id, rowElement) {
     var childRow = document.getElementById('child-' + id);
     var icon = document.querySelector('.icon-' + id);

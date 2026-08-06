@@ -5,6 +5,15 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/css_pimpinan/pegawai.css') }}">
+    <style>
+        /* --- CUSTOM PAGINATION LARAVEL --- */
+        .pagination { display: flex; justify-content: center; align-items: center; list-style: none; padding: 0; margin: 30px 0 10px 0; gap: 8px; }
+        .pagination li { margin: 0; padding: 0; list-style: none; }
+        .pagination li a, .pagination li span { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #475569; background: #ffffff; border: 1px solid #cbd5e1; text-decoration: none; transition: all 0.2s ease; }
+        .pagination li a:hover { background: #f8fafc; color: #1B2D46; border-color: #94a3b8; transform: translateY(-2px); }
+        .pagination li.active span { background: #bda572; color: #ffffff; border-color: #bda572; box-shadow: 0 4px 10px rgba(189, 165, 114, 0.3); }
+        .pagination li.disabled span { color: #94a3b8; background: #f1f5f9; border-color: #e2e8f0; cursor: not-allowed; }
+    </style>
 @endpush
 
 @section('content')
@@ -49,8 +58,9 @@
                     <td>{{ $row->unit_kerja }}</td>
                     <td><span class="status-badge aktif">{{ $row->status_aktif ?? 'Aktif' }}</span></td> 
                     <td class="action-buttons">
-                        <a href="{{ route('pimpinan.pegawai.show', $row->pegawai_id) }}" class="btn-icon view"><i class="bi bi-eye"></i></a>
-                        <a href="{{ route('pimpinan.pegawai.edit', $row->pegawai_id) }}" class="btn-icon edit"><i class="bi bi-pencil"></i></a>
+                        <!-- PERUBAHAN CLASS BUTTON AKSI MENJADI WARNA-WARNI KOTAK -->
+                        <a href="{{ route('pimpinan.pegawai.show', $row->pegawai_id) }}" class="action-btn view-btn"><i class="bi bi-eye"></i></a>
+                        <a href="{{ route('pimpinan.pegawai.edit', $row->pegawai_id) }}" class="action-btn edit-btn"><i class="bi bi-pencil-square"></i></a>
                     </td>
                 </tr>
                 @empty

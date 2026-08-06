@@ -146,10 +146,26 @@
             @csrf <input type="hidden" name="action" value="tambah_jabatan_baru">
             <select name="jabatan" class="form-control" onchange="toggleDateInputs(this)" required>
                 <option value="">-- Pilih Jabatan --</option>
-                <option value="Semua Jabatan" style="font-weight: bold; color: #3b82f6;">-- Pilih Semua Jabatan --</option>
+                <option value="Semua Jabatan" style="font-weight: bold; color: #3b82f6;">-- Pilih Semua Jabatan Tim Saya --</option>
                 @foreach($posisi_list as $pos)
-                    @php $is_exist = $periods->contains('nama_periode', $pos); @endphp
-                    <option value="{{ $pos }}" {{ $is_exist ? 'disabled style=color:#cbd5e1;' : '' }}>{{ $pos == 'Hubungan Masyarakat dan Pemasaran' ? 'Humas & Pemasaran' : $pos }} {{ $is_exist ? '(Sudah Ada)' : '' }}</option>
+                    @php 
+                        // Cek apakah periode aktif saat ini sudah melewati tanggal selesai
+                        $periode_ini = $periods->where('nama_periode', $pos)->first();
+                        $is_exist = $periode_ini ? true : false;
+                        $is_selesai = false;
+                        
+                        if ($periode_ini && !empty($periode_ini->tanggal_selesai)) {
+                            if (time() > strtotime($periode_ini->tanggal_selesai . ' 23:59:59')) {
+                                $is_selesai = true;
+                            }
+                        }
+                        
+                        $disable_opt = ($is_exist && !$is_selesai);
+                    @endphp
+                    <option value="{{ $pos }}" {{ $disable_opt ? 'disabled style=color:#cbd5e1;' : '' }}>
+                        {{ $pos == 'Hubungan Masyarakat dan Pemasaran' ? 'Humas & Pemasaran' : $pos }} 
+                        {{ $disable_opt ? '(Sedang Berjalan)' : ($is_selesai ? '(Periode Baru)' : '') }}
+                    </option>
                 @endforeach
             </select>
             <div id="serentak-date-fields" style="display: none; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
@@ -171,7 +187,7 @@
             <input type="hidden" name="jabatan" id="tgl_jabatan">
             <label style="font-size: 11px; font-weight: 600; color:#64748b; margin-bottom:5px; display:block;">Tanggal Mulai</label><input type="date" name="tanggal_mulai" id="tgl_mulai" class="form-control" required>
             <label style="font-size: 11px; font-weight: 600; color:#64748b; margin-bottom:5px; display:block;">Tanggal Selesai</label><input type="date" name="tanggal_selesai" id="tgl_selesai" class="form-control" required>
-            <button type="submit" class="btn-simpan">Simpan Tanggal</button>
+            <button type="submit" class="btn-simpan">Simpan & Mulai Periode Baru</button>
         </form>
     </div>
 </div>

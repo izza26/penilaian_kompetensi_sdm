@@ -2,8 +2,8 @@
     /* PRIMARY COLORS */
     --primary:#182A3A;       /* Yankees Blue */
     --secondary:#425B6F;     /* Deep Space Sparkle */
-    --accent:#A08348;        /* Dark Tan */
-    --light-accent:#D6BB80;  /* Burlywood */
+    --accent:#bda572;        /* Dark Tan */
+    --light-accent:#ebdbb6;  /* Burlywood */
     --smoke: #7A7E74;
 
     /* SUPPORT */
@@ -73,12 +73,12 @@ body{
 .btn-delete { color: #e74c3c; } .btn-delete:hover { background: #fdedec; }
 
 /* Tombol Tambah Kecil (Untuk Elemen & Aktivitas di dalam tabel) */
-.btn-add { background: #bda572; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.2s; font-weight: bold;}
-.btn-add:hover { background: #A08348; }
+.btn-add { background: #ebdbb6; color: black; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.2s; font-weight: bold;}
+.btn-add:hover { background: #bda572; }
 
 /* Tombol Tambah Utama (Untuk "Tambah Unit Baru" di atas) */
-.btn-add-main { background: #bda572; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
-.btn-add-main:hover { background: #A08348; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); }
+.btn-add-main { background: #ebdbb6; color: black; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+.btn-add-main:hover { background: #bda572; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); }
 
 .badge-evidence { background: #fff3cd; color: #d35400; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .no-propagate { position: relative; z-index: 10; }

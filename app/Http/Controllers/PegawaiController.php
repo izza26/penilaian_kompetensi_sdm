@@ -3,21 +3,78 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Pegawai;
 
 class PegawaiController extends Controller
 {
+    // Fungsi bantuan untuk mendapatkan daftar filter jabatan bawahan
+    private function getFilterBawahan()
+    {
+        $userLogin = Auth::user();
+        if (isset($userLogin->jabatan)) {
+            $pimpinan = $userLogin; 
+        } else {
+            $nip = $userLogin->username ?? $userLogin->nip_nik;
+            $pimpinan = Pegawai::where('nip_nik', $nip)->first();
+        }
+
+        $jabatanPimpinan = trim($pimpinan->jabatan ?? '');
+        $filterJabatanBawahan = [];
+
+        if (str_contains($jabatanPimpinan, 'Kepala Museum')) {
+            $filterJabatanBawahan = ['Koordinator', 'Manajer', 'Kurator'];
+        } elseif (str_contains($jabatanPimpinan, 'Registrasi') || str_contains($jabatanPimpinan, 'Konservasi')) {
+            $filterJabatanBawahan = ['Konservator', 'Register'];
+        } elseif (str_contains($jabatanPimpinan, 'Edukasi') || str_contains($jabatanPimpinan, 'Program Publik')) {
+            $filterJabatanBawahan = ['Edukator', 'Penata Pameran'];
+        } elseif (str_contains($jabatanPimpinan, 'Humas') || str_contains($jabatanPimpinan, 'Pemasaran')) {
+            $filterJabatanBawahan = ['Humas', 'Hubungan Masyarakat'];
+        
+        // --- TAMBAHKAN BARIS INI ---
+        } elseif (str_contains($jabatanPimpinan, 'Kurator')) {
+            $filterJabatanBawahan = ['Kurator'];
+        }
+        
+
+        return $filterJabatanBawahan;
+    }
+
     // 1. TAMPILKAN SEMUA DATA & PENCARIAN (pegawai.php)
     public function index(Request $request)
     {
         $cari = $request->cari;
+        $filterJabatanBawahan = $this->getFilterBawahan();
 
-        // Query Builder Laravel untuk pencarian
-        $pegawais = Pegawai::when($cari, function ($query, $cari) {
-            return $query->where('pegawai_nama', 'ILIKE', "%$cari%")
-                         ->orWhere('nip_nik', 'ILIKE', "%$cari%")
-                         ->orWhere('unit_kerja', 'ILIKE', "%$cari%");
-        })->orderBy('pegawai_id', 'desc')->paginate(10); // Otomatis bikin Pagination!
+        // KUNCI PERBAIKAN: Tarik ID Pimpinan yang sedang login
+        $userLogin = \Illuminate\Support\Facades\Auth::user();
+        $idPimpinan = $userLogin->pegawai_id;
+
+        $query = Pegawai::query();
+
+        // 1. KUNCI UTAMA: Pengecualian menggunakan pegawai_id agar tahan banting
+        $query->where('pegawai_id', '!=', $idPimpinan);
+
+        // 2. KUNCI KEDUA: Hanya tampilkan pegawai yang jabatannya sesuai wewenang
+        $query->where(function($q) use ($filterJabatanBawahan) {
+            if (empty($filterJabatanBawahan)) {
+                $q->whereRaw('1=0'); 
+            } else {
+                foreach ($filterJabatanBawahan as $jab) {
+                    $q->orWhere('jabatan', 'LIKE', '%' . $jab . '%');
+                }
+            }
+        });
+
+        if (!empty($cari)) {
+            $query->where(function($q) use ($cari) {
+                $q->where('pegawai_nama', 'ILIKE', "%$cari%")
+                  ->orWhere('nip_nik', 'ILIKE', "%$cari%")
+                  ->orWhere('unit_kerja', 'ILIKE', "%$cari%");
+            });
+        }
+
+        $pegawais = $query->orderBy('pegawai_nama', 'asc')->paginate(10); 
 
         return view('pimpinan.pegawai.index', compact('pegawais', 'cari'));
     }
@@ -48,7 +105,7 @@ class PegawaiController extends Controller
             'no_hp' => $request->no_hp,
             'jabatan' => $request->jabatan,
             'unit_kerja' => $request->unit_kerja,
-            'password' => '123456', // Sesuai sistem lama
+            'password' => \Illuminate\Support\Facades\Hash::make('123456'), // Update: Langsung Hash!
             'role' => 'pegawai',
             'status_aktif' => 'Aktif'
         ]);
