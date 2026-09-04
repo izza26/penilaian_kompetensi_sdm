@@ -6,41 +6,51 @@
 @push('styles')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .widget-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
-        .widget-box { background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 15px; transition: 0.2s;}
-        .widget-box:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.04); }
-        .widget-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 22px; flex-shrink: 0;}
-        .widget-info { display: flex; flex-direction: column; gap: 2px;}
-        .widget-info h4 { margin: 0; font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;}
-        .widget-info p { margin: 0; font-size: 24px; font-weight: 800; color: #0f172a;}
-        .w-sangat .widget-icon { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0;}
-        .w-kompeten .widget-icon { background: #f0fdfa; color: #0d9488; border: 1px solid #bbf7d0;}
-        .w-cukup .widget-icon { background: #fffbeb; color: #d97706; border: 1px solid #fde68a;}
-        .w-belum .widget-icon { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;}
+        .widget-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 24px; }
+        .widget-box { background: #fff; padding: 24px; border-radius: 24px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 16px; transition: 0.3s;}
+        .widget-box:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(62, 84, 160, 0.08); }
+        .widget-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; flex-shrink: 0;}
+        .widget-info { display: flex; flex-direction: column; gap: 4px;}
+        .widget-info h4 { margin: 0; font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
+        .widget-info p { margin: 0; font-size: 28px; font-weight: 800; color: #1e293b; line-height: 1;}
+        
+        .w-sangat .widget-icon { background: #ecfdf5; color: #10b981; }
+        .w-kompeten .widget-icon { background: #f4f7fe; color: #3e54a0; }
+        .w-cukup .widget-icon { background: #fffbeb; color: #d97706; }
+        .w-belum .widget-icon { background: #fff1f2; color: #e11d48; }
 
-        .filter-box { background: #ffffff; border-radius: 12px; padding: 15px 25px; border: 1px solid #e2e8f0; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;}
-        .filter-left { display: flex; align-items: center; gap: 15px; flex: 1;}
-        .filter-left label { font-size: 13px; font-weight: 600; color: #475569;}
-        .filter-left select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; outline: none; cursor: pointer;}
-        .btn-cetak-excel { background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;}
-        .btn-cetak-excel:hover { background: #059669; color: white;}
+        .filter-box { background: #ffffff; border-radius: 24px; padding: 20px 32px; border: none; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); flex-wrap: wrap; gap: 16px;}
+        .filter-left { display: flex; align-items: center; gap: 16px; flex: 1; flex-wrap: wrap;}
+        .filter-left label { font-size: 13px; font-weight: 700; color: #475569; display: flex; align-items: center; gap: 8px;}
+        .filter-left select { padding: 0 20px; height: 48px; border: 1px solid #cbd5e1; border-radius: 50px; font-size: 13px; outline: none; cursor: pointer; background: #f9fafb; transition: 0.2s; color: #1e293b; font-family: inherit;}
+        .filter-left select:focus { border-color: #3e54a0; background: #fff; box-shadow: 0 0 0 3px rgba(62, 84, 160, 0.15);}
+        
+        .btn-cetak-excel { background: #10b981; color: white; padding: 0 24px; height: 48px; border-radius: 50px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; border: none;}
+        .btn-cetak-excel:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);}
 
-        .table-card { background: #fff; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; }
-        .table-card h3 { margin: 0 0 5px 0; font-size: 16px; color: #0f172a; }
-        .table-card p { margin: 0 0 20px 0; font-size: 13px; color: #64748b; }
+        .table-card { background: #fff; padding: 32px; border-radius: 24px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.02);}
+        .table-card h3 { margin: 0 0 8px 0; font-size: 18px; color: #1e293b; font-weight: 700; }
+        .table-card p { margin: 0 0 24px 0; font-size: 13px; color: #64748b; }
+        
         .styled-table { width: 100%; border-collapse: collapse; }
-        .styled-table th { background: #f8fafc; color: #475569; padding: 12px 15px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
-        .styled-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; }
+        .styled-table th { background: transparent; color: #64748b; padding: 16px 20px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; font-weight: 700;}
+        .styled-table td { padding: 16px 20px; border-bottom: 1px dashed #f1f5f9; font-size: 13px; color: #334155; vertical-align: middle;}
+        .row-clickable { transition: 0.2s; }
         .row-clickable:hover { background-color: #f8fafc; cursor: pointer; }
         
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; width: 120px; text-align: center; text-transform: uppercase; display: inline-block;}
-        .badge-hijau { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; } 
-        .badge-kuning { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; } 
-        .badge-merah { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; } 
+        .badge { padding: 6px 16px; border-radius: 50px; font-size: 10px; font-weight: 700; width: auto; min-width: 110px; text-align: center; text-transform: uppercase; display: inline-block; letter-spacing: 0.5px;}
+        .badge-hijau { background: #ecfdf5; color: #059669; border: none; } 
+        .badge-kuning { background: #fffbeb; color: #d97706; border: none; } 
+        .badge-merah { background: #fff1f2; color: #e11d48; border: none; } 
         
-        .btn-aksi { width: 34px; height: 34px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; font-size: 15px; text-decoration: none;}
-        .btn-detail { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe;}
-        .btn-hapus { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; margin-left: 5px;}
+        .btn-aksi { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; font-size: 15px; text-decoration: none; transition: 0.2s;}
+        .btn-detail { background: #f4f7fe; color: #3e54a0; }
+        .btn-detail:hover { background: #3e54a0; color: white; transform: translateY(-2px);}
+        .btn-hapus { background: #fff1f2; color: #e11d48; margin-left: 5px;}
+        .btn-hapus:hover { background: #e11d48; color: white; transform: translateY(-2px);}
+
+        @media(max-width: 992px) { .widget-container { grid-template-columns: repeat(2, 1fr); } }
+        @media(max-width: 768px) { .widget-container { grid-template-columns: 1fr; } .filter-box { flex-direction: column; align-items: stretch;} }
     </style>
 @endpush
 
@@ -62,7 +72,7 @@
 
     <div class="filter-box">
         <form method="GET" action="{{ route('pimpinan.hasil_kompetensi.index') }}" id="formFilter" class="filter-left">
-            <label><i class="bi bi-funnel-fill" style="color: #3b82f6;"></i> Filter Penilaian:</label>
+            <label><i class="bi bi-funnel-fill" style="color: #3e54a0;"></i> Filter Penilaian:</label>
             <select name="periode" onchange="document.getElementById('formFilter').submit();">
                 <option value="ALL">Semua Jabatan</option>
                 @foreach($list_periode as $p)
@@ -83,7 +93,6 @@
             </select>
         </form>
         
-        <!-- Link Export menyambung filter yang ada -->
         <a href="{{ route('pimpinan.hasil_kompetensi.export', ['periode' => $filter_periode, 'bulan' => $filter_bulan, 'tahun' => $filter_tahun]) }}" class="btn-cetak-excel" target="_blank">
             <i class="bi bi-file-earmark-excel-fill"></i> Cetak Penilaian
         </a>
@@ -119,7 +128,8 @@
                             <span style="font-size: 12px; color: #64748b;">{{ $r->jabatan }}</span>
                         </td>
                         <td>
-                            <span style="font-size: 11px; font-weight: 700; color: #A08348; display: block;">{{ $r->kode_unit }}</span>
+                            <!-- Warna Teks ID Kode Unit diubah ke #3e54a0 -->
+                            <span style="font-size: 11px; font-weight: 700; color: #3e54a0; display: block; margin-bottom: 2px;">{{ $r->kode_unit }}</span>
                             <span style="color: #334155; font-weight: 500; font-size: 13px;">{{ $r->judul_unit }}</span>
                         </td>
                         <td style="text-align: center; font-size: 12px;">{{ date('d M Y', strtotime($r->waktu_submit)) }}</td>

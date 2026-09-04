@@ -26,6 +26,7 @@ use App\Http\Controllers\AdminPenilaianController;
 use App\Http\Controllers\AdminProfilController;
 use App\Http\Controllers\AdminHasilKompetensiController;
 
+
 // Jika buka web pertama kali, langsung arahkan ke login
 Route::get('/', function () {
     return redirect()->route('login');
@@ -39,7 +40,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'register'])->name('register.proses');
 
-// Group Route untuk ADMIN
+// Group Route untuk ADMIN (Prefix 'admin' dan Name 'admin.' otomatis ditambahkan ke semua route di dalam ini)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('pegawai', AdminPegawaiController::class);
@@ -61,13 +62,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/hasil-kompetensi/detail/{id}', [AdminHasilKompetensiController::class, 'show'])->name('hasil_kompetensi.show');
     // PROFIL ADMIN
     Route::get('/profil', [AdminProfilController::class, 'index'])->name('profil.index');
+    
+    // --- PERBAIKAN ROUTE STANDAR PROFIL (Nggak ada lagi yang dobel nama admin.admin) ---
     Route::get('/standar-profil', [\App\Http\Controllers\AdminStandarProfilController::class, 'index'])->name('standar_profil.index');
     Route::post('/standar-profil/store', [\App\Http\Controllers\AdminStandarProfilController::class, 'store'])->name('standar_profil.store');
+    
+    // Diarahkan sekalian ke AdminStandarProfilController biar rapi 1 rumah
+    Route::post('/standar-profil/gap', [\App\Http\Controllers\AdminStandarProfilController::class, 'simpanBobotGap'])->name('standar_profil.gap.store');
 });
 
 // Group Route untuk PEGAWAI
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
-    
     // Rute Dashboard Pegawai
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'pegawai'])->name('dashboard');
     
@@ -82,17 +87,17 @@ Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')
     Route::get('/penilaian/detail/{aktivitas_id}', [PegawaiPenilaianController::class, 'show'])->name('penilaian.show');
     // HASIL KOMPETENSI (PENILAIAN SAYA)
     Route::get('/hasil-kompetensi', [PegawaiPenilaianController::class, 'hasil'])->name('hasil.index');
-    // HASIL KOMPETENSI PEGAWAI
-    Route::get('/hasil-kompetensi', [PegawaiPenilaianController::class, 'hasil'])->name('hasil.index');
     // PROFIL PEGAWAI
     Route::get('/profil', [PegawaiProfilController::class, 'index'])->name('profil.index');
+
+    // Master Koleksi (Read-Only)
+    Route::get('/koleksi', [\App\Http\Controllers\Pegawai\MasterKoleksiController::class, 'index'])->name('koleksi.index');
+    Route::get('/koleksi/{id}', [\App\Http\Controllers\Pegawai\MasterKoleksiController::class, 'show'])->name('koleksi.show');
 });
 
 // Group Route untuk PIMPINAN
 Route::middleware(['auth', 'role:pimpinan'])->prefix('pimpinan')->name('pimpinan.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard');
-    
-    // Tambahkan 1 baris sakti ini untuk memanggil seluruh fungsi CRUD!
     Route::resource('pegawai', PegawaiController::class);
     // MASTER UNIT SKKNI
     Route::get('/master-unit', [MasterUnitController::class, 'index'])->name('master_unit.index');
@@ -120,4 +125,55 @@ Route::middleware(['auth', 'role:pimpinan'])->prefix('pimpinan')->name('pimpinan
     Route::delete('/hasil-kompetensi/{id}', [HasilKompetensiController::class, 'destroy'])->name('hasil_kompetensi.destroy');
     // PROFIL PIMPINAN
     Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
+
+    // Master Koleksi (Pimpinan: Read, Update, Detail)
+    Route::get('/koleksi', [\App\Http\Controllers\Pimpinan\MasterKoleksiController::class, 'index'])->name('koleksi.index');
+    Route::get('/koleksi/{id}/detail', [\App\Http\Controllers\Pimpinan\MasterKoleksiController::class, 'show'])->name('koleksi.show');
+    Route::post('/koleksi/update', [\App\Http\Controllers\Pimpinan\MasterKoleksiController::class, 'update'])->name('koleksi.update');
+    // Pastikan baris ini ada di file routes/web.php Anda
+    Route::post('/tim-saya/nilai/{pegawai_id}/{kode_unit}/simpan', [App\Http\Controllers\SkoringController::class, 'simpanNilai'])->name('pimpinan.tim_saya.simpan_nilai');
 });
+
+Route::post('/ajax-panggil-ai', [App\Http\Controllers\SkoringController::class, 'ajaxPanggilAI'])->name('ajax.panggil.ai');
+
+// RUTE PROXY UNTUK MENGAKALI BLOKIR CORS DARI CLOUD STORAGE SUPABASE
+Route::get('/proxy-document', function (\Illuminate\Http\Request $request) {
+    $url = $request->query('url');
+    if (!$url) return response("URL Kosong", 400);
+
+    // Otomatis bersihkan spasi yang ter-encode menjadi '%20' agar Guzzle tidak bingung
+    $url = urldecode($url);
+
+    try {
+        $client = new \GuzzleHttp\Client();
+        // Paksa Guzzle untuk tidak memvalidasi sertifikat SSL yang ketat (bawaan lokal)
+        $response = $client->get($url, ['verify' => false]); 
+        
+        return response($response->getBody())
+                ->header('Content-Type', $response->getHeaderLine('Content-Type'))
+                ->header('Access-Control-Allow-Origin', '*');
+    } catch (\Exception $e) {
+        // Coba alternatif kedua: langsung tarik pakai Storage Facade S3 jika Guzzle gagal
+        try {
+            // Ekstrak nama file dari URL (contoh: EVI_2_12345.docx)
+            $filename = basename(parse_url($url, PHP_URL_PATH));
+            if (\Illuminate\Support\Facades\Storage::disk('s3')->exists('uploads/evidence/' . $filename)) {
+                $fileContent = \Illuminate\Support\Facades\Storage::disk('s3')->get('uploads/evidence/' . $filename);
+                // Deteksi Mime Type sederhana
+                $mimeType = str_ends_with(strtolower($filename), 'docx') ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : 'application/msword';
+                return response($fileContent)
+                        ->header('Content-Type', $mimeType)
+                        ->header('Access-Control-Allow-Origin', '*');
+            }
+        } catch (\Exception $ex) {
+            // Abaikan jika tetap gagal
+        }
+
+        return response("Gagal mengambil dokumen dari Cloud.", 500);
+    }
+})->name('proxy.document');
+
+// Rute Publik untuk Halaman Template Dokumen
+Route::get('/template-dokumen', function () {
+    return view('template_dokumen'); 
+})->name('template.dokumen');

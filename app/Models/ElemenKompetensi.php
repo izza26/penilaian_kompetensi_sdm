@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ElemenKompetensi extends Model
 {
-    protected $table = 'elemen_kompetensi';
+    protected $table = 'geotrax_v3.elemen_kompetensi';
     protected $primaryKey = 'elemen_id';
     public $timestamps = false;
     protected $guarded = [];

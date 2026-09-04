@@ -9,32 +9,26 @@ use App\Models\Pegawai;
 
 class HasilKompetensiController extends Controller
 {
-    private function getFilterBawahan()
+    /**
+     * Dapatkan ID Pegawai yang sah menjadi bawahan dari Pimpinan yang sedang login
+     */
+    private function getBawahanIds()
     {
+        // Ambil ID Pimpinan yang sedang login
         $userLogin = Auth::user();
-        if (isset($userLogin->jabatan)) {
-            $pimpinan = $userLogin; 
-        } else {
-            $nip = $userLogin->username ?? $userLogin->nip_nik;
-            $pimpinan = Pegawai::where('nip_nik', $nip)->orWhere('username', $nip)->first();
-        }
+        
+        // Pengecekan aman, karena di tabel users kita pakai 'id', tapi di pegawai_skkni 'pegawai_id'
+        // Kita cocokan username ke pegawai_skkni untuk dapat pegawai_id yang valid
+        $pimpinan = DB::table('geotrax_v3.pegawai_skkni')->where('username', $userLogin->username)->first();
+        $idPimpinan = $pimpinan ? $pimpinan->pegawai_id : 0;
 
-        $jabatanPimpinan = trim($pimpinan->jabatan ?? '');
-        $filterJabatanBawahan = [];
+        // Ambil ID bawahan langsung dari tabel relasi penilai yang sah
+        $bawahanIds = DB::table('geotrax_v3.p_pegawai_penilai_sah')
+            ->where('id_penilai', $idPimpinan)
+            ->pluck('id_pegawai')
+            ->toArray();
 
-        if (str_contains($jabatanPimpinan, 'Kepala Museum')) {
-            $filterJabatanBawahan = ['Koordinator', 'Manajer', 'Kurator'];
-        } elseif (str_contains($jabatanPimpinan, 'Registrasi') || str_contains($jabatanPimpinan, 'Konservasi')) {
-            $filterJabatanBawahan = ['Konservator', 'Register'];
-        } elseif (str_contains($jabatanPimpinan, 'Edukasi') || str_contains($jabatanPimpinan, 'Program Publik')) {
-            $filterJabatanBawahan = ['Edukator', 'Penata Pameran'];
-        } elseif (str_contains($jabatanPimpinan, 'Humas') || str_contains($jabatanPimpinan, 'Pemasaran')) {
-            $filterJabatanBawahan = ['Humas', 'Hubungan Masyarakat'];
-        } elseif (str_contains($jabatanPimpinan, 'Kurator')) {
-            $filterJabatanBawahan = ['Kurator'];
-        }
-
-        return $filterJabatanBawahan;
+        return $bawahanIds;
     }
 
     public function index(Request $request)
@@ -43,24 +37,12 @@ class HasilKompetensiController extends Controller
         $filter_bulan = $request->bulan ?? 'ALL';
         $filter_tahun = $request->tahun ?? 'ALL';
 
-        $filterJabatanBawahan = $this->getFilterBawahan();
-        
-        // KUNCI PERBAIKAN: Gunakan ID agar kebal dari masalah NIP vs Username
-        $userLogin = Auth::user();
-        $idPimpinan = $userLogin->pegawai_id;
+        // 1. Ambil daftar ID bawahan langsung
+        $bawahanIds = $this->getBawahanIds();
 
-        $list_periode = DB::table('pegawai')
+        $list_periode = DB::table('geotrax_v3.pegawai_skkni')
             ->select('jabatan as nama_periode')
-            ->where('pegawai_id', '!=', $idPimpinan) // Pengecualian pakai ID
-            ->where(function($q) use ($filterJabatanBawahan) {
-                if (empty($filterJabatanBawahan)) {
-                    $q->whereRaw('1=0'); 
-                } else {
-                    foreach ($filterJabatanBawahan as $jab) {
-                        $q->orWhere('jabatan', 'LIKE', '%' . $jab . '%');
-                    }
-                }
-            })
+            ->whereIn('pegawai_id', $bawahanIds) // FILTER BAWAHAN LANGSUNG
             ->distinct()
             ->orderBy('jabatan', 'asc')
             ->get();
@@ -75,21 +57,11 @@ class HasilKompetensiController extends Controller
         $arr_tahun = range(2024, $tahun_sekarang + 1);
 
         $query = DB::table('penilaian_header as ph')
-            ->join('pegawai as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
+            ->join('geotrax_v3.pegawai_skkni as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
             ->join('unit_kompetensi as uk', 'ph.kode_unit', '=', 'uk.kode_unit')
             ->where('ph.status', 'Selesai')
-            ->where('p.pegawai_id', '!=', $idPimpinan) // Pengecualian pakai ID
+            ->whereIn('p.pegawai_id', $bawahanIds) // FILTER BAWAHAN LANGSUNG
             ->select('ph.penilaian_id', 'ph.pegawai_id', 'p.pegawai_nama', 'p.jabatan', 'ph.kode_unit', 'uk.judul_unit', 'ph.nilai_akhir', 'ph.kategori', 'ph.waktu_submit', 'ph.rekomendasi');
-
-        $query->where(function($q) use ($filterJabatanBawahan) {
-            if (empty($filterJabatanBawahan)) {
-                $q->whereRaw('1=0');
-            } else {
-                foreach ($filterJabatanBawahan as $jab) {
-                    $q->orWhere('p.jabatan', 'LIKE', '%' . $jab . '%');
-                }
-            }
-        });
 
         if ($filter_periode !== 'ALL') {
             $query->where('p.jabatan', $filter_periode);
@@ -117,8 +89,9 @@ class HasilKompetensiController extends Controller
 
     public function show($id)
     {
+        // 1. Data Penilaian SKKNI Header
         $header = DB::table('penilaian_header as ph')
-            ->join('pegawai as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
+            ->join('geotrax_v3.pegawai_skkni as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
             ->join('unit_kompetensi as uk', 'ph.kode_unit', '=', 'uk.kode_unit')
             ->where('ph.penilaian_id', $id)
             ->select('ph.*', 'p.pegawai_nama', 'p.jabatan', 'uk.judul_unit')
@@ -126,6 +99,7 @@ class HasilKompetensiController extends Controller
 
         if (!$header) return redirect()->route('pimpinan.hasil_kompetensi.index')->with('error', 'Data tidak ditemukan.');
 
+        // 2. Data Penilaian SKKNI Detail
         $details = DB::table('penilaian_detail as pd')
             ->join('aktivitas_kompeten as ak', 'pd.aktivitas_id', '=', 'ak.aktivitas_id')
             ->where('pd.penilaian_id', $id)
@@ -133,23 +107,25 @@ class HasilKompetensiController extends Controller
             ->orderBy('ak.aktivitas_id', 'asc')
             ->get();
 
-        $roles = ['Kurator', 'Edukator', 'Konservator', 'Penata Pameran', 'Register', 'Hubungan Masyarakat dan Pemasaran'];
-        $match_scores = [];
-        
-        srand($header->pegawai_id); 
-        foreach($roles as $r) {
-            if ($r == $header->jabatan) {
-                $match_scores[$r] = $header->nilai_akhir; 
-            } else {
-                $match_scores[$r] = rand(4000, 8500) / 100;
-            }
-        }
-        srand(); 
-        arsort($match_scores);
-        $best_match_role = array_key_first($match_scores);
-        $is_match = ($best_match_role == $header->jabatan);
+        // 3. AMBIL DATA PROFILE MATCHING ASLI DARI DATABASE (Bukan Rand() lagi)
+        $hasil_pm = DB::table('geotrax_v3.p_hasil_profile_matching as pm')
+            ->join('geotrax_v3.p_master_jabatan as mj', 'pm.id_jabatan', '=', 'mj.id_jabatan')
+            ->where('pm.id_pegawai', $header->pegawai_id)
+            ->orderBy('pm.peringkat', 'asc') // Urutkan dari Peringkat 1
+            ->get();
 
-        return view('pimpinan.hasil_kompetensi.show', compact('header', 'details', 'match_scores', 'best_match_role', 'is_match'));
+        // Tentukan Best Match (Peringkat 1)
+        $best_match = $hasil_pm->first();
+        $best_match_role = $best_match ? $best_match->nama_jabatan : 'Belum Ada Hasil PM';
+        
+        // Cek apakah Best Match sesuai dengan Jabatan Saat Ini
+        $is_match = false;
+        if ($best_match) {
+            $is_match = stripos($header->jabatan, $best_match->nama_jabatan) !== false || 
+                        stripos($best_match->nama_jabatan, $header->jabatan) !== false;
+        }
+
+        return view('pimpinan.hasil_kompetensi.show', compact('header', 'details', 'hasil_pm', 'best_match_role', 'is_match'));
     }
 
     public function destroy($id)
@@ -164,27 +140,14 @@ class HasilKompetensiController extends Controller
         $periode = $request->periode ?? 'ALL';
         $nama_file = ($periode !== 'ALL') ? "Rekap_Penilaian_" . str_replace(" ", "_", $periode) . ".xls" : "Rekap_Penilaian_Semua_Pegawai.xls";
 
-        $filterJabatanBawahan = $this->getFilterBawahan();
-        
-        $userLogin = Auth::user();
-        $idPimpinan = $userLogin->pegawai_id;
+        $bawahanIds = $this->getBawahanIds();
 
         $query = DB::table('penilaian_header as ph')
-            ->join('pegawai as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
+            ->join('geotrax_v3.pegawai_skkni as p', 'ph.pegawai_id', '=', 'p.pegawai_id')
             ->join('unit_kompetensi as uk', 'ph.kode_unit', '=', 'uk.kode_unit')
             ->where('ph.status', 'Selesai')
-            ->where('p.pegawai_id', '!=', $idPimpinan) // Pengecualian pakai ID
+            ->whereIn('p.pegawai_id', $bawahanIds)
             ->select('ph.penilaian_id', 'p.pegawai_nama', 'p.jabatan', 'ph.kode_unit', 'uk.judul_unit', 'ph.nilai_akhir', 'ph.kategori', 'ph.rekomendasi', 'ph.waktu_submit');
-
-        $query->where(function($q) use ($filterJabatanBawahan) {
-            if (empty($filterJabatanBawahan)) {
-                $q->whereRaw('1=0');
-            } else {
-                foreach ($filterJabatanBawahan as $jab) {
-                    $q->orWhere('p.jabatan', 'LIKE', '%' . $jab . '%');
-                }
-            }
-        });
 
         if ($periode !== 'ALL') {
             $query->where('p.jabatan', $periode);

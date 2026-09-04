@@ -6,62 +6,44 @@
 
 @section('content')
 <style>
-    :root {
-        --primary: #182A3A;
-        --secondary: #425B6F;
-        --accent: #A08348;
-        --light-accent: #D6BB80;
-        --bg: #F7F8FA;
-    }
+    :root { --primary: #3e54a0; --primary-hover: #2b3a70; --light-accent: #f4f7fe; --bg: #f8fafc; }
 
-    .page-card { padding: 25px; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-    .page-title-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #E5E7EB; }
-    .page-title-header h2 { margin: 0; font-size: 20px; color: var(--primary); font-weight: 700; }
+    .page-card { padding: 32px; background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); margin-bottom: 30px; border: none; }
+    .page-title-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px dashed #e2e8f0; }
+    .page-title-header h2 { margin: 0; font-size: 20px; color: #1e293b; font-weight: 700; }
     
-    /* BADGE PENILAI */
-    .badge-penilai { background-color: #ebdbb6; color: var(--primary); font-weight: 700; padding: 8px 14px; border-radius: 8px; font-size: 13px; box-shadow: 0 2px 5px rgba(160, 131, 72, 0.3); }
+    .badge-penilai { background-color: var(--light-accent); color: var(--primary); font-weight: 700; padding: 8px 16px; border-radius: 50px; font-size: 12px; border: 1px solid #cbd5e1; }
 
-    /* TABEL LEVEL 1 (PARENT) */
     .styled-table { width: 100%; border-collapse: collapse; }
-    .styled-table th { background: #f8fafc; color: #475569; padding: 14px 15px; border-bottom: 2px solid #e2e8f0; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-    .styled-table td { padding: 14px 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 13px; color: #334155; }
+    .styled-table th { background: transparent; color: #64748b; padding: 16px 15px; border-bottom: 2px solid #e2e8f0; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .styled-table td { padding: 16px 15px; border-bottom: 1px dashed #f1f5f9; vertical-align: middle; font-size: 13px; color: #334155; }
     
     .parent-row { cursor: pointer; transition: 0.2s; }
     .parent-row:hover { background-color: #f8fafc; }
+    .icon-toggle { color: var(--primary) !important; transition: 0.3s; }
     
-    /* PERBAIKAN BADGE JABATAN */
-    .jabatan-badge { 
-        background: #f1f5f9; 
-        color: var(--primary); 
-        padding: 6px 12px; 
-        border-radius: 6px; 
-        font-size: 12px; 
-        font-weight: 600; 
-        border: 1px solid #cbd5e1; 
-        display: inline-block; /* KUNCI AGAR TIDAK TERPOTONG */
-        line-height: 1.4;
-        text-align: center;
-    }
+    .jabatan-badge { background: #f8fafc; color: #475569; padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0; display: inline-block; text-align: center; }
     
-    /* TABEL LEVEL 2 (CHILD/ACCORDION) */
-    .child-container { padding: 20px 25px; background-color: #f8fafc; border-left: 4px solid var(--accent); border-radius: 0 0 8px 0; }
-    .sub-table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; }
-    .sub-table th { background: #ffffff; padding: 12px 15px; font-size: 11px; color: #64748b; border-bottom: 1px solid #e2e8f0;}
-    .sub-table td { padding: 14px 15px; font-size: 13px; border-bottom: 1px solid #f1f5f9; vertical-align: middle;}
+    .child-container { padding: 20px 25px; background-color: #f8fafc; border-left: 4px solid var(--primary); border-radius: 0 0 16px 0; }
+    .sub-table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .sub-table th { background: #ffffff; padding: 14px 15px; font-size: 11px; color: #64748b; border-bottom: 1px solid #e2e8f0;}
+    .sub-table td { padding: 16px 15px; font-size: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle;}
     
-    /* INDIKATOR EVIDENCE & STATUS */
-    .evidence-badge { display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 700;}
-    .text-target { color: #94a3b8; font-size: 11px; font-weight: 500;}
-    .badge-status { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 5px;}
-    .badge-hijau { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
-    .badge-kuning { background: #fffbeb; color: #b45309; border-color: #fde68a; }
-    .badge-merah { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+    .evidence-badge { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 700;}
+    .text-target { color: #94a3b8; font-size: 11px; font-weight: 600;}
+    .badge-status { padding: 6px 14px; border-radius: 50px; font-size: 10px; font-weight: 700; white-space: nowrap; border: none; display: inline-flex; align-items: center; gap: 6px;}
     
-    /* TOMBOL AKSI */
-    .btn-nilai-main { background: #ebdbb6; color: black; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 12px; display: inline-flex; gap: 6px; width: 110px; justify-content: center; transition: 0.2s;}
-    .btn-nilai-main:hover { background: #bda572; color: black; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(160, 131, 72, 0.3); }
-    .btn-update-main { background: #fffdf5; color: var(--accent); border: 1px solid var(--accent); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 12px; display: inline-flex; gap: 6px; width: 110px; justify-content: center; transition: 0.2s;}
-    .btn-update-main:hover { background: var(--accent); color: white; }
+    .badge-hijau { background: #ecfdf5; color: #059669; }
+    .badge-kuning { background: #fffbeb; color: #b45309; }
+    .badge-merah { background: #fef2f2; color: #dc2626; }
+    
+    .btn-nilai-main { background: var(--primary); color: white; padding: 0 16px; height: 36px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 11px; display: inline-flex; align-items: center; gap: 6px; justify-content: center; transition: 0.2s; border: none; cursor: pointer; }
+    .btn-nilai-main:hover:not(:disabled) { background: var(--primary-hover); color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(62,84,160,0.2); }
+    
+    .btn-update-main { background: var(--light-accent); color: var(--primary); border: 1px solid var(--primary); padding: 0 16px; height: 36px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 11px; display: inline-flex; align-items: center; gap: 6px; justify-content: center; transition: 0.2s; cursor: pointer; }
+    .btn-update-main:hover { background: var(--primary); color: white; }
+
+    .btn-disabled { background: #f1f5f9 !important; color: #94a3b8 !important; border: 1px solid #cbd5e1 !important; cursor: not-allowed !important; box-shadow: none !important; }
 </style>
 
 <div class="container-fluid py-4 px-4">
@@ -93,17 +75,17 @@
                             elseif ($peg['total_terkumpul'] > 0) $progress_color = '#f59e0b'; 
                             
                             $semua_selesai = ($peg['total_uk'] > 0 && $peg['uk_dinilai'] == $peg['total_uk']);
-                            $shortcut_kode = $semua_selesai ? $peg['uks'][0]['kode_unit'] : $peg['first_uk_to_score'];
+                            $shortcut_kode = $semua_selesai ? ($peg['uks'][0]['kode_unit'] ?? '') : $peg['first_uk_to_score'];
                         @endphp
+                        
+                        <!-- BARIS PARENT (LEVEL 1) -->
                         <tr class="parent-row" onclick="toggleChild('child-{{ $pid }}', this)">
-                            <td style="text-align: center;"><i class="bi bi-chevron-right icon-toggle" style="color: var(--accent); font-weight: bold;"></i></td>
+                            <td style="text-align: center;"><i class="bi bi-chevron-right icon-toggle"></i></td>
                             <td>
                                 <b style="color: var(--primary); font-size: 14px;">{{ $peg['pegawai_nama'] }}</b><br>
                                 <span style="font-size: 11px; color: #94a3b8;">NIP: {{ $peg['nip_nik'] }}</span>
                             </td>
-                            <td style="text-align: center;">
-                                <span class="jabatan-badge">{{ $peg['jabatan'] }}</span>
-                            </td>
+                            <td style="text-align: center;"><span class="jabatan-badge">{{ $peg['jabatan'] }}</span></td>
                             <td style="text-align: center;">
                                 @if($peg['total_terkumpul'] == 0)
                                     <span class="badge-status badge-merah"><i class="bi bi-x-circle-fill"></i> Belum Upload</span>
@@ -123,13 +105,23 @@
                                 @endif
                             </td>
                             <td style="text-align: center;" onclick="event.stopPropagation();">
-                                <a href="{{ route('pimpinan.tim_saya.beri_nilai', [$pid, $shortcut_kode]) }}" class="{{ $semua_selesai ? 'btn-update-main' : 'btn-nilai-main' }}">
-                                    <i class="bi {{ $semua_selesai ? 'bi-pencil-square' : 'bi-plus-circle' }}"></i> {{ $semua_selesai ? 'Ubah Nilai' : 'Beri Nilai' }}
-                                </a>
+                                @if($peg['total_terkumpul'] == 0)
+                                    <button class="btn-nilai-main btn-disabled" disabled style="width: 120px;">
+                                        <i class="bi bi-lock-fill"></i> Terkunci
+                                    </button>
+                                @elseif($semua_selesai)
+                                    <a href="{{ route('pimpinan.tim_saya.beri_nilai', [$pid, $shortcut_kode]) }}" class="btn-update-main" style="width: 120px;">
+                                        <i class="bi bi-pencil-square"></i> Ubah Nilai
+                                    </a>
+                                @else
+                                    <a href="{{ route('pimpinan.tim_saya.beri_nilai', [$pid, $shortcut_kode]) }}" class="btn-nilai-main" style="width: 120px;">
+                                        <i class="bi bi-ui-checks"></i> Beri Nilai
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                         
-                        <!-- BAGIAN CHILD ROW (RINCIAN UK) -->
+                        <!-- BAGIAN CHILD ROW (RINCIAN UK LEVEL 2) -->
                         <tr class="child-row" id="child-{{ $pid }}" style="display: none;">
                             <td colspan="6" style="padding: 0; border-bottom: 2px solid #cbd5e1;">
                                 <div class="child-container">
@@ -153,7 +145,7 @@
                                                 @endphp
                                                 <tr>
                                                     <td>
-                                                        <span style="font-size: 11px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 2px;"><i class="bi bi-tag-fill"></i> {{ $uk['kode_unit'] }}</span>
+                                                        <span style="font-size: 11px; font-weight: 700; color: var(--primary); display: block; margin-bottom: 2px;"><i class="bi bi-tag-fill"></i> {{ $uk['kode_unit'] }}</span>
                                                         <span style="color: #334155; font-weight: 500; font-size: 12px; line-height: 1.4;">{{ $uk['judul_unit'] }}</span>
                                                     </td>
                                                     <td style="text-align: center;">
@@ -168,21 +160,32 @@
                                                     </td>
                                                     <td style="text-align: center;">
                                                         @if(!empty($uk['waktu_terakhir'])) 
-                                                            <span style="font-size: 11px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 6px;">
-                                                                <i class="bi bi-clock-history"></i> {{ date('d M Y', strtotime($uk['waktu_terakhir'])) }}
-                                                            </span>
+                                                            <span style="font-size: 11px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 6px;"><i class="bi bi-clock-history"></i> {{ date('d M Y', strtotime($uk['waktu_terakhir'])) }}</span>
                                                         @else 
                                                             <span style="color: #cbd5e1; font-size: 12px; font-style: italic;">-</span> 
                                                         @endif
                                                     </td>
                                                     <td style="text-align: center;">
-                                                        @if($uk['is_dinilai']) <span class="badge-status badge-hijau" style="font-size:10px;"><i class="bi bi-check-circle-fill"></i> SUDAH DINILAI</span>
-                                                        @else <span class="badge-status badge-kuning" style="font-size:10px;"><i class="bi bi-exclamation-circle-fill"></i> BELUM DINILAI</span> @endif
+                                                        @if($uk['is_dinilai']) 
+                                                            <span class="badge-status badge-hijau" style="font-size:10px;"><i class="bi bi-check-circle-fill"></i> SUDAH DINILAI</span>
+                                                        @else 
+                                                            <span class="badge-status badge-kuning" style="font-size:10px;"><i class="bi bi-exclamation-circle-fill"></i> BELUM DINILAI</span> 
+                                                        @endif
                                                     </td>
                                                     <td style="text-align: center;">
-                                                        <a href="{{ route('pimpinan.tim_saya.beri_nilai', [$pid, $uk['kode_unit']]) }}" class="{{ $uk['is_dinilai'] ? 'btn-update-main' : 'btn-nilai-main' }}" style="width: 100px;">
-                                                            <i class="bi {{ $uk['is_dinilai'] ? 'bi-pencil-square' : 'bi-ui-checks' }}"></i> Nilai UK
-                                                        </a>
+                                                        @if($uk['terkumpul'] == 0)
+                                                            <button class="btn-nilai-main btn-disabled" disabled style="width: 100px;">
+                                                                <i class="bi bi-lock-fill"></i> Terkunci
+                                                            </button>
+                                                        @elseif($uk['is_dinilai'])
+                                                            <a href="{{ route('pimpinan.tim_saya.beri_nilai', [$pid, $uk['kode_unit']]) }}" class="btn-update-main" style="width: 100px;">
+                                                                <i class="bi bi-pencil-square"></i> Ubah Nilai
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ route('pimpinan.tim_saya.beri_nilai', [$pid, $uk['kode_unit']]) }}" class="btn-nilai-main" style="width: 100px;">
+                                                                <i class="bi bi-ui-checks"></i> Nilai UK
+                                                            </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach

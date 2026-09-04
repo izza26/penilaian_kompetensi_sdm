@@ -7,12 +7,16 @@
     <link rel="stylesheet" href="{{ asset('assets/css/css_admin/pegawai.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/css_admin/user.css') }}">
     <style>
-        .role { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block;}
-        .admin-role { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
-        .assessor-role { background: #fef9e8; color: #b45309; border: 1px solid #fde68a; }
-        .pimpinan-role { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
-        /* Tampilan Khusus Badge Role Pegawai (Warna Kuning/Emas) */
-        .pegawai-role { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+        /* Lencana Role Dibuat Membulat Penuh (Pill) */
+        .role { padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 700; display: inline-block; letter-spacing: 0.5px;}
+
+        /* Warna Lembut & Modern Tanpa Border Kaku */
+        .admin-role { background: #fee2e2; color: #dc2626; border: none; }
+        .assessor-role { background: #fef9e8; color: #b45309; border: none; }
+        .pimpinan-role { background: #e0e7ff; color: #2563eb; border: none; }
+
+        /* Pegawai dibuat ungu soft agar lebih stand-out */
+        .pegawai-role { background: #f3e8ff; color: #7e22ce; border: none; }
     </style>
 @endpush
 
@@ -23,7 +27,11 @@
             <input type="text" name="cari" class="search-input" placeholder="Cari user..." value="{{ $cari }}" onchange="this.form.submit()">
             @if($cari) <a href="{{ route('admin.user.index') }}" class="btn-reset">(X) Reset</a> @endif
         </form>
-        <a href="{{ route('admin.user.create') }}" class="btn-primary" style="text-decoration:none;">+ Tambah User</a>
+
+        <!-- PEMBATASAN HAK AKSES: Tombol Tambah hanya untuk Super Admin -->
+        @if(Auth::user()->role == 'superadmin')
+            <a href="{{ route('admin.user.create') }}" class="btn-primary" style="text-decoration:none;">+ Tambah User</a>
+        @endif
     </div>
 
     @if(session('success'))
@@ -54,13 +62,18 @@
                         <td class="action-buttons">
                             <!-- ID Diamankan, TAPI CLASS UI BUTTON TETAP MEMAKAI BAWAAN ASLI -->
                             @php $idAman = $user->id ?? $user->user_id ?? $user->pegawai_id; @endphp
-                            
+
+                            <!-- Tombol View tetap bisa diakses semua level Admin -->
                             <a href="{{ route('admin.user.show', $idAman) }}" class="action-btn view-btn"><i class="bi bi-eye"></i></a>
-                            <a href="{{ route('admin.user.edit', $idAman) }}" class="action-btn edit-btn"><i class="bi bi-pencil-square"></i></a>
-                            <form action="{{ route('admin.user.destroy', $idAman) }}" method="POST" style="display:inline;">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="action-btn delete-btn" onclick="return confirm('Yakin ingin menghapus user ini?');"><i class="bi bi-trash"></i></button>
-                            </form>
+
+                            <!-- PEMBATASAN HAK AKSES: Tombol Edit & Delete hanya untuk Super Admin -->
+                            @if(Auth::user()->role == 'superadmin')
+                                <a href="{{ route('admin.user.edit', $idAman) }}" class="action-btn edit-btn"><i class="bi bi-pencil-square"></i></a>
+                                <form action="{{ route('admin.user.destroy', $idAman) }}" method="POST" style="display:inline;">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="action-btn delete-btn" onclick="return confirm('Yakin ingin menghapus user ini?');"><i class="bi bi-trash"></i></button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @empty

@@ -5,24 +5,17 @@
 @section('back_url', route('pimpinan.pegawai.index'))
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/css_pimpinan/pegawai.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/css_pimpinan/tambah_pegawai.css') }}">
 @endpush
 
 @section('content')
 <div class="page-card">
-    <div class="page-header">
-        <div class="page-title">
-            <h2>Tambah Pegawai</h2>
-            <p>Lengkapi informasi pegawai yang akan dinilai.</p>
-        </div>
-    </div>
 
     <form action="{{ route('pimpinan.pegawai.store') }}" method="POST">
         @csrf
         <div class="form-grid">
             <div class="form-group">
-                <label>NIP / NIK</label>
+                <label>NIP</label>
                 <input type="text" name="nip_nik" required>
             </div>
             <div class="form-group">
@@ -55,7 +48,7 @@
             </div>
         </div>
         <div class="form-footer">
-            <button type="submit" class="btn-primary" style="padding: 12px 25px; border: none; border-radius: 8px; background: #bda572; color: white; cursor: pointer;">Simpan Pegawai</button>
+            <button type="submit" class="btn-primary">Simpan Pegawai</button>
         </div>
     </form>
 </div>

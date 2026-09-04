@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 use App\Models\Pegawai;
+
 
 class AuthController extends Controller
 {
@@ -23,10 +24,10 @@ class AuthController extends Controller
 
         $input = $request->username;
 
-        // PERBAIKAN: Cari pegawai berdasarkan nip_nik ATAU username
         $pegawai = Pegawai::where('nip_nik', $input)
-                          ->orWhere('username', $input)
-                          ->first();
+                  ->orWhere('username', $input)
+                  ->orWhere('email', $input)
+                  ->first();
 
         if ($pegawai) {
             $isPasswordValid = false;

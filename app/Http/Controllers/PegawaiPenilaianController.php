@@ -124,95 +124,69 @@ class PegawaiPenilaianController extends Controller
     // --- 4. HASIL KOMPETENSI PROFILE MATCHING ---
     public function hasil(Request $request)
     {
-        $pegawai = Auth::user();
+        $userLogin = \Illuminate\Support\Facades\Auth::user();
+        $pegawai = \Illuminate\Support\Facades\DB::table('geotrax_v3.pegawai_skkni')->where('username', $userLogin->username)->first();
+        
+        if (!$pegawai) return redirect()->route('login');
+
         $jabatanPegawai = $pegawai->jabatan ?? 'Belum Ada Jabatan';
         
-        // 1. Ambil list periode dan urutkan dari yang terbaru
-        $listPeriode = DB::table('periode_penilaian')
-            ->where('nama_periode', 'ILIKE', "%{$jabatanPegawai}%")
+        // 1. Ambil list periode
+        $listPeriode = \Illuminate\Support\Facades\DB::table('geotrax_v3.periode_penilaian')
+            ->where('nama_periode', $jabatanPegawai)
             ->orderBy('tanggal_selesai', 'desc')
             ->get();
 
-        // 2. Auto-select periode terbaru jika user belum memilih dari dropdown
         $periode_terpilih = $request->periode_id;
         if (empty($periode_terpilih) && $listPeriode->isNotEmpty()) {
             $periode_terpilih = $listPeriode->first()->periode_id;
         }
 
         $hasilRingkasan = null;
-        $hasilDetail = collect([]);
         $match_scores = [];
         $best_match_role = '-';
         $is_match = false;
 
         if ($periode_terpilih) {
-            // Ambil nama periode (Karena di sistem ini nama periode identik dengan nama jabatan/posisi)
-            $nama_periode = DB::table('periode_penilaian')->where('periode_id', $periode_terpilih)->value('nama_periode');
+            // AMBIL HASIL PROFILE MATCHING ASLI DARI DATABASE
+            $hasil_pm = \Illuminate\Support\Facades\DB::table('geotrax_v3.p_hasil_profile_matching as pm')
+                ->join('geotrax_v3.p_master_jabatan as mj', 'pm.id_jabatan', '=', 'mj.id_jabatan')
+                ->where('pm.id_pegawai', $pegawai->pegawai_id)
+                ->orderBy('pm.peringkat', 'asc') // Peringkat 1 di atas
+                ->get();
 
-            // 3. Kalkulasi Rata-rata Nilai Akhir (Keseluruhan Unit Kompetensi)
-            $query_header = DB::table('penilaian_header as ph')
-                ->join('unit_kompetensi as uk', 'ph.kode_unit', '=', 'uk.kode_unit')
-                ->where('ph.pegawai_id', $pegawai->pegawai_id)
-                ->where('uk.posisi_target', 'ILIKE', "%{$nama_periode}%");
-
-            if ($query_header->count() > 0) {
-                // Rata-rata dari seluruh nilai unit yang sudah disahkan
-                $avg_nilai = $query_header->avg('ph.nilai_akhir');
+            if ($hasil_pm->isNotEmpty()) {
+                $best_match = $hasil_pm->first(); // Peringkat 1
                 
-                if ($avg_nilai >= 85) $kat = "Sangat Kompeten";
-                elseif ($avg_nilai >= 70) $kat = "Kompeten";
-                elseif ($avg_nilai >= 55) $kat = "Cukup Kompeten";
-                else $kat = "Belum Kompeten";
+                $kategori = "Sangat Sesuai";
+                if ($best_match->nilai_total < 3) $kategori = "Cukup Sesuai";
+                if ($best_match->nilai_total < 2) $kategori = "Kurang Sesuai";
 
                 $hasilRingkasan = (object)[
-                    'nilai_akhir' => $avg_nilai,
-                    'kategori' => $kat
+                    'nilai_akhir' => $best_match->nilai_total,
+                    'kategori' => $kategori
                 ];
-            }
 
-            // 4. Detail Tabel Skor Historis per Aktivitas
-            $hasilDetail = DB::table('penilaian_header as ph')
-                ->join('unit_kompetensi as uk', 'ph.kode_unit', '=', 'uk.kode_unit')
-                ->join('penilaian_detail as pd', 'ph.penilaian_id', '=', 'pd.penilaian_id')
-                ->join('aktivitas_kompeten as ak', 'pd.aktivitas_id', '=', 'ak.aktivitas_id')
-                ->where('ph.pegawai_id', $pegawai->pegawai_id)
-                ->where('uk.posisi_target', 'ILIKE', "%{$nama_periode}%")
-                ->select(
-                    'pd.aktivitas_id', 'ak.detail_aktivitas', 'pd.skor_final', 
-                    'ph.nilai_akhir', 'ph.kategori', 'ph.rekomendasi'
-                )
-                ->orderBy('ak.aktivitas_id', 'asc')
-                ->paginate(5);
-
-            // 5. DUMMY LOGIC: REKOMENDASI PENEMPATAN PROFILE MATCHING
-            if ($hasilRingkasan) {
-                $roles = ['Kurator', 'Edukator', 'Konservator', 'Penata Pameran', 'Register', 'Hubungan Masyarakat dan Pemasaran'];
-                $nilai_aktual = $hasilRingkasan->nilai_akhir; // Memakai rata-rata skor
-
-                // Gunakan ID pegawai sebagai seed agar random generator konsisten (angka tidak berubah-ubah saat di-refresh)
-                srand($pegawai->pegawai_id); 
+                $best_match_role = $best_match->nama_jabatan;
                 
-                foreach($roles as $r) {
-                    if ($r == $jabatanPegawai) {
-                        $match_scores[$r] = $nilai_aktual; 
-                    } else {
-                        // Generate nilai dummy (40.00 - 85.00) untuk bidang lain
-                        $match_scores[$r] = rand(4000, 8500) / 100;
-                    }
+                // Cek apakah jabatan sekarang = rekomendasi sistem
+                $is_match = (stripos($jabatanPegawai, $best_match_role) !== false || stripos($best_match_role, $jabatanPegawai) !== false);
+
+                // Siapkan data untuk grafik bar
+                foreach($hasil_pm as $pm) {
+                    // Skala max PM adalah 5.0, kita ubah ke persen untuk lebar grafik
+                    $persen = ($pm->nilai_total / 5.0) * 100; 
+                    
+                    $match_scores[$pm->nama_jabatan] = [
+                        'skor_asli' => $pm->nilai_total,
+                        'persen' => min($persen, 100)
+                    ];
                 }
-                srand(); // Reset seed kembali ke mode acak
-
-                // Urutkan nilai dari tertinggi ke terendah (arsort)
-                arsort($match_scores);
-                
-                // Ambil jabatan yang berada di urutan teratas (paling cocok/GAP terkecil)
-                $best_match_role = array_key_first($match_scores);
-                $is_match = ($best_match_role == $jabatanPegawai);
             }
         }
 
         return view('pegawai.penilaian.hasil', compact(
-            'listPeriode', 'periode_terpilih', 'hasilRingkasan', 'hasilDetail', 
+            'listPeriode', 'periode_terpilih', 'hasilRingkasan', 
             'jabatanPegawai', 'match_scores', 'best_match_role', 'is_match'
         ));
     }

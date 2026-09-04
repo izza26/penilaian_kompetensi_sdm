@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'users';
+    protected $table = 'geotrax_v3.users';
 
     // Sesuaikan dengan kolom di databasemu
     protected $fillable = [

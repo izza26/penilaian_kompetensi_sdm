@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AktivitasKompeten extends Model
 {
-    protected $table = 'aktivitas_kompeten';
+    protected $table = 'geotrax_v3.aktivitas_kompeten';
     protected $primaryKey = 'aktivitas_id';
     public $incrementing = false; // PK berupa string
     protected $keyType = 'string';

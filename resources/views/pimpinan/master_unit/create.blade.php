@@ -2,25 +2,89 @@
 @section('title', 'Tambah Unit SKKNI')
 @section('page_title', 'Tambah Unit Kompetensi')
 @section('page_subtitle', 'Buat hierarki unit, elemen, dan aktivitas dalam satu kali proses.')
-@section('back_url', route('admin.master_unit.index'))
+@section('back_url', route('pimpinan.master_unit.index'))
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/css_pimpinan/master_unit.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .form-section { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 30px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .section-title { font-size: 16px; color: #1e293b; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        /* KARTU FORM UTAMA */
+        .form-section { 
+            background: #fff; border-radius: 24px; border: none; padding: 32px; 
+            margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); 
+        }
+        
+        .section-title { 
+            font-size: 18px; color: #1e293b; border-bottom: 1px dashed #e2e8f0; 
+            padding-bottom: 15px; margin-bottom: 25px; font-weight: 700; 
+            display: flex; align-items: center; gap: 8px; 
+        }
+        .section-title i { color: #3e54a0 !important; font-size: 20px;}
+
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; }
-        .form-control { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; box-sizing: border-box;}
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        
+        /* INPUT DIBUAT MELENGKUNG (PILL-SHAPE) */
+        .form-control { 
+            width: 100%; padding: 0 20px; height: 48px; border: 1px solid #cbd5e1; 
+            border-radius: 50px; font-size: 13px; box-sizing: border-box; outline: none;
+            background: #f9fafb; transition: 0.2s; color: #1e293b; font-family: inherit;
+        }
+        .form-control:focus { border-color: #3e54a0; background: #fff; box-shadow: 0 0 0 3px rgba(62, 84, 160, 0.15); }
+        textarea.form-control { border-radius: 20px; padding: 16px 20px; height: auto; min-height: 80px;}
+
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .elemen-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; margin-bottom: 20px; position: relative;}
-        .btn-hapus-elemen { position: absolute; top: 15px; right: 15px; background: #fef2f2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
-        .aktivitas-box { background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #A08348; border-radius: 8px; padding: 20px; margin-top: 15px; position: relative;}
-        .btn-hapus-aktivitas { position: absolute; top: 15px; right: 15px; color: #ef4444; background: none; border: none; cursor: pointer; font-size: 16px; }
-        .btn-tambah-elemen { background: #fffdf5; color: #A08348; border: 1px dashed #A08348; width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 30px;}
-        .btn-tambah-aktivitas { background: #f1f5f9; color: #475569; border: 1px dashed #94a3b8; padding: 10px 15px; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; margin-top: 10px;}
-        .floating-save { position: fixed; bottom: 30px; right: 30px; background: #A08348; color: white; border: none; padding: 16px 30px; border-radius: 30px; font-size: 16px; font-weight: 700; box-shadow: 0 10px 25px rgba(160, 131, 72, 0.3); cursor: pointer; display: flex; align-items: center; gap: 10px; z-index: 1000;}
+
+        /* ELEMEN BOX DIBUAT LEBIH ELEGAN */
+        .elemen-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; margin-bottom: 20px; position: relative;}
+        
+        .btn-hapus-elemen { 
+            position: absolute; top: 20px; right: 20px; background: #fff1f2; color: #f43f5e; 
+            border: none; padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 600; 
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-hapus-elemen:hover { background: #f43f5e; color: white; }
+
+        /* AKTIVITAS BOX & LIST ROYAL BLUE */
+        .aktivitas-box { 
+            background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #3e54a0; 
+            border-radius: 16px; padding: 24px; margin-top: 15px; position: relative;
+        }
+        
+        .btn-hapus-aktivitas { 
+            position: absolute; top: 15px; right: 15px; color: #f43f5e; background: #fff1f2; 
+            border: none; cursor: pointer; font-size: 14px; width: 30px; height: 30px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.2s;
+        }
+        .btn-hapus-aktivitas:hover { background: #f43f5e; color: white; }
+
+        /* TOMBOL TAMBAH (Royal Blue Outline) */
+        .btn-tambah-elemen { 
+            background: #f4f7fe; color: #3e54a0; border: 2px dashed #3e54a0; 
+            width: 100%; padding: 15px; border-radius: 50px; font-weight: 600; font-size: 13px; 
+            cursor: pointer; margin-bottom: 30px; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-tambah-elemen:hover { background: #3e54a0; color: white; }
+
+        .btn-tambah-aktivitas { 
+            background: #ffffff; color: #3e54a0; border: 1px dashed #cbd5e1; 
+            padding: 10px 20px; border-radius: 50px; font-weight: 600; font-size: 12px; 
+            cursor: pointer; margin-top: 10px; transition: 0.2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-tambah-aktivitas:hover { background: #f4f7fe; border-color: #3e54a0; }
+
+        /* FLOATING SAVE BUTTON (Royal Blue Solid) */
+        .floating-save { 
+            position: fixed; bottom: 35px; right: 40px; 
+            background: #3e54a0; color: white; border: none; padding: 16px 32px; 
+            border-radius: 50px; font-size: 14px; font-weight: 700; 
+            box-shadow: 0 10px 25px rgba(62, 84, 160, 0.35); 
+            cursor: pointer; display: flex; align-items: center; gap: 10px; z-index: 1000;
+            transition: 0.2s;
+        }
+        .floating-save:hover { background: #2b3a70; transform: translateY(-3px); box-shadow: 0 15px 30px rgba(62, 84, 160, 0.4); }
     </style>
 @endpush
 
@@ -38,7 +102,7 @@
             <div class="section-title"><i class="bi bi-1-circle-fill" style="color: #A08348;"></i> Identitas Unit Kompetensi</div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Kode Unit (Wajib Unik)</label>
+                    <label>Kode Unit</label>
                     <input type="text" name="kode_unit" class="form-control" value="{{ old('kode_unit') }}" placeholder="Contoh: R.91MUS02.001.3" required>
                 </div>
                 <div class="form-group">

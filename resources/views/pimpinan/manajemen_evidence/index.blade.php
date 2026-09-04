@@ -6,29 +6,63 @@
 @push('styles')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .filter-box { background: #ffffff; border-radius: 12px; padding: 15px 25px; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.02); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
-        .filter-box label { font-size: 13px; font-weight: 600; color: #475569; white-space: nowrap; margin: 0; }
-        .filter-box select { flex: 1; max-width: calc(100% - 200px); padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; color: #1e293b; outline: none; cursor: pointer;}
-        .unit-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 25px; overflow: hidden; }
-        .unit-card-header { background: #f8fafc; padding: 18px 25px; border-bottom: 1px solid #e2e8f0; }
-        .unit-card-header h3 { margin: 0 0 4px 0; font-size: 16px; color: #1e293b;}
-        .unit-card-header span { font-size: 12px; font-weight: 700; color: #bda572; background: #fffbeb; padding: 4px 10px; border-radius: 6px; border: 1px solid #fde68a;}
+        /* Filter Box Atas */
+        .filter-box { 
+            background: #ffffff; border-radius: 24px; padding: 20px 32px; border: none; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02); margin-bottom: 24px; 
+            display: flex; align-items: center; gap: 20px; 
+            box-sizing: border-box; width: 100%; /* Pastikan kontainer full dan tidak bocor */
+        }
+        .filter-box label { font-size: 13px; font-weight: 700; color: #475569; white-space: nowrap; margin: 0; display: flex; align-items: center; gap: 8px;}
+        
+        /* Input Select Pill-Shape */
+        .filter-box select { 
+            flex: 1; 
+            min-width: 0; /* KUNCI ANTI-JEBOL FLEXBOX */
+            padding: 0 20px; height: 48px; border: 1px solid #cbd5e1; 
+            border-radius: 50px; font-size: 13px; color: #1e293b; outline: none; cursor: pointer; 
+            background-color: #f9fafb; font-family: inherit; transition: 0.2s;
+            box-sizing: border-box; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; /* Teks kepanjangan jadi titik-titik */
+        }
+        .filter-box select:focus { border-color: #3e54a0; background-color: #ffffff; box-shadow: 0 0 0 3px rgba(62, 84, 160, 0.15); }
+
+        /* Kartu Unit Kompetensi */
+        .unit-card { background: #fff; border-radius: 24px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.02); margin-bottom: 24px; overflow: hidden; }
+        .unit-card-header { background: #ffffff; padding: 24px 32px; border-bottom: 1px dashed #cbd5e1; }
+        .unit-card-header h3 { margin: 0; font-size: 18px; color: #1e293b; font-weight: 700;}
+        .unit-card-header span { 
+            font-size: 11px; font-weight: 700; color: #3e54a0; background: #f4f7fe; 
+            padding: 6px 14px; border-radius: 50px; border: none; display: inline-block; margin-bottom: 10px; letter-spacing: 0.5px;
+        }
+
+        /* Tabel */
         .styled-table { width: 100%; border-collapse: collapse; }
-        .styled-table th { background: #ffffff; color: #475569; padding: 14px 25px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
-        .styled-table td { padding: 16px 25px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; vertical-align: top; }
+        .styled-table th { background: transparent; color: #64748b; padding: 16px 24px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; font-weight: 700; }
+        .styled-table td { padding: 20px 24px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; vertical-align: top; }
+        
         .inline-edit-row { transition: 0.2s; cursor: pointer; }
         .inline-edit-row:hover { background-color: #f8fafc; }
-        .text-id { font-size: 13px; font-weight: 700; color: #bda572; margin-bottom: 4px; display: block;}
-        .text-detail { font-size: 14px; font-weight: 600; color: #0f172a; line-height: 1.4; display: block;}
-        .text-kriteria { font-size: 13px; color: #475569; line-height: 1.5;}
-        .badge-evidence { background: #fffbeb; color: #b45309; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid #fde68a; display: inline-block; margin-bottom: 10px;}
-        .ev-group { margin-bottom: 12px; }
-        .ev-group-title { font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;}
-        .ev-list { padding-left: 18px; margin: 0; color: #0f172a; font-size: 13px; font-weight: 500;}
-        .ev-list li::marker { color: #bda572; }
-        .badge-kosong { background: #fef2f2; color: #dc2626; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid #fecaca; display: inline-block; }
-        .btn-atur { display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: black; text-decoration: none; font-size: 13px; font-weight: 600; background: #ebdbb6; padding: 8px 16px; border-radius: 8px; border: 1px solid #ebdbb6;}
-        .btn-atur:hover { background: #bda572; transform: translateY(-2px);}
+        
+        .text-id { font-size: 11px; font-weight: 700; color: #3e54a0; margin-bottom: 6px; display: block;}
+        .text-detail { font-size: 14px; font-weight: 600; color: #1e293b; line-height: 1.5; display: block;}
+        .text-kriteria { font-size: 13px; color: #475569; line-height: 1.6;}
+        
+        /* Indikator Evidence */
+        .badge-evidence { background: #f4f7fe; color: #3e54a0; padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 700; border: none; display: inline-block; margin-bottom: 12px;}
+        .ev-group { margin-bottom: 16px; background: #f8fafc; padding: 12px 16px; border-radius: 12px; border: 1px dashed #cbd5e1;}
+        .ev-group-title { font-size: 11px; font-weight: 700; color: #1e293b; margin-bottom: 8px; text-transform: uppercase;}
+        .ev-list { padding-left: 20px; margin: 0; color: #475569; font-size: 13px; font-weight: 500;}
+        .ev-list li { margin-bottom: 4px; }
+        .ev-list li::marker { color: #3e54a0; }
+        .badge-kosong { background: #fff1f2; color: #e11d48; padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 600; border: none; display: inline-block; }
+        
+        /* Tombol Atur Pill-Shape */
+        .btn-atur { 
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px; 
+            color: white; text-decoration: none; font-size: 12px; font-weight: 600; 
+            background: #3e54a0; padding: 0 20px; height: 36px; border-radius: 50px; border: none; transition: 0.2s;
+        }
+        .btn-atur:hover { background: #2b3a70; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(62, 84, 160, 0.2);}
     </style>
 @endpush
 

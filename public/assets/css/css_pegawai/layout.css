@@ -123,12 +123,11 @@ body {
 /* SECTION MENU */
 .sidebar-menu {
     flex: 1;
-    overflow-y: auto;
-    scrollbar-width: none; /* Hilangkan scrollbar Firefox */
-}
-
-.sidebar-menu::-webkit-scrollbar {
-    display: none; /* Hilangkan scrollbar Chrome/Webkit */
+    /* Ubah dari overflow-y: auto menjadi hidden jika isinya sedikit */
+    overflow-y: hidden; 
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
 }
 
 .sidebar-menu ul {
@@ -142,7 +141,7 @@ body {
     color: #94a3b8;
     font-weight: 700;
     letter-spacing: 1px;
-    margin: 12px 0 8px !important;
+    margin: 16px 0 8px !important; /* Tambah margin atas agar tidak menumpuk */
     text-transform: uppercase;
 }
 
@@ -195,7 +194,7 @@ body {
 .sidebar-footer {
     padding-top: 12px !important;
     border-top: 1px solid rgba(255,255,255,.08);
-    margin-top: auto;
+    margin-top: auto; /* Memaksa footer selalu ada di paling bawah */
 }
 
 .logout-link {

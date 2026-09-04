@@ -9,7 +9,7 @@ class Pegawai extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'pegawai';
+    protected $table = 'geotrax_v3.pegawai_skkni';
     protected $primaryKey = 'pegawai_id';
     public $timestamps = false;
 

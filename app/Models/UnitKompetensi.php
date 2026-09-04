@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UnitKompetensi extends Model
 {
-    protected $table = 'unit_kompetensi';
+    protected $table = 'geotrax_v3.unit_kompetensi';
     protected $primaryKey = 'kode_unit';
     public $incrementing = false; // Karena primary key-nya string (huruf)
     protected $keyType = 'string';

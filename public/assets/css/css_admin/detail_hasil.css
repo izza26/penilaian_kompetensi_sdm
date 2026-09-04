@@ -1,341 +1,58 @@
-/* ==========================
-   PAGE HEADER
-========================== */
-
-.page-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:28px;
+.pegawai-card {
+    background: #ffffff; border-radius: 24px; padding: 32px; border: none;
+    margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
 }
 
-.page-title h2{
-    font-size:28px;
-    font-weight:700;
-    color:#2B2926;
-    margin-bottom:8px;
+.pegawai-left { display: flex; align-items: center; gap: 24px; }
+.avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: #3e54a0; color: #ffffff; /* Royal Blue */
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700; box-shadow: 0 8px 20px rgba(62, 84, 160, 0.25);
 }
 
-.page-title p{
-    font-size:15px;
-    color:#6F6A64;
+.pegawai-left h3 { font-size: 22px; font-weight: 700; color: #1e293b; margin: 0 0 6px 0; }
+.pegawai-left p { color: #64748b; margin: 0 0 12px 0; font-size: 13px; font-weight: 500;}
+
+.pegawai-right { text-align: right; background: #f4f7fe; padding: 16px 32px; border-radius: 20px; }
+.pegawai-right small { color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase;}
+.pegawai-right h2 { font-size: 36px; color: #3e54a0; margin: 4px 0 0 0; font-weight: 800; line-height: 1; }
+
+.badge { display: inline-block; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; }
+.badge.kompeten { background: #ecfdf5; color: #059669; }
+.badge.belum { background: #fff1f2; color: #f43f5e; }
+
+.content-card {
+    background: #ffffff; border-radius: 24px; padding: 32px; border: none;
+    margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);
 }
-
-.btn-back{
-    display:flex;
-    align-items:center;
-    gap:8px;
-
-    padding:12px 18px;
-
-    background:#F3EFEA;
-
-    color:#4F4A45;
-
-    border-radius:12px;
-
-    text-decoration:none;
-
-    font-weight:500;
-
-    transition:.2s;
-}
-
-.btn-back:hover{
-    background:#ECE5DD;
-}
-
-/* ==========================
-   CARD UMUM
-========================== */
-
-.content-card{
-    background:#fff;
-    border:1px solid #EAE6E1;
-    border-radius:24px;
-    padding:26px;
-    margin-bottom:24px;
-}
-
-.content-card h3{
-    font-size:18px;
-    font-weight:700;
-    color:#2B2926;
-    margin-bottom:24px;
-}
-
-/* ==========================
-   PEGAWAI CARD
-========================== */
-
-.pegawai-card{
-    background:#fff;
-    border:1px solid #EAE6E1;
-    border-radius:24px;
-
-    padding:30px;
-
-    margin-bottom:24px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.pegawai-left{
-    display:flex;
-    align-items:center;
-    gap:22px;
-}
-
-.avatar{
-    width:72px;
-    height:72px;
-
-    border-radius:50%;
-
-    background:#B16A35;
-
-    color:#fff;
-
-    font-size:30px;
-    font-weight:700;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.pegawai-left h3{
-    font-size:20px;
-    font-weight:700;
-    color:#2B2926;
-    margin-bottom:4px;
-}
-
-.pegawai-left p{
-    color:#6F6A64;
-    margin-bottom:12px;
-}
-
-.pegawai-right{
-    text-align:right;
-}
-
-.pegawai-right small{
-    display:block;
-    color:#8B847D;
-    margin-bottom:6px;
-}
-
-.pegawai-right h2{
-    font-size:48px;
-    color:#B16A35;
-    font-weight:700;
-}
-
-/* ==========================
-   BADGE
-========================== */
-
-.badge{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:10px 18px;
-
-    border-radius:999px;
-
-    font-size:14px;
-    font-weight:600;
-}
-
-.kompeten{
-    background:#DFF2E6;
-    color:#149954;
-}
-
-.belum{
-    background:#FDE7E7;
-    color:#E54848;
-}
-
-/* ==========================
-   INFO GRID
-========================== */
-
-.info-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:28px 60px;
-}
-
-.info-grid label{
-    display:block;
-    color:#8B847D;
-    font-size:14px;
-    margin-bottom:8px;
-}
-
-.info-grid span{
-    font-size:15px;
-    font-weight:600;
-    color:#2B2926;
-}
-
-/* ==========================
-   SUMMARY
-========================== */
-
-.summary-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-}
-
-.summary-item{
-    background:#FAF8F5;
-    border:1px solid #EEE8E2;
-    border-radius:18px;
-    padding:22px;
-}
-
-.summary-item label{
-    display:block;
-    color:#8B847D;
-    margin-bottom:10px;
-}
-
-.summary-item h4{
-    font-size:28px;
-    font-weight:700;
-    color:#2B2926;
-}
-
-/* ==========================
-   SCORE LIST
-========================== */
-
-.score-list{
-    display:flex;
-    flex-direction:column;
-    gap:22px;
-}
-
-.score-item{
-    background:#FAF8F5;
-    border:1px solid #EEE8E2;
-    border-radius:18px;
-    padding:20px;
-}
-
-.score-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:12px;
-}
-
-.score-header span{
-    color:#2B2926;
-    font-weight:500;
-}
-
-.score-header strong{
-    color:#B16A35;
-    font-weight:700;
-}
-
-.progress{
-    width:100%;
-    height:10px;
-
-    background:#ECE8E3;
-
-    border-radius:999px;
-
-    overflow:hidden;
-}
-
-.progress-fill{
-    height:100%;
-    background:#B16A35;
-    border-radius:999px;
-}
-
-.w100{
-    width:100%;
-}
-
-.w80{
-    width:80%;
-}
-
-/* ==========================
-   NOTE
-========================== */
-
-.note-box{
-    background:#FAF8F5;
-    border:1px solid #EEE8E2;
-
-    border-radius:18px;
-
-    padding:22px;
-
-    color:#4F4A45;
-
-    line-height:1.8;
-}
-
-/* ==========================
-   FOOTER ACTION
-========================== */
-
-.footer-action{
-    margin-top:10px;
-    display:flex;
-    justify-content:flex-start;
-}
-
-/* ==========================
-   RESPONSIVE
-========================== */
-
-@media(max-width:992px){
-
-    .pegawai-card{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:25px;
-    }
-
-    .pegawai-right{
-        text-align:left;
-    }
-
-    .summary-grid{
-        grid-template-columns:1fr;
-    }
-
-    .info-grid{
-        grid-template-columns:1fr;
-    }
-
-}
-
-@media(max-width:768px){
-
-    .page-header{
-        flex-direction:column;
-        gap:15px;
-    }
-
-    .pegawai-left{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
+.content-card h3 { font-size: 16px; font-weight: 700; color: #1e293b; margin: 0 0 20px 0; border-bottom: 1px dashed #e2e8f0; padding-bottom: 12px; }
+
+.info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 40px; }
+.info-grid div { display: flex; flex-direction: column; gap: 6px; }
+.info-grid label { font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;}
+.info-grid span { font-size: 14px; font-weight: 600; color: #1e293b; }
+
+.summary-grid { display: flex; gap: 24px; flex-wrap: wrap; }
+.summary-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px 30px; border-radius: 20px; flex: 1; text-align: center; }
+.summary-item label { display: block; font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 8px; text-transform: uppercase;}
+.summary-item h4 { font-size: 28px; color: #3e54a0; margin: 0; font-weight: 800; }
+
+.score-list { display: flex; flex-direction: column; gap: 20px; }
+.score-item { background: #f9fafb; padding: 20px; border-radius: 16px; border: 1px dashed #e2e8f0; }
+.score-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.score-header span { font-size: 13px; font-weight: 600; color: #334155; line-height: 1.5; padding-right: 20px;}
+.score-header strong { font-size: 16px; color: #1e293b; font-weight: 800; }
+
+.progress { width: 100%; height: 10px; background: #e2e8f0; border-radius: 50px; overflow: hidden; }
+.progress-fill { height: 100%; background: #3e54a0; border-radius: 50px; } /* Progress Bar Biru */
+
+.note-box { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 20px; border-radius: 16px; color: #475569; font-size: 13px; font-style: italic; line-height: 1.6; }
+
+@media(max-width: 768px) {
+    .pegawai-card { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .pegawai-right { width: 100%; text-align: left; }
+    .info-grid { grid-template-columns: 1fr; }
+    .summary-grid { flex-direction: column; }
 }

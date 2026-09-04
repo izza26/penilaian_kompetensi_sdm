@@ -8,46 +8,68 @@ use App\Models\ElemenKompetensi;
 use App\Models\AktivitasKompeten;
 use App\Models\PeriodePenilaian;
 
+// --- DUA BARIS PENYELAMAT INI HARUS ADA DI SINI! ---
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 class ManajemenPenilaianController extends Controller
 {
     // --- 1. TAMPILAN HALAMAN MANAJEMEN PENILAIAN ---
+    // --- 1. TAMPILAN HALAMAN MANAJEMEN PENILAIAN ---
     public function periodeIndex()
     {
-        $userLogin = \Illuminate\Support\Facades\Auth::user();
-        if (isset($userLogin->jabatan)) {
-            $pimpinan = $userLogin; 
-        } else {
+        $userLogin = Auth::user();
+        if (isset($userLogin->jabatan)) { $pimpinan = $userLogin; } 
+        else {
             $nip = $userLogin->username ?? $userLogin->nip_nik;
-            $pimpinan = \App\Models\Pegawai::where('nip_nik', $nip)->orWhere('username', $nip)->first();
+            $pimpinan = \App\Models\Pegawai::where('nip_nik', $nip)->first();
         }
 
-        $jabatanPimpinan = trim($pimpinan->jabatan ?? '');
-        $allowed_roles = [];
+        // PERUBAHAN URUTAN: Sesuai hierarki SKKNI Museum (UK 001 s/d 034)
+        $posisi_list = [
+            'Kurator',
+            'Register',
+            'Konservator',
+            'Edukator',
+            'Penata Pameran',
+            'Hubungan Masyarakat dan Pemasaran'
+        ];
 
-        if (str_contains($jabatanPimpinan, 'Kepala Museum')) {
-            $allowed_roles = ['Kurator', 'Konservator', 'Register', 'Edukator', 'Penata Pameran', 'Hubungan Masyarakat dan Pemasaran'];
-        } elseif (str_contains($jabatanPimpinan, 'Registrasi') || str_contains($jabatanPimpinan, 'Konservasi')) {
-            $allowed_roles = ['Konservator', 'Register'];
-        } elseif (str_contains($jabatanPimpinan, 'Edukasi') || str_contains($jabatanPimpinan, 'Program Publik')) {
-            $allowed_roles = ['Edukator', 'Penata Pameran'];
-        } elseif (str_contains($jabatanPimpinan, 'Humas') || str_contains($jabatanPimpinan, 'Pemasaran')) {
-            $allowed_roles = ['Hubungan Masyarakat dan Pemasaran'];
-        } elseif (str_contains($jabatanPimpinan, 'Kurator')) {
-            $allowed_roles = ['Kurator'];
-        }
+        // KUNCI PERBAIKAN: Memaksa hasil database agar diurutkan sesuai array $posisi_list di atas
+        $periods = DB::table('geotrax_v3.periode_penilaian')
+                     ->whereIn('nama_periode', $posisi_list)
+                     ->get()
+                     ->sortBy(function($item) use ($posisi_list) {
+                         return array_search($item->nama_periode, $posisi_list);
+                     });
 
-        $posisi_list = $allowed_roles;
+        $all_uks = DB::table('geotrax_v3.unit_kompetensi')
+                     ->orderBy('kode_unit', 'asc')
+                     ->get();
 
-        $periods = \Illuminate\Support\Facades\DB::table('periode_penilaian')
-            ->whereIn('nama_periode', $allowed_roles)
-            ->where('status_aktif', 'Y') 
-            ->get();
+        return view('pimpinan.manajemen_penilaian.periode', compact('periods', 'posisi_list', 'all_uks'));
+    }
 
-        $all_uks = \Illuminate\Support\Facades\DB::table('unit_kompetensi')
+    // --- 3. HALAMAN KUSTOMISASI AKTIVITAS ---
+    public function aktivitasIndex(Request $request)
+    {
+        $jabatan = $request->jabatan;
+        if (!$jabatan) return redirect()->route('pimpinan.manajemen_penilaian.periode');
+
+        $display_jabatan = ($jabatan == 'Hubungan Masyarakat dan Pemasaran') ? 'Humas & Pemasaran' : $jabatan;
+
+        // PERUBAHAN: Hanya menarik Elemen yang berakhiran 'A' (Membuang elemen 1B, 2B, dst)
+        $data = UnitKompetensi::with(['elemen' => function($q) {
+                $q->where('kode_elemen_excel', 'ILIKE', '%A')->orderBy('kode_elemen_excel', 'asc');
+            }, 'elemen.aktivitas' => function($q) {
+                $q->orderBy('aktivitas_id', 'asc');
+            }])
+            ->where('posisi_target', 'ILIKE', "%{$jabatan}%")
             ->where('aktif', 'Y')
+            ->orderBy('kode_unit', 'asc')
             ->get();
 
-        return view('pimpinan.manajemen_penilaian.periode', compact('periods', 'all_uks', 'posisi_list'));
+        return view('pimpinan.manajemen_penilaian.aktivitas', compact('data', 'jabatan', 'display_jabatan'));
     }
 
     // --- 2. AKSI MANAJEMEN PENILAIAN (TAMBAH, EDIT TANGGAL, HAPUS) ---
@@ -161,26 +183,6 @@ class ManajemenPenilaianController extends Controller
         return redirect()->back();
     }
 
-    // --- 3. HALAMAN KUSTOMISASI AKTIVITAS ---
-    public function aktivitasIndex(Request $request)
-    {
-        $jabatan = $request->jabatan;
-        if (!$jabatan) return redirect()->route('pimpinan.manajemen_penilaian.periode');
-
-        $display_jabatan = ($jabatan == 'Hubungan Masyarakat dan Pemasaran') ? 'Humas & Pemasaran' : $jabatan;
-
-        $data = UnitKompetensi::with(['elemen' => function($q) {
-                $q->orderBy('kode_elemen_excel', 'asc');
-            }, 'elemen.aktivitas' => function($q) {
-                $q->orderBy('aktivitas_id', 'asc');
-            }])
-            ->where('posisi_target', 'ILIKE', "%{$jabatan}%")
-            ->where('aktif', 'Y')
-            ->orderBy('kode_unit', 'asc')
-            ->get();
-
-        return view('pimpinan.manajemen_penilaian.aktivitas', compact('data', 'jabatan', 'display_jabatan'));
-    }
 
     // --- 4. PROSES SIMPAN KUSTOMISASI AKTIVITAS ---
     public function aktivitasStore(Request $request)
