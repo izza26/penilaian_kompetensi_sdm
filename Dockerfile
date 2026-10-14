@@ -25,8 +25,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         poppler-utils \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j"$(nproc)" pdo_pgsql zip gd opcache \
-    && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
+
+# ---------------------------------------------------------------------------
+# 1b. Paksa tepat SATU MPM.
+#
+#     Image php:8.2-apache memakai mpm_prefork (wajib untuk mod_php), TETAPI
+#     `apt-get install` di atas bisa meng-upgrade paket `apache2` Debian dan
+#     postinst-nya mengaktifkan mpm_event (MPM default Debian). Akibatnya dua
+#     MPM aktif bersamaan dan Apache menolak start:
+#         AH00534: apache2: Configuration error: More than one MPM loaded.
+#     Inilah penyebab container "Crashed" di Railway.
+#
+#     Baris terakhir = build-time assertion: kalau sampai ada lebih/kurang dari
+#     satu MPM, build GAGAL, jadi masalah ini tidak bisa lolos ke produksi lagi.
+# ---------------------------------------------------------------------------
+RUN rm -f /etc/apache2/mods-enabled/mpm_event.load   /etc/apache2/mods-enabled/mpm_event.conf \
+          /etc/apache2/mods-enabled/mpm_worker.load  /etc/apache2/mods-enabled/mpm_worker.conf \
+ && a2enmod mpm_prefork rewrite headers \
+ && test "$(ls /etc/apache2/mods-enabled/ | grep -c '^mpm_.*\.load$')" = "1" \
+ && echo "MPM aktif (harus tepat 1): $(ls /etc/apache2/mods-enabled/ | grep '^mpm_.*\.load$' | tr '\n' ' ')"
 
 # ---------------------------------------------------------------------------
 # 2. php.ini

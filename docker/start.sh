@@ -13,6 +13,18 @@ PORT="${PORT:-8080}"
 
 echo "==> Geotrax start: PORT=${PORT}"
 
+# --- 0. Jaring pengaman MPM ----------------------------------------------
+# Apache menolak start kalau lebih dari satu MPM aktif
+# (AH00534: More than one MPM loaded). Idealnya sudah dibetulkan saat build
+# (lihat Dockerfile tahap 1b), ini hanya pengaman kalau base image berubah.
+mpm_count="$(ls /etc/apache2/mods-enabled/ 2>/dev/null | grep -c '^mpm_.*\.load$' || true)"
+if [ "${mpm_count}" != "1" ]; then
+    echo "==> Perbaiki MPM: ditemukan ${mpm_count} MPM aktif, menyisakan mpm_prefork saja"
+    rm -f /etc/apache2/mods-enabled/mpm_event.*  \
+          /etc/apache2/mods-enabled/mpm_worker.*
+    a2enmod mpm_prefork >/dev/null 2>&1 || true
+fi
+
 # --- 1. Apache dengar di $PORT -------------------------------------------
 sed -ri "s/^Listen [0-9]+/Listen ${PORT}/" /etc/apache2/ports.conf
 sed -ri "s/<VirtualHost \*:[0-9]+>/<VirtualHost *:${PORT}>/" \
