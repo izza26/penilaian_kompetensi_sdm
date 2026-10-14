@@ -6,26 +6,32 @@
 
 @push('styles')
     <style>
-        .page-card { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; }
-        .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px; }
-        .page-title h2 { margin: 0 0 5px 0; font-size: 22px; color: #0f172a; font-weight: 700; }
-        .page-title p { margin: 0; font-size: 14px; color: #64748b; }
+        .page-card { background: #fff; border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: none; }
+        .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .page-title h2 { margin: 0 0 6px 0; font-size: 20px; color: #1e293b; font-weight: 700; }
+        .page-title p { margin: 0; font-size: 13px; color: #64748b; }
         
-        .btn-kembali { background: #f1f5f9; color: #475569; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.2s; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 6px;}
-        .btn-kembali:hover { background: #e2e8f0; color: #0f172a; }
-
-        .pegawai-summary { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
-        .avatar { width: 75px; height: 75px; background: #b56c35; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; font-weight: 700; }
-        .pegawai-info h3 { margin: 0 0 5px 0; font-size: 20px; color: #0f172a; font-weight: 700;}
-        .pegawai-info p { margin: 0 0 8px 0; font-size: 14px; color: #64748b; }
-        .status-badge { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block;}
+        .detail-card { background: #f8fafc; border-radius: 24px; padding: 32px; border: 1px solid #f1f5f9; }
         
-        .detail-divider { height: 1px; background: #e2e8f0; margin-bottom: 25px; }
+        .pegawai-summary { display: flex; align-items: center; gap: 24px; margin-bottom: 30px; }
         
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .detail-item { display: flex; flex-direction: column; gap: 5px; }
-        .detail-item label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
-        .detail-item span { font-size: 15px; color: #0f172a; font-weight: 600; }
+        /* Avatar Baru: Bulat & Royal Blue */
+        .avatar { 
+            width: 80px; height: 80px; background: #3e54a0; color: white; 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-size: 28px; font-weight: 700; box-shadow: 0 8px 20px rgba(62, 84, 160, 0.25);
+        }
+        
+        .pegawai-info h3 { margin: 0 0 6px 0; font-size: 20px; color: #1e293b; font-weight: 700;}
+        .pegawai-info p { margin: 0 0 12px 0; font-size: 14px; color: #64748b; font-weight: 500;}
+        .status-badge { background: #ecfdf5; color: #059669; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; display: inline-block;}
+        
+        .detail-divider { height: 1px; border-top: 1px dashed #cbd5e1; margin-bottom: 30px; }
+        
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .detail-item { display: flex; flex-direction: column; gap: 6px; }
+        .detail-item label { font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+        .detail-item span { font-size: 14px; color: #1e293b; font-weight: 600; }
     </style>
 @endpush
 

@@ -22,3 +22,13 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# --- Geotrax: hanya untuk lokal, jangan di-commit ---
+# Data kerja internal agent (bukan bagian aplikasi)
+/.workbuddy-ai
+# Dokumentasi internal: berisi kredensial (token, password, API key) — repo ini publik
+/docs
+# Cache & artefak runtime
+/bootstrap/cache/*.php
+/public/uploads
+/storage/app/rubrik

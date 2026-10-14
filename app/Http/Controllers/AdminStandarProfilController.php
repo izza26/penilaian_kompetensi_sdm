@@ -5,21 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use App\Models\StandarSoftskill; // Pastikan model ini dipanggil
 
 class AdminStandarProfilController extends Controller
 {
-    // --- 1. TAMPILAN HALAMAN STANDAR PROFIL (DUMMY SESSION) ---
+    // --- 1. TAMPILAN HALAMAN STANDAR PROFIL ---
     public function index(Request $request)
     {
         $jabatan_terpilih = $request->jabatan ?? '';
-        
-        // Daftar jabatan standar di Museum Geologi
+
+        // REVISI: Urutan jabatan disesuaikan baku dengan hierarki dokumen SKKNI
         $list_jabatan = [
-            'Kurator', 'Edukator', 'Konservator', 
-            'Penata Pameran', 'Register', 'Hubungan Masyarakat dan Pemasaran'
+            'Kurator',
+            'Register',
+            'Konservator',
+            'Edukator',
+            'Penata Pameran',
+            'Hubungan Masyarakat dan Pemasaran'
         ];
 
         $list_aktivitas = [];
+        $bobot_ncf = 60; // Set default agar view tidak error
+        $bobot_nsf = 40; // Set default agar view tidak error
 
         if ($jabatan_terpilih) {
             // Tarik aktivitas dari DB TANPA memanggil kolom target_skor & jenis_faktor
@@ -40,42 +47,80 @@ class AdminStandarProfilController extends Controller
 
             foreach ($db_aktivitas as $ak) {
                 $id = $ak->aktivitas_id;
-                
-                // Jika data ada di session, pakai itu. Jika belum ada, pakai nilai default (4 dan Core)
-                $ak->target_skor = $session_standar[$id]['target'] ?? 4; 
+
+                // Jika data ada di session, pakai itu. Jika belum ada, pakai nilai default (5 dan Core)
+                $ak->target_skor = $session_standar[$id]['target'] ?? 5;
                 $ak->jenis_faktor = $session_standar[$id]['faktor'] ?? 'Core';
-                
+
                 $list_aktivitas[] = $ak;
             }
         }
 
-        return view('admin.standar_profil.index', compact('list_jabatan', 'jabatan_terpilih', 'list_aktivitas'));
+        // --- TAMBAHAN UNTUK TAB 2 (MASTER BOBOT GAP) ---
+        $list_bobot_gap = DB::table('p_master_bobot_gap')->orderBy('gap', 'desc')->get();
+
+        // --- TAMBAHAN: TARIK DATA SOFTSKILL DARI DATABASE ---
+        $list_softskill = DB::table('standar_softskill')->orderBy('softskill_id', 'asc')->get();
+
+        return view('admin.standar_profil.index', compact(
+            'list_jabatan', 'jabatan_terpilih', 'list_aktivitas', 'bobot_ncf', 'bobot_nsf', 'list_bobot_gap', 'list_softskill'
+        ));
     }
 
-    // --- 2. PROSES SIMPAN PENGATURAN STANDAR (KE DALAM SESSION) ---
+    // --- 2. PROSES SIMPAN PENGATURAN STANDAR (KE DALAM SESSION & DATABASE) ---
     public function store(Request $request)
     {
         $jabatan = $request->jabatan;
-        $targets = $request->target; // Array dari input target
-        $faktors = $request->faktor; // Array dari input jenis faktor
+        $targets = $request->target; // Array dari input target Hardskill
+        $faktors = $request->faktor; // Array dari input jenis faktor Hardskill
+        $targets_sf = $request->target_sf; // Array dari input target Softskill
 
+        // 1. Simpan Standar Hardskill (SKKNI) ke Session
         if ($targets && $faktors) {
             $standar_data = [];
-            
-            // Format ulang array untuk disimpan ke session
             foreach ($targets as $aktivitas_id => $nilai_target) {
                 $standar_data[$aktivitas_id] = [
                     'target' => $nilai_target,
                     'faktor' => $faktors[$aktivitas_id] ?? 'Core'
                 ];
             }
-            
-            // Simpan ke Session Laravel. Ini bertindak sebagai Dummy Database!
             Session::put("standar_profil_{$jabatan}", $standar_data);
-
-            return back()->with('success', "Standar profil untuk jabatan $jabatan berhasil diperbarui (Disimpan di Memori Sementara)!");
         }
 
-        return back()->with('error', "Data aktivitas tidak ditemukan.");
+        // 2. Simpan Target Skor Softskill langsung ke Database
+        if ($targets_sf) {
+            foreach ($targets_sf as $softskill_id => $nilai_target_sf) {
+                DB::table('standar_softskill')
+                    ->where('softskill_id', $softskill_id)
+                    ->update(['target_skor' => $nilai_target_sf, 'updated_at' => now()]);
+            }
+        }
+
+        return back()->with('success', "Standar profil untuk jabatan $jabatan berhasil diperbarui!");
+    }
+
+    // --- 3. SIMPAN MASTER BOBOT GAP (TAB 2) ---
+    public function simpanBobotGap(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            if ($request->has('bobot')) {
+                foreach ($request->bobot as $gap => $nilai_bobot) {
+                    DB::table('p_master_bobot_gap')
+                        ->where('gap', $gap)
+                        ->update([
+                            'bobot' => (float) $nilai_bobot,
+                            'keterangan' => $request->keterangan[$gap] ?? ''
+                        ]);
+                }
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Master Bobot Gap berhasil diperbarui!')->withFragment('tab-gap');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan bobot gap!')->withFragment('tab-gap');
+        }
     }
 }

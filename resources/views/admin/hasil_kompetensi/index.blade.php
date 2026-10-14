@@ -1,66 +1,118 @@
 @extends('layouts.app')
-@section('title', 'Hasil Kompetensi')
-@section('page_title', 'Hasil Kompetensi')
-@section('page_subtitle', 'Kelola hasil akhir penilaian kompetensi pegawai')
+@section('title', 'Hasil Kompetensi SDM')
+@section('page_title', 'Hasil Kompetensi SDM')
+@section('page_subtitle', 'Pantau nilai akhir seluruh pegawai yang telah disahkan')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/css_admin/hasil_kompetensi.css') }}">
     <style>
-        .status { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-align: center; display: inline-block; white-space: nowrap;}
-        .status.kompeten { background-color: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;}
-        .status.cukup { background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a;}
-        .status.belum { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca;}
-        .btn-cetak-excel { background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; text-decoration: none; transition: 0.2s; white-space: nowrap; }
-        .btn-cetak-excel:hover { background: #059669; transform: translateY(-2px); color: white;}
+        .widget-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 24px; }
+        .widget-box { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 14px;}
+        .widget-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px;}
+        .widget-info h4 { margin: 0; font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700;}
+        .widget-info p { margin: 0; font-size: 24px; font-weight: 800; color: #1e293b; line-height: 1;}
+        
+        .w-st { .widget-icon { background: #ecfdf5; color: #10b981; } }
+        .w-t { .widget-icon { background: #e0e7ff; color: #4338ca; } }
+        .w-sd { .widget-icon { background: #fef3c7; color: #d97706; } }
+        .w-r { .widget-icon { background: #ffedd5; color: #ea580c; } }
+        .w-sr { .widget-icon { background: #fff1f2; color: #e11d48; } }
+
+        .filter-box { background: #ffffff; border-radius: 24px; padding: 20px 32px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02);}
+        .filter-left { display: flex; align-items: center; gap: 16px; }
+        .filter-left select { padding: 0 20px; height: 48px; border: 1px solid #cbd5e1; border-radius: 50px; font-size: 13px; outline: none; cursor: pointer; background: #f9fafb; color: #1e293b;}
+        
+        .btn-cetak-excel { background: #10b981; color: white; padding: 0 24px; height: 48px; border-radius: 50px; text-decoration: none; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; border: none;}
+        .btn-cetak-excel:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);}
+
+        .table-card { background: #fff; padding: 32px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);}
+        .styled-table { width: 100%; border-collapse: collapse; }
+        .styled-table th { color: #64748b; padding: 16px 20px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; font-weight: 700;}
+        .styled-table td { padding: 16px 20px; border-bottom: 1px dashed #f1f5f9; font-size: 13px; color: #334155; vertical-align: middle;}
+        
+        .badge { padding: 6px 16px; border-radius: 50px; font-size: 10px; font-weight: 700; width: auto; min-width: 100px; text-align: center; text-transform: uppercase; display: inline-block;}
+        .badge-st { background: #ecfdf5; color: #059669; } 
+        .badge-t { background: #e0e7ff; color: #4338ca; } 
+        .badge-sd { background: #fef3c7; color: #d97706; } 
+        .badge-r { background: #ffedd5; color: #ea580c; } 
+        .badge-sr { background: #fff1f2; color: #e11d48; } 
+        
+        .btn-aksi { background: #3e54a0; color: white; padding: 8px 18px; border-radius: 50px; text-decoration: none; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; transition: 0.2s;}
+        .btn-aksi:hover { background: #2b3a70; transform: translateY(-2px);}
     </style>
 @endpush
 
 @section('content')
-<div class="page-card" style="background:transparent; border:none; box-shadow:none; padding:0;">
-    <div class="stats-grid">
-        <div class="stat-card"><div class="stat-icon brown"><i class="bi bi-people"></i></div><div><h3>{{ $total_pegawai }}</h3><span>Total Pegawai</span></div></div>
-        <div class="stat-card"><div class="stat-icon green"><i class="bi bi-patch-check"></i></div><div><h3>{{ $jml_kompeten }}</h3><span>Kompeten (≥70)</span></div></div>
-        <div class="stat-card"><div class="stat-icon red"><i class="bi bi-exclamation-circle"></i></div><div><h3>{{ $jml_belum }}</h3><span>Belum Kompeten</span></div></div>
-        <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-bar-chart"></i></div><div><h3>{{ $rata_rata }}</h3><span>Rata-rata Nilai</span></div></div>
+    <div class="widget-container">
+        <div class="widget-box w-st"><div class="widget-icon"><i class="bi bi-star-fill"></i></div><div class="widget-info"><h4>Sangat Tinggi</h4><p>{{ $stat_sangat_tinggi }}</p></div></div>
+        <div class="widget-box w-t"><div class="widget-icon" style="background:#e0e7ff; color:#4338ca;"><i class="bi bi-graph-up-arrow"></i></div><div class="widget-info"><h4>Tinggi</h4><p>{{ $stat_tinggi }}</p></div></div>
+        <div class="widget-box w-sd"><div class="widget-icon" style="background:#fef3c7; color:#d97706;"><i class="bi bi-dash-circle-fill"></i></div><div class="widget-info"><h4>Sedang</h4><p>{{ $stat_sedang }}</p></div></div>
+        <div class="widget-box w-r"><div class="widget-icon" style="background:#ffedd5; color:#ea580c;"><i class="bi bi-exclamation-triangle-fill"></i></div><div class="widget-info"><h4>Rendah</h4><p>{{ $stat_rendah }}</p></div></div>
+        <div class="widget-box w-sr"><div class="widget-icon" style="background:#fff1f2; color:#e11d48;"><i class="bi bi-x-circle-fill"></i></div><div class="widget-info"><h4>Sangat Rendah</h4><p>{{ $stat_sangat_rendah }}</p></div></div>
     </div>
 
-    <div class="result-card" style="padding: 25px; background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; margin-top: 25px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <div><h3 style="margin: 0 0 5px 0; font-size: 16px; color: #0f172a;">Riwayat Penilaian Pegawai</h3><p style="margin: 0; font-size: 13px; color: #64748b;">Daftar nilai akhir kompetensi dari seluruh pegawai.</p></div>
-            <a href="{{ route('admin.hasil_kompetensi.export') }}" class="btn-cetak-excel" target="_blank"><i class="bi bi-file-earmark-excel-fill"></i> Cetak Penilaian</a>
-        </div>
+    <div class="filter-box">
+        <form method="GET" action="{{ route('admin.hasil_kompetensi.index') }}" id="formFilter" class="filter-left">
+            <label style="font-size: 13px; font-weight: 700; margin-right:10px;"><i class="bi bi-funnel-fill" style="color: #3e54a0;"></i> Filter Periode / Jabatan:</label>
+            <select name="periode" onchange="document.getElementById('formFilter').submit();">
+                <option value="ALL">Semua Jabatan</option>
+                @foreach($list_periode as $p)
+                    <option value="{{ $p->nama_periode }}" {{ $filter_periode == $p->nama_periode ? 'selected' : '' }}>{{ $p->nama_periode }}</option>
+                @endforeach
+            </select>
+        </form>
 
-        <div class="table-wrapper">
-            <table class="data-table" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;"><th style="padding:12px;">No</th><th>Nama Pegawai</th><th>Jabatan</th><th>Unit Kompetensi</th><th>Nilai Akhir</th><th>Status</th><th>Aksi</th></tr>
-                </thead>
-                <tbody>
-                    @forelse ($list_hasil as $index => $row)
-                        @php 
-                            $kategori = trim($row->kategori);
-                            if (in_array($kategori, ['Sangat Kompeten', 'Kompeten'])) $class_status = 'kompeten';
-                            elseif ($kategori === 'Cukup Kompeten') $class_status = 'cukup';
-                            else $class_status = 'belum';
-                        @endphp
-                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                            <td style="padding:15px;">{{ $list_hasil->firstItem() + $index }}</td>
-                            <td><b>{{ $row->pegawai_nama }}</b></td>
-                            <td>{{ $row->jabatan }}</td>
-                            <td><span style="font-size: 11px; font-weight: 700; color: #1e3a8a; display: block;">{{ $row->kode_unit }}</span><span style="font-size: 12px;">{{ $row->judul_unit }}</span></td>
-                            <td class="nilai"><b>{{ number_format($row->nilai_akhir, 2) }}</b></td>
-                            <td><span class="status {{ $class_status }}">{{ $kategori }}</span></td>
-                            <td class="action-cell">
-                                <a href="{{ route('admin.hasil_kompetensi.show', $row->penilaian_id) }}" class="action-btn view-btn" style="background:#eff6ff; color:#3b82f6; padding:6px 10px; border-radius:6px; display:inline-block;"><i class="bi bi-eye"></i></a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr><td colspan="7" style="text-align:center; padding: 30px;">Belum ada data hasil penilaian.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-            <div style="margin-top:20px;">{{ $list_hasil->links('pagination::bootstrap-4') }}</div>
+        <a href="{{ route('admin.hasil_kompetensi.export', ['periode' => $filter_periode]) }}" class="btn-cetak-excel" target="_blank">
+            <i class="bi bi-file-earmark-excel-fill"></i> Cetak Rekapitulasi
+        </a>
+    </div>
+
+    <div class="table-card">
+        <h3 style="margin:0 0 20px 0; font-size: 18px; color:#1e293b;">Daftar Pegawai yang Telah Dinilai</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th width="5%" style="text-align: center;">No</th>
+                    <th width="25%">Nama Pegawai</th>
+                    <th width="20%">Jabatan Saat Ini</th>
+                    <th width="15%" style="text-align: center;">Rata-rata Skor (100)</th>
+                    <th width="15%" style="text-align: center;">Predikat</th>
+                    <th width="20%" style="text-align: center;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($list_riwayat as $index => $r)
+                    @php
+                        $kat = trim($r->rata_nilai);
+                        if ($kat >= 85) $badge_class = 'badge-st';
+                        elseif ($kat >= 70) $badge_class = 'badge-t';
+                        elseif ($kat >= 55) $badge_class = 'badge-sd';
+                        elseif ($kat >= 40) $badge_class = 'badge-r';
+                        else $badge_class = 'badge-sr';
+                        
+                        // Konversi angka ke teks predikat
+                        if ($kat >= 85) $text_kat = "Sangat Tinggi";
+                        elseif ($kat >= 70) $text_kat = "Tinggi";
+                        elseif ($kat >= 55) $text_kat = "Sedang";
+                        elseif ($kat >= 40) $text_kat = "Rendah";
+                        else $text_kat = "Sangat Rendah";
+                    @endphp
+                    <tr>
+                        <td style="text-align: center; color: #64748b;">{{ $list_riwayat->firstItem() + $index }}</td>
+                        <td><b style="color: #0f172a; font-size: 14px;">{{ $r->pegawai_nama }}</b></td>
+                        <td>{{ $r->jabatan }}</td>
+                        <td style="text-align: center;"><b style="font-size: 16px; color: #3e54a0;">{{ number_format($r->rata_nilai, 2) }}</b></td>
+                        <td style="text-align: center;"><span class="badge {{ $badge_class }}">{{ $text_kat }}</span></td>
+                        <td style="text-align: center;">
+                            <a href="{{ route('admin.hasil_kompetensi.show', $r->pegawai_id) }}" class="btn-aksi"><i class="bi bi-eye-fill"></i> Lihat Detail</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="6" style="text-align: center; padding: 40px;">Belum ada data penilaian pegawai.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div style="margin-top:20px; background: white;">
+            {{ $list_riwayat->appends(['periode' => $filter_periode])->links('pagination::bootstrap-4') }}
         </div>
     </div>
-</div>
-@endsection 
+@endsection

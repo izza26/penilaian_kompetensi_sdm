@@ -1,165 +1,320 @@
 @extends('layouts.app')
 @section('title', 'Hasil Kompetensi')
-@section('page_title', 'Hasil Kompetensi')
-@section('page_subtitle', 'Pantau rekomendasi penempatan Profile Matching Anda')
+@section('page_title', 'Hasil Kompetensi Evaluasi')
+@section('page_subtitle', 'Pantau nilai akhir SKKNI dan Softskill Anda yang telah disahkan Pimpinan')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/css_pegawai/hasil_kompetensi.css') }}">
     <style>
-        .btn-cetak-excel { background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; text-decoration: none; transition: 0.2s; white-space: nowrap; }
-        .btn-cetak-excel:hover { background: #059669; transform: translateY(-2px); color: white;}
-        .header-title-wrapper { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;}
-        .header-title-wrapper .section-title { margin-bottom: 0; border-bottom: none; padding-bottom: 0;}
-        .badge-auto { background: #ecfdf5; color: #059669; font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid #a7f3d0; display: inline-flex; align-items: center; gap: 4px; }
-        .skor-box-cf { background: #eff6ff; color: #3b82f6; font-size: 14px; font-weight: 800; width: 32px; height: 32px; display: inline-flex; justify-content: center; align-items: center; border-radius: 8px; border: 1px solid #bfdbfe; margin: 0 auto;}
+        .summary-card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); padding: 32px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: stretch; gap: 24px; flex-wrap: wrap;}
+        .summary-left { flex: 1; min-width: 280px; display: flex; flex-direction: column; justify-content: center;}
+        .summary-left h2 { margin: 0 0 8px 0; font-size: 20px; color: #1e293b; font-weight: 800;}
+        .summary-left p { margin: 0; color: #64748b; font-size: 13px; line-height: 1.5; }
         
-        /* Style untuk Rekomendasi Bar */
-        .summary-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;}
-        .role-bar-container { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
-        .role-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
-        .role-name { width: 150px; font-size: 12px; font-weight: 600; color: #475569; }
-        .role-bar-bg { flex: 1; background: #f1f5f9; height: 10px; border-radius: 10px; overflow: hidden; }
-        .role-bar-fill { height: 100%; border-radius: 10px; }
-        .role-score { width: 45px; text-align: right; font-size: 12px; font-weight: 700; color: #0f172a; }
-        .highlight-bar { background: #3b82f6; }
-        .normal-bar { background: #cbd5e1; }
+        .summary-right { display: flex; gap: 16px; flex-wrap: wrap; flex: 2; justify-content: flex-end;}
+        
+        .box-kalkulasi { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 20px; border-radius: 16px; min-width: 220px; display: flex; flex-direction: column; justify-content: center;}
+        .box-skor { background: #f8fafc; padding: 20px 24px; border-radius: 16px; border: 1px dashed #cbd5e1; text-align: center; display: flex; flex-direction: column; justify-content: center; min-width: 140px;}
+        .box-skor h1 { margin: 10px 0; font-size: 38px; color: #3e54a0; font-weight: 800; line-height: 1;}
+        
+        .badge { padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-block;}
+        .badge-st { background: #ecfdf5; color: #059669; border: none; } 
+        .badge-t { background: #e0e7ff; color: #4338ca; border: none; } 
+        .badge-sd { background: #fef3c7; color: #d97706; border: none; } 
+        .badge-r { background: #ffedd5; color: #ea580c; border: none; } 
+        .badge-sr { background: #fff1f2; color: #e11d48; border: none; } 
+
+        .table-card { background: #fff; padding: 24px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); margin-bottom: 24px;}
+        .table-card h3 { margin: 0 0 20px 0; font-size: 16px; color: #1e293b; border-bottom: 1px dashed #e2e8f0; padding-bottom: 12px; font-weight: 700;}
+        .styled-table { width: 100%; border-collapse: collapse; }
+        .styled-table th { color: #64748b; padding: 12px 16px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+        .styled-table td { padding: 12px 16px; border-bottom: 1px dashed #f1f5f9; font-size: 12px; color: #334155; }
+        
+        .filter-period-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px 20px; border-radius: 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;}
+        .filter-period-box label { font-size: 13px; font-weight: 700; color: #475569; margin: 0;}
+        .filter-period-box select { padding: 10px 20px; border-radius: 50px; border: 1px solid #cbd5e1; font-size: 13px; outline: none; cursor: pointer; color: #1e293b; font-weight: 600; min-width: 250px;}
+
+        .btn-detail-kuk { background: #f4f7fe; color: #3e54a0; border: none; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-detail-kuk:hover { background: #3e54a0; color: #fff; }
+
+        .skor-box-sf { background: #fef3c7; color: #d97706; font-weight: 800; padding: 6px 12px; border-radius: 8px; display: inline-block; min-width: 35px; text-align: center; border: 1px solid #fde68a;}
+        .gap-box-sf { font-weight: 800; color: #ef4444; }
+        .gap-box-sf.positive { color: #10b981; }
+        .gap-box-sf.zero { color: #64748b; }
+        
+        @media(max-width: 992px) { .summary-right { justify-content: flex-start; } .grid-3-col { grid-template-columns: 1fr !important; } }
     </style>
 @endpush
 
 @section('content')
 <div class="hasil-container">
-    <div class="hero-card">
-        <div class="hero-left">
-            <span class="hero-label"><i class="bi bi-cpu"></i> Profile Matching</span>
-            <h1>Rekomendasi Penempatan Posisi</h1>
-            <p>Sistem membandingkan skor kompetensi Anda dengan standar kompetensi seluruh bidang di Museum Geologi.</p>
-        </div>
-        <div class="hero-right">
-            <div class="filter-card">
-                <span class="filter-title">Periode Penilaian</span>
-                <form action="{{ route('pegawai.hasil.index') }}" method="GET">
-                    <select name="periode_id" class="select-periode" onchange="this.form.submit()">
-                        @if ($listPeriode->isEmpty())
-                            <option value="">-- Belum Ada Periode --</option>
-                        @else
-                            <option value="">-- Pilih Periode --</option>
-                            @foreach ($listPeriode as $periode)
-                                <option value="{{ $periode->periode_id }}" {{ ($periode_terpilih == $periode->periode_id) ? 'selected' : '' }}>
-                                    {{ $periode->nama_periode }}
-                                </option>
-                            @endforeach
-                        @endif
-                    </select>
-                </form>
-            </div>
-        </div>
+    
+    <div class="filter-period-box">
+        <label><i class="bi bi-calendar-check-fill" style="color: #3e54a0; margin-right: 8px;"></i> Filter Periode Penilaian:</label>
+        <form action="{{ route('pegawai.hasil.index') }}" method="GET" style="margin: 0;">
+            <select name="periode_id" onchange="this.form.submit()">
+                @if ($listPeriode->isEmpty())
+                    <option value="">-- Belum Ada Penilaian Disahkan --</option>
+                @else
+                    <option value="">-- Pilih Periode --</option>
+                    @foreach ($listPeriode as $periode)
+                        @php
+                            // Mengambil tahun secara otomatis dari database
+                            $tahun = !empty($periode->tanggal_mulai) ? date('Y', strtotime($periode->tanggal_mulai)) : '2026';
+                        @endphp
+                        <option value="{{ $periode->periode_id }}" {{ ($periode_terpilih == $periode->periode_id) ? 'selected' : '' }}>
+                            Tahun {{ $tahun }} ({{ $periode->nama_periode }})
+                        </option>
+                    @endforeach
+                @endif
+            </select>
+        </form>
     </div>
 
     @if ($periode_terpilih)
-        @if ($hasilRingkasan)
-            <div class="header-title-wrapper">
-                <div class="section-title">
-                    <span><i class="bi bi-person-check-fill"></i> Hasil Analisis Kesesuaian Jabatan</span>
-                    <p style="margin-top: 5px;">Rekomendasi sistem berdasarkan hasil pengumpulan evidence.</p>
-                </div>
-            </div>
+        @if ($sudah_dinilai)
+            @php
+                $badge_class = 'badge-sr';
+                if ($kategori_raw == 'Sangat Tinggi') {
+                    $badge_class = 'badge-st';
+                    $tindakan_lanjut = "Rekomendasi Sertifikasi / Mentor Internal";
+                    $tindakan_color = "#059669"; $tindakan_bg = "#ecfdf5"; $tindakan_border = "#a7f3d0";
+                } elseif ($kategori_raw == 'Tinggi') {
+                    $badge_class = 'badge-t';
+                    $tindakan_lanjut = "Delegasi Proyek Khusus";
+                    $tindakan_color = "#4338ca"; $tindakan_bg = "#e0e7ff"; $tindakan_border = "#c7d2fe";
+                } elseif ($kategori_raw == 'Sedang') {
+                    $badge_class = 'badge-sd';
+                    $tindakan_lanjut = "Sesi Coaching & Tutor Sebaya";
+                    $tindakan_color = "#d97706"; $tindakan_bg = "#fef3c7"; $tindakan_border = "#fde68a";
+                } elseif ($kategori_raw == 'Rendah') {
+                    $badge_class = 'badge-r';
+                    $tindakan_lanjut = "Disarankan Mengikuti Seminar / Workshop";
+                    $tindakan_color = "#ea580c"; $tindakan_bg = "#ffedd5"; $tindakan_border = "#fed7aa";
+                } else {
+                    $tindakan_lanjut = "Wajib Mengikuti Pelatihan / Diklat Intensif";
+                    $tindakan_color = "#e11d48"; $tindakan_bg = "#fff1f2"; $tindakan_border = "#fecdd3";
+                }
+            @endphp
 
-            <!-- TIGA WIDGET ATAS -->
-            <div class="summary-grid">
-                <div class="summary-card">
-                    <div class="summary-icon" style="background:#e0f2fe; color:#0284c7;"><i class="bi bi-graph-up-arrow"></i></div>
-                    <div class="summary-info">
-                        <span>Nilai Akhir Skala 100</span>
-                        <h2>{{ number_format($hasilRingkasan->nilai_akhir, 2) }}</h2>
-                    </div>
+            <div class="summary-card">
+                <div class="summary-left">
+                    <h2><i class="bi bi-person-badge" style="color: #3e54a0; margin-right:8px;"></i> Evaluasi Jabatan: {{ $jabatanPegawai }}</h2>
+                    <p>Berikut adalah hasil akhir dari perhitungan <i>Core Factor</i> (SKKNI) dan <i>Secondary Factor</i> (Softskill) yang telah disahkan oleh Pimpinan Anda.</p>
                 </div>
                 
-                @php
-                    $iconClass = 'bi-patch-check-fill'; $iconColor = 'icon-green'; $textColor = 'text-green';
-                    if (!in_array($hasilRingkasan->kategori, ['Kompeten', 'Sangat Kompeten'])) {
-                        $iconClass = 'bi-exclamation-triangle-fill'; $iconColor = 'icon-red'; $textColor = 'text-red';
-                    }
-                @endphp
-                <div class="summary-card">
-                    <div class="summary-icon {{ $iconColor }}"><i class="bi {{ $iconClass }}"></i></div>
-                    <div class="summary-info">
-                        <span>Kategori Kelulusan</span>
-                        <h2 class="{{ $textColor }}">{{ $hasilRingkasan->kategori }}</h2>
-                    </div>
-                </div>
-
-                <div class="summary-card" style="border: 2px solid {{ $is_match ? '#10b981' : '#f59e0b' }};">
-                    <div class="summary-icon" style="background: {{ $is_match ? '#d1fae5' : '#fef3c7' }}; color: {{ $is_match ? '#059669' : '#d97706' }};"><i class="bi bi-briefcase-fill"></i></div>
-                    <div class="summary-info">
-                        <span>Rekomendasi Posisi (Sistem)</span>
-                        <h2 style="color: {{ $is_match ? '#059669' : '#d97706' }}; font-size: 18px; margin-top: 5px;">{{ $best_match_role }}</h2>
-                        <span style="font-size: 10px; font-weight: bold; background: {{ $is_match ? '#059669' : '#d97706' }}; color: white; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px;">
-                            {{ $is_match ? 'MATCH (Tepat Sasaran)' : 'MISMATCH (Perlu Rotasi)' }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GRAFIK KESESUAIAN -->
-            <div class="role-bar-container">
-                <h3 style="font-size: 14px; color: #0f172a; margin-bottom: 15px;"><i class="bi bi-bar-chart-steps"></i> Komparasi Tingkat Kesesuaian Semua Bidang</h3>
-                @foreach($match_scores as $role => $score)
-                    <div class="role-row">
-                        <div class="role-name">{{ $role }} {!! $role == $jabatanPegawai ? '<span style="color:#3b82f6;">(Saat Ini)</span>' : '' !!}</div>
-                        <div class="role-bar-bg">
-                            <div class="role-bar-fill {{ $role == $best_match_role ? 'highlight-bar' : 'normal-bar' }}" style="width: {{ $score }}%;"></div>
+                <div class="summary-right">
+                    <div class="box-kalkulasi">
+                        <span style="display: block; font-size: 10px; font-weight: 800; color: #475569; margin-bottom: 12px; letter-spacing: 0.5px;"><i class="bi bi-calculator"></i> SKOR MENTAH JABATAN</span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 11px;">
+                            <span style="color: #64748b;">Total Kompetensi</span><b style="color: #1e293b;">{{ $jumlah_kompetensi }} Unit</b>
                         </div>
-                        <div class="role-score">{{ number_format($score, 2) }}</div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 11px;">
+                            <span style="color: #64748b;">Total KUK Dinilai</span><b style="color: #1e293b;">{{ $total_kuk_jabatan }} KUK</b>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 11px;">
+                            <span style="color: #64748b;">Batas Minimum (x1)</span><b style="color: #1e293b;">{{ $nilai_minimum }}</b>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 11px;">
+                            <span style="color: #64748b;">Batas Maksimum (x5)</span><b style="color: #1e293b;">{{ $nilai_maksimum }}</b>
+                        </div>
+                        <hr style="border: none; border-top: 1px dashed #cbd5e1; margin: 8px 0;">
+                        <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                            <span style="color: #3e54a0; font-weight: 700;">Skor Aktual</span><b style="color: #3e54a0; font-size: 16px; font-weight: 800;">{{ $skor_aktual_total }}</b>
+                        </div>
                     </div>
-                @endforeach
+
+                    <div class="box-skor">
+                        <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Skor Aktual (Raw)</span>
+                        <h1>{{ $skor_aktual_total }}</h1>
+                        <span class="badge {{ $badge_class }}">{{ $kategori_raw }}</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- TABEL HISTORIS -->
-            <div class="section-title mt-40" id="rincian-penilaian">
-                <span><i class="bi bi-list-check"></i> Rincian Skor Historis per Aktivitas (Khusus {{ $jabatanPegawai }})</span>
+            <div class="grid-3-col" style="display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 24px; margin-bottom: 24px;">
+                <div style="background: #fff; padding: 24px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #3e54a0;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;"><i class="bi bi-tools" style="margin-right: 4px;"></i> Nilai NCF</span>
+                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Core Factor ({{ $persen_ncf }}%)</p>
+                    </div>
+                    <h2 style="margin: 0; font-size: 28px; color: #3e54a0; font-weight: 800;">{{ number_format($ncf, 2) }}</h2>
+                </div>
+
+                <div style="background: #fff; padding: 24px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #d97706;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;"><i class="bi bi-person-hearts" style="margin-right: 4px;"></i> Nilai NSF</span>
+                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Secondary Factor ({{ $persen_nsf }}%)</p>
+                    </div>
+                    <h2 style="margin: 0; font-size: 28px; color: #d97706; font-weight: 800;">{{ number_format($nsf, 2) }}</h2>
+                </div>
+
+                <div style="background: {{ $tindakan_bg }}; padding: 24px; border-radius: 24px; border: 1px solid {{ $tindakan_border }}; display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: white; display: flex; justify-content: center; align-items: center; font-size: 20px; color: {{ $tindakan_color }}; flex-shrink: 0;">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </div>
+                    <div>
+                        <span style="font-size: 10px; font-weight: 800; color: {{ $tindakan_color }}; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;">Rekomendasi Pengembangan</span>
+                        <h3 style="margin: 4px 0 0 0; font-size: 14px; color: {{ $tindakan_color }}; line-height: 1.4; font-weight: 700;">{{ $tindakan_lanjut }}</h3>
+                    </div>
+                </div>
             </div>
 
-            <div class="table-card" style="padding: 0;">
+            <!-- TABEL HISTORIS SKKNI (CORE FACTOR) YANG BISA DIKLIK DETAIL -->
+            @if($list_uk && $list_uk->count() > 0)
+            <div class="table-card" style="padding: 0; overflow: hidden;">
+                <h3 style="padding: 24px 24px 0 24px;"><i class="bi bi-tools" style="color: #3e54a0; margin-right: 8px;"></i> Break-down Hardskill NCF (Per Unit Kompetensi)</h3>
                 <div class="table-responsive">
-                    <table class="custom-table" style="margin: 0; width: 100%;">
+                    <table class="styled-table" style="margin: 0; width: 100%;">
                         <thead style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
                             <tr>
-                                <th width="5%" class="text-center" style="font-size: 11px; color: #475569;">NO</th>
-                                <th width="15%" style="font-size: 11px; color: #475569;">ID AKTIVITAS</th>
-                                <th width="45%" style="font-size: 11px; color: #475569;">DETAIL AKTIVITAS KOMPETENSI</th>
-                                <th width="20%" class="text-center" style="font-size: 11px; color: #475569;">KETERANGAN SISTEM</th>
-                                <th width="15%" class="text-center" style="font-size: 11px; color: #475569;">NILAI AKTUAL (CF)</th>
+                                <th width="15%">Kode Unit</th>
+                                <th width="35%">Judul Unit</th>
+                                <th width="15%" class="text-center">Skor (100)</th>
+                                <th width="20%" class="text-center">Skor Raw (Min-Max)</th>
+                                <th width="15%" class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($hasilDetail as $index => $row)
+                            @foreach ($list_uk as $uk)
                                 <tr>
-                                    <td class="text-center" style="font-weight: 600; color: #64748b; font-size: 13px;">{{ $hasilDetail->firstItem() + $index }}</td>
-                                    <td style="font-weight: 700; color: #1e293b; font-size: 13px;">{{ $row->aktivitas_id }}</td>
-                                    <td style="font-size: 13px; color: #334155; line-height: 1.5;">{{ $row->detail_aktivitas }}</td>
-                                    <td class="text-center"><span class="badge-auto"><i class="bi bi-check-all"></i> Auto-parsed</span></td>
-                                    <td class="text-center"><div class="skor-box-cf">{{ (int)$row->skor_final }}</div></td>
+                                    <td><b style="color: #3e54a0;">{{ $uk->kode_unit }}</b></td>
+                                    <td><div style="font-weight: 600; color: #1e293b;">{{ $uk->judul_unit }}</div></td>
+                                    <td class="text-center"><b style="font-size: 14px; color:#0f172a;">{{ number_format($uk->nilai_akhir, 2) }}</b></td>
+                                    <td class="text-center">
+                                        <b style="font-size: 14px; color:#0f172a;">{{ $uk->skor_aktual_raw }}</b>
+                                        <span style="display:block; font-size: 10px; color:#64748b; margin-top:2px;">(Range: {{ $uk->min_skor }} - {{ $uk->max_skor }})</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- TOMBOL UNTUK MEMBUKA DETAIL KUK -->
+                                        <button type="button" class="btn-detail-kuk" onclick="toggleDetail('{{ $uk->kode_unit }}')">
+                                            <i class="bi bi-eye-fill"></i> Detail KUK
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- BARIS TERSEMBUNYI UNTUK DETAIL KUK -->
+                                <tr id="detail-{{ $uk->kode_unit }}" style="display: none; background: #f8fafc;">
+                                    <td colspan="5" style="padding: 20px 30px; border-bottom: 2px solid #cbd5e1;">
+                                        <div style="background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+                                            <table style="width: 100%; border-collapse: collapse;">
+                                                <thead style="background: #f1f5f9;">
+                                                    <tr>
+                                                        <th style="padding: 10px 15px; font-size: 10px; color: #475569; text-transform: uppercase;">Aktivitas (KUK)</th>
+                                                        <th class="text-center" style="padding: 10px 15px; font-size: 10px; color: #475569; text-transform: uppercase;">Aktual</th>
+                                                        <th class="text-center" style="padding: 10px 15px; font-size: 10px; color: #475569; text-transform: uppercase;">Target</th>
+                                                        <th class="text-center" style="padding: 10px 15px; font-size: 10px; color: #475569; text-transform: uppercase;">Gap</th>
+                                                        <th class="text-center" style="padding: 10px 15px; font-size: 10px; color: #475569; text-transform: uppercase;">Bobot</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if(isset($detail_per_uk[$uk->kode_unit]))
+                                                        @foreach($detail_per_uk[$uk->kode_unit] as $row)
+                                                        <tr style="border-bottom: 1px dashed #e2e8f0;">
+                                                            <td style="padding: 12px 15px; font-size: 12px; color: #334155;">{!! $row->detail_aktivitas !!}</td>
+                                                            <td class="text-center" style="padding: 12px 15px; font-size: 12px; font-weight: bold; color: #0284c7;">{{ (int)$row->skor_final }}</td>
+                                                            <td class="text-center" style="padding: 12px 15px; font-size: 12px; font-weight: bold;">5</td>
+                                                            <td class="text-center" style="padding: 12px 15px; font-size: 12px;">
+                                                                @php
+                                                                    $gapClass = 'zero';
+                                                                    if($row->gap > 0) $gapClass = 'positive';
+                                                                    elseif($row->gap < 0) $gapClass = '';
+                                                                @endphp
+                                                                <span class="gap-box-sf {{ $gapClass }}" style="background: transparent; border:none;">{{ $row->gap > 0 ? '+'.$row->gap : $row->gap }}</span>
+                                                            </td>
+                                                            <td class="text-center" style="padding: 12px 15px; font-size: 12px; font-weight: bold; color: #3e54a0;">{{ number_format($row->bobot, 2) }}</td>
+                                                        </tr>
+                                                        @if(!empty($row->catatan_penilai) && $row->catatan_penilai != 'Penilaian PM (Dikoreksi Pimpinan)')
+                                                        <tr>
+                                                            <td colspan="5" style="padding: 0 15px 12px 15px; border-bottom: 1px dashed #e2e8f0;">
+                                                                <div style="background: #fef3c7; border-left: 3px solid #d97706; padding: 8px 12px; font-size: 11px; color: #92400e; font-style: italic;">
+                                                                    <i class="bi bi-chat-left-text-fill"></i> "{{ $row->catatan_penilai }}"
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        @endif
+                                                        @endforeach
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-                <div style="padding: 20px;">{{ $hasilDetail->appends(['periode_id' => $periode_terpilih])->fragment('rincian-penilaian')->links('pagination::bootstrap-4') }}</div>
             </div>
+            @endif
+
+            <!-- TABEL HISTORIS SOFTSKILL (SECONDARY FACTOR) -->
+            @if($hasilSoftskill && $hasilSoftskill->count() > 0)
+            <div class="table-card" style="padding: 0; overflow: hidden; border: 1px solid #fde68a;">
+                <h3 style="padding: 24px 24px 0 24px; color: #92400e; border-bottom: none;"><i class="bi bi-person-hearts" style="color: #d97706; margin-right: 8px;"></i> Rincian Skor Perilaku NSF (Secondary Factor - {{ $persen_nsf }}%)</h3>
+                <div class="table-responsive" style="background: white;">
+                    <table class="styled-table" style="margin: 0; width: 100%;">
+                        <thead style="background: #fdf8e6; border-bottom: 2px solid #fde68a;">
+                            <tr>
+                                <th width="5%" class="text-center" style="color: #92400e;">NO</th>
+                                <th width="40%" style="color: #92400e;">KRITERIA SOFTSKILL</th>
+                                <th width="15%" class="text-center" style="color: #92400e;">TARGET</th>
+                                <th width="15%" class="text-center" style="color: #92400e;">NILAI AKTUAL</th>
+                                <th width="10%" class="text-center" style="color: #92400e;">GAP</th>
+                                <th width="15%" class="text-center" style="color: #92400e;">BOBOT PM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($hasilSoftskill as $index => $sf)
+                                <tr>
+                                    <td class="text-center" style="font-weight: 600; color: #b45309;">{{ $index + 1 }}</td>
+                                    <td>
+                                        <div style="font-weight: 700; color: #78350f; font-size: 13px;">{{ $sf->nama_softskill }}</div>
+                                        <div style="font-size: 11px; color: #92400e; margin-top: 4px; line-height: 1.4;">{{ $sf->deskripsi }}</div>
+                                    </td>
+                                    <td class="text-center"><span style="font-weight: 800; color: #94a3b8; font-size: 13px;">{{ $sf->target_skor }}</span></td>
+                                    <td class="text-center"><div class="skor-box-sf">{{ $sf->nilai_aktual }}</div></td>
+                                    <td class="text-center">
+                                        @php
+                                            $gapClass = 'zero';
+                                            if($sf->gap > 0) $gapClass = 'positive';
+                                            elseif($sf->gap < 0) $gapClass = '';
+                                        @endphp
+                                        <span class="gap-box-sf {{ $gapClass }}">{{ $sf->gap > 0 ? '+'.$sf->gap : $sf->gap }}</span>
+                                    </td>
+                                    <td class="text-center" style="font-weight: 800; color: #b45309;">{{ number_format($sf->bobot_gap, 2) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
+
         @else
-            <!-- STATE JIKA BELUM ADA DATA SKORING SAMA SEKALI -->
-            <div class="empty-state-card" style="margin-top: 20px; background: white; border: 1px solid #e2e8f0;">
-                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486747.png" style="width: 100px; opacity: 0.5; margin-bottom: 15px;">
-                <h3 style="color: #0f172a;">Sedang Dalam Proses Evaluasi</h3>
-                <p style="color: #64748b;">Sistem belum menerbitkan hasil Profile Matching untuk periode ini.<br>Silakan selesaikan pengunggahan dokumen Anda.</p>
+            <div style="background:#fff; padding: 40px; text-align:center; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+                <i class="bi bi-hourglass-split" style="font-size: 40px; color:#cbd5e1; display:block; margin-bottom: 10px;"></i>
+                <h3 style="color: #0f172a; margin:0;">Sedang Dalam Proses Evaluasi</h3>
+                <p style="color: #64748b; font-size: 13px; margin-top: 8px;">Pimpinan belum menyelesaikan dan mengesahkan penilaian kompetensi Anda untuk periode ini.</p>
             </div>
         @endif
     @else
-        <div class="empty-state-card">
-            <i class="bi bi-cpu"></i>
-            <h3>Pilih Periode Terlebih Dahulu</h3>
-            <p>Silakan gunakan menu dropdown di atas untuk memilih periode penilaian dan melihat hasil rekomendasi sistem.</p>
+        <div style="background:#fff; padding: 40px; text-align:center; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+            <i class="bi bi-cpu" style="font-size: 40px; color:#cbd5e1; display:block; margin-bottom: 10px;"></i>
+            <h3 style="color: #0f172a; margin:0;">Pilih Periode Terlebih Dahulu</h3>
+            <p style="color: #64748b; font-size: 13px; margin-top: 8px;">Silakan gunakan dropdown di atas untuk memilih periode penilaian dan melihat hasil skoring Anda.</p>
         </div>
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function toggleDetail(kodeUnit) {
+        var el = document.getElementById('detail-' + kodeUnit);
+        if (el.style.display === 'none') {
+            el.style.display = 'table-row';
+        } else {
+            el.style.display = 'none';
+        }
+    }
+</script>
+@endpush

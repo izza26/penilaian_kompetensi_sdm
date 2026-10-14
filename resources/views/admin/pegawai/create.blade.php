@@ -6,28 +6,35 @@
 
 @push('styles')
     <style>
-        .page-card { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; }
-        .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px; }
-        .page-title h2 { margin: 0 0 5px 0; font-size: 22px; color: #0f172a; font-weight: 700; }
-        .page-title p { margin: 0; font-size: 14px; color: #64748b; }
+        .page-card { background: #fff; border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: none; }
+        .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .page-title h2 { margin: 0 0 6px 0; font-size: 20px; color: #1e293b; font-weight: 700; }
+        .page-title p { margin: 0; font-size: 13px; color: #64748b; }
         
-        .btn-kembali { background: #f1f5f9; color: #475569; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.2s; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 6px;}
-        .btn-kembali:hover { background: #e2e8f0; color: #0f172a; }
-        
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;}
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 25px;}
         .form-group { display: flex; flex-direction: column; gap: 8px; }
         .form-group.full-width { grid-column: span 2; }
-        .form-group label { font-size: 13px; font-weight: 600; color: #1e293b; text-transform: uppercase;}
-        .form-control { padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; font-family: inherit;}
-        .form-control:focus { border-color: #A08348; box-shadow: 0 0 0 3px rgba(160,131,72,0.1); }
-        .btn-primary { background: #1B2D46; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px;}
-        .btn-primary:hover { background: #29466b; }
+        .form-group label { font-size: 12px; font-weight: 600; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px;}
+        
+        .form-control { 
+            padding: 0 20px; height: 48px; border: 1px solid #e2e8f0; 
+            border-radius: 50px; font-size: 13px; outline: none; transition: 0.2s; 
+            font-family: inherit; background: #f9fafb; color: #1e293b;
+        }
+        .form-control:focus { border-color: #3e54a0; background: #fff; box-shadow: 0 0 0 3px rgba(62, 84, 160, 0.15); }
+        
+        /* Tombol Simpan Biru Royal */
+        .btn-primary { 
+            background: #3e54a0; color: white; border: none; padding: 0 28px; height: 48px;
+            border-radius: 50px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 13px;
+            display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+        }
+        .btn-primary:hover { background: #2b3a70; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(62, 84, 160, 0.2); }
 
-        /* Styling untuk fitur Show/Hide Password */
         .password-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         .password-wrapper .form-control { width: 100%; padding-right: 45px; box-sizing: border-box; }
-        .toggle-password { position: absolute; right: 12px; background: none; border: none; color: #64748b; cursor: pointer; padding: 5px; outline: none; font-size: 16px; transition: 0.2s; }
-        .toggle-password:hover { color: #3b82f6; }
+        .toggle-password { position: absolute; right: 16px; background: none; border: none; color: #94a3b8; cursor: pointer; padding: 5px; outline: none; font-size: 16px; transition: 0.2s; }
+        .toggle-password:hover { color: #3e54a0; }
     </style>
 @endpush
 
@@ -45,6 +52,12 @@
             <ul style="margin: 0; padding-left: 15px;">
                 @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
             </ul>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div style="background: #fef2f2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fecaca; font-size: 13px;">
+            <i class="bi bi-exclamation-triangle-fill"></i> {{ session('error') }}
         </div>
     @endif
 

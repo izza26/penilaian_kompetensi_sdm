@@ -6,23 +6,29 @@
 
 @push('styles')
     <style>
-        .page-card { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; }
-        .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px; }
-        .page-title h2 { margin: 0 0 5px 0; font-size: 22px; color: #0f172a; font-weight: 700; }
-        .page-title p { margin: 0; font-size: 14px; color: #64748b; }
-        .btn-kembali { background: #f1f5f9; color: #475569; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.2s; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 6px;}
-        .btn-kembali:hover { background: #e2e8f0; color: #0f172a; }
+        .page-card { background: #fff; border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: none; }
+        .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px; }
+        .page-title h2 { margin: 0 0 6px 0; font-size: 20px; color: #1e293b; font-weight: 700; }
+        .page-title p { margin: 0; font-size: 13px; color: #64748b; }
 
-        .profile-card { background: #f8fafc; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 25px; border: 1px solid #e2e8f0;}
-        .user-avatar { width: 80px; height: 80px; background: #bda572; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; font-weight: 700; margin: 0 auto 15px auto;}
-        .profile-card h3 { margin: 0 0 5px 0; color: #0f172a; font-size: 20px;}
-        .profile-card p { margin: 0 0 15px 0; color: #64748b; font-size: 14px;}
-        .status { background: #ecfdf5; color: #059669; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid #a7f3d0;}
+        .profile-card { background: #f8fafc; padding: 32px; border-radius: 24px; text-align: center; margin-bottom: 30px; border: 1px solid #f1f5f9;}
+        
+        /* Avatar Royal Blue Mewah */
+        .user-avatar { 
+            width: 80px; height: 80px; background: #3e54a0; color: white; 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-size: 28px; font-weight: 700; margin: 0 auto 16px auto; 
+            box-shadow: 0 8px 20px rgba(62, 84, 160, 0.25);
+        }
+        
+        .profile-card h3 { margin: 0 0 6px 0; color: #1e293b; font-size: 20px; font-weight: 700;}
+        .profile-card p { margin: 0 0 16px 0; color: #64748b; font-size: 14px; font-weight: 500;}
+        .status { background: #ecfdf5; color: #059669; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; display: inline-block;}
 
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .info-item { display: flex; flex-direction: column; gap: 5px; }
-        .info-item label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;}
-        .info-item span { font-size: 15px; color: #0f172a; font-weight: 600; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .info-item { display: flex; flex-direction: column; gap: 6px; }
+        .info-item label { font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+        .info-item span { font-size: 14px; color: #1e293b; font-weight: 600; }
     </style>
 @endpush
 

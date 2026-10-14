@@ -1,0 +1,46 @@
+# ---------------------------------------------------------------------------
+# Konteks build Docker — JANGAN hapus baris .env: berkas itu memuat
+# password Supabase dan tidak boleh ikut terkirim ke server build.
+# ---------------------------------------------------------------------------
+
+.git
+.gitignore
+.github
+
+# Rahasia — wajib dikecualikan
+.env
+.env.*
+!.env.example
+
+# Dependensi (dipasang ulang di dalam image)
+vendor
+node_modules
+
+# Cache / artefak lokal
+bootstrap/cache/*.php
+storage/app/rubrik/*
+storage/logs/*
+storage/framework/views/*
+storage/framework/sessions/*
+storage/framework/cache/*
+storage/framework/testing/*
+*.log
+.phpunit.result.cache
+.phpunit.cache
+
+# Hasil build frontend (tidak dipakai — proyek tidak memakai Vite)
+public/build
+public/hot
+public/storage
+
+# Berkas editor / OS
+.idea
+.vscode
+.fleet
+.nova
+.zed
+.DS_Store
+Thumbs.db
+Homestead.json
+Homestead.yaml
+phpunit.xml

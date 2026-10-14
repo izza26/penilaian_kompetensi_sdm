@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 use App\Models\Pegawai;
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.login'); 
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         $input = $request->username;
 
-        // PERBAIKAN: Cari pegawai berdasarkan nip_nik ATAU username
+        // Cari pegawai berdasarkan nip_nik ATAU username
         $pegawai = Pegawai::where('nip_nik', $input)
                           ->orWhere('username', $input)
                           ->first();
@@ -45,7 +45,8 @@ class AuthController extends Controller
 
                 $role = trim(strtolower($pegawai->role));
 
-                if ($role === 'admin') {
+                // PERBAIKAN: Tambahkan superadmin agar diarahkan ke dashboard admin
+                if ($role === 'admin' || $role === 'superadmin') {
                     return redirect()->route('admin.dashboard');
                 } elseif ($role === 'pegawai') {
                     return redirect()->route('pegawai.dashboard');
@@ -66,7 +67,7 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
-    
+
     public function showRegister()
     {
         return view('auth.register');
@@ -98,7 +99,7 @@ class AuthController extends Controller
             'no_hp'        => $request->no_hp,
             'jabatan'      => $request->jabatan,
             'unit_kerja'   => $request->unit_kerja,
-            'password'     => Hash::make($request->password), 
+            'password'     => Hash::make($request->password),
             'role'         => trim(strtolower($request->role)),
             'status_aktif' => 'Aktif'
         ]);

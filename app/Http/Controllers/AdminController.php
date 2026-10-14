@@ -10,26 +10,33 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $nama_admin = Auth::user()->pegawai_nama ?? 'Administrator';
+        // Ambil data admin dari tabel yang benar
+        $userLogin = Auth::user();
+        $admin = DB::table('geotrax_v4.pegawai_skkni')->where('username', $userLogin->username)->first();
+        $nama_admin = $admin->pegawai_nama ?? 'Administrator HR';
 
-        // 1. KPI Admin
-        $tot_pegawai = DB::table('pegawai')->count();
+        // 1. KPI Admin (Disesuaikan dengan tabel geotrax_v4 yang baru)
+        // Mengecualikan akun admin dari hitungan total pegawai
+        $tot_pegawai = DB::table('pegawai')->where('role', '!=', 'admin')->count(); 
         $tot_masuk   = DB::table('penilaian_header')->count();
-        $tot_tunggu  = DB::table('penugasan_penilai')->where('status_penugasan', 'Menunggu')->count();
+        
+        // Mengganti penugasan_penilai dengan menghitung jumlah bukti yang belum direview pimpinan
+        $tot_tunggu  = DB::table('geotrax_v4.bukti_pegawai')->where('status_validasi', 'Menunggu Review')->count(); 
+        
         $tot_selesai = DB::table('penilaian_header')->where('status', 'Selesai')->count();
 
-        // 2. Statistik Kompetensi (Persentase)[cite: 42]
-        $tot_elemen = DB::table('rekap_elemen_360')->count();
-        $kompeten   = DB::table('rekap_elemen_360')->where('status_kompeten', 'Kompeten')->count();
-        $cukup      = DB::table('rekap_elemen_360')->where('status_kompeten', 'Cukup Kompeten')->count();
-        $bina       = DB::table('rekap_elemen_360')->where('status_kompeten', 'Perlu Pembinaan')->count();
+        // 2. Statistik Kompetensi (Diambil dari tabel penilaian_header)
+        $tot_elemen = DB::table('penilaian_header')->count();
+        $kompeten   = DB::table('penilaian_header')->whereIn('kategori', ['Sangat Kompeten', 'Kompeten'])->count();
+        $cukup      = DB::table('penilaian_header')->where('kategori', 'Cukup Kompeten')->count();
+        $bina       = DB::table('penilaian_header')->where('kategori', 'Belum Kompeten')->count();
 
         $pct_kompeten = ($tot_elemen > 0) ? round(($kompeten / $tot_elemen) * 100) : 0;
         $pct_cukup    = ($tot_elemen > 0) ? round(($cukup / $tot_elemen) * 100) : 0;
         $pct_bina     = ($tot_elemen > 0) ? round(($bina / $tot_elemen) * 100) : 0;
 
-        // 3. Query Aktivitas Terbaru (Pegawai Baru)[cite: 42]
-        $aktivitas = DB::table('pegawai')->orderBy('pegawai_id', 'desc')->limit(4)->get();
+        // 3. Query Aktivitas Terbaru (Pegawai Baru Terdaftar, kecuali admin)
+        $aktivitas = DB::table('pegawai')->where('role', '!=', 'admin')->orderBy('pegawai_id', 'desc')->limit(4)->get();
 
         setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian');
         $tanggalSekarang = \Carbon\Carbon::now()->translatedFormat('l, d F Y');

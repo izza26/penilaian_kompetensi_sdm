@@ -2,7 +2,7 @@
 @section('title', 'Beri Nilai')
 @section('page_title', 'Hasil Analisis Profile Matching')
 @section('page_subtitle', 'Tinjau rekomendasi sistem. Anda dapat mengoreksi nilai jika diperlukan.')
-@section('back_url', route('pimpinan.skoring.index'))
+@section('back_url', route('pimpinan.tim_saya.index'))
 
 @push('styles')
     <style>
@@ -36,7 +36,7 @@
         <h3 style="color: #0f172a;">Tidak Ada Aktivitas Aktif</h3>
     </div>
 @else
-<form method="POST" action="{{ route('pimpinan.skoring.simpan_nilai', [$pegawai_id, $kode_unit]) }}" id="formPenilaian">
+<form method="POST" action="{{ route('pimpinan.tim_saya.simpan_nilai', [$pegawai_id, $kode_unit]) }}" id="formPenilaian">
     @csrf
     <input type="hidden" name="is_update" value="{{ $is_update ? 1 : 0 }}">
     @if($is_update) <input type="hidden" name="penilaian_id_lama" value="{{ $penilaian_lama->penilaian_id }}"> @endif

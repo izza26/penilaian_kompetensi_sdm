@@ -8,22 +8,35 @@
     <link rel="stylesheet" href="{{ asset('assets/css/css_admin/detail_penilaian.css') }}">
     <style>
         .page-card { background: transparent; box-shadow: none; border: none; padding: 0;}
-        .detail-card { background: #fff; padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
-        .pegawai-summary { display: flex; align-items: center; gap: 20px; }
-        .avatar { width: 70px; height: 70px; background: #b56c35; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; }
-        .status-wrapper { display: flex; gap: 10px; margin-top: 10px; }
-        .status { background: #ecfdf5; color: #059669; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid #a7f3d0;}
-        .nilai-badge { background: #eff6ff; color: #3b82f6; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid #bfdbfe;}
-        .section-title { font-size: 16px; margin: 0 0 15px 0; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; color: #0f172a;}
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .detail-item label { font-size: 12px; color: #64748b; display: block; margin-bottom: 4px; }
-        .detail-item span { font-size: 14px; color: #0f172a; font-weight: 600; }
+        .detail-card { 
+            background: #fff; padding: 32px; border-radius: 24px; margin-bottom: 24px; 
+            border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        }
+        .pegawai-summary { display: flex; align-items: center; gap: 24px; }
+        
+        /* Avatar Diganti Royal Blue */
+        .avatar { 
+            width: 80px; height: 80px; background: #3e54a0; color: white; border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; font-size: 28px; font-weight: 700; 
+            box-shadow: 0 8px 20px rgba(62, 84, 160, 0.25);
+        }
+        
+        .status-wrapper { display: flex; gap: 10px; margin-top: 12px; }
+        .status { background: #ecfdf5; color: #059669; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700;}
+        .nilai-badge { background: #f4f7fe; color: #3e54a0; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700;}
+        
+        .section-title { font-size: 16px; margin: 0 0 20px 0; border-bottom: 1px dashed #e2e8f0; padding-bottom: 12px; color: #1e293b; font-weight: 700;}
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .detail-item label { font-size: 11px; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;}
+        .detail-item span { font-size: 14px; color: #1e293b; font-weight: 600; }
+        
         .hasil-table { width: 100%; border-collapse: collapse; }
-        .hasil-table th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: #475569; border-bottom: 2px solid #e2e8f0; }
-        .hasil-table td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; }
-        .note-box { background: #fffbeb; border: 1px dashed #fcd34d; padding: 15px; border-radius: 10px; color: #92400e; font-size: 13px; font-style: italic; }
-        .kompeten { color: #059669; font-weight: 700;}
-        .belum { color: #dc2626; font-weight: 700;}
+        .hasil-table th { background: transparent; padding: 16px; text-align: left; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+        .hasil-table td { padding: 16px; border-bottom: 1px dashed #f1f5f9; font-size: 13px; color: #334155; }
+        
+        .note-box { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 20px; border-radius: 16px; color: #475569; font-size: 13px; font-style: italic; line-height: 1.6;}
+        .kompeten { color: #059669; font-weight: 700; background: #ecfdf5; padding: 4px 12px; border-radius: 50px;}
+        .belum { color: #dc2626; font-weight: 700; background: #fef2f2; padding: 4px 12px; border-radius: 50px;}
     </style>
 @endpush
 

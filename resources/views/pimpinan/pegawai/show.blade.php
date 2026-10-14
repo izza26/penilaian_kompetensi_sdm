@@ -4,7 +4,7 @@
 @section('back_url', route('pimpinan.pegawai.index'))
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/css_admin/detail_pegawai.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/css_pimpinan/detail_pegawai.css') }}">
 @endpush
 
 @section('content')
@@ -16,7 +16,7 @@
 <div class="page-card">
     <div class="detail-card">
         <div class="pegawai-summary">
-            <div class="avatar" style="width: 80px; height: 80px; background: #182A3A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold;">
+            <div class="avatar">
                 {{ $inisial }}
             </div>
             <div class="pegawai-info">
@@ -26,29 +26,25 @@
             </div>
         </div>
 
-        <div class="detail-divider" style="margin: 20px 0; border-bottom: 1px solid #e2e8f0;"></div>
+        <div class="detail-divider"></div>
 
-        <div class="detail-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="detail-grid">
             <div class="detail-item">
-                <label style="color: #64748b; font-size: 12px;">NIP/NIK</label>
-                <div style="font-weight: 600;">{{ $pegawai->nip_nik }}</div>
+                <label>NIP</label>
+                <div>{{ $pegawai->nip_nik }}</div>
             </div>
             <div class="detail-item">
-                <label style="color: #64748b; font-size: 12px;">Email</label>
-                <div style="font-weight: 600;">{{ $pegawai->email ?? '-' }}</div>
+                <label>Email</label>
+                <div>{{ $pegawai->email ?? '-' }}</div>
             </div>
             <div class="detail-item">
-                <label style="color: #64748b; font-size: 12px;">No. HP</label>
-                <div style="font-weight: 600;">{{ $pegawai->no_hp ?? '-' }}</div>
+                <label>No. HP</label>
+                <div>{{ $pegawai->no_hp ?? '-' }}</div>
             </div>
             <div class="detail-item">
-                <label style="color: #64748b; font-size: 12px;">Unit Kerja</label>
-                <div style="font-weight: 600;">{{ $pegawai->unit_kerja }}</div>
+                <label>Unit Kerja</label>
+                <div>{{ $pegawai->unit_kerja }}</div>
             </div>
-        </div>
-        
-        <div style="margin-top: 30px;">
-            <a href="{{ route('pimpinan.pegawai.index') }}" class="btn-secondary" style="padding: 10px 20px; background: #e2e8f0; text-decoration: none; border-radius: 8px; color: black;">Kembali</a>
         </div>
     </div>
 </div>

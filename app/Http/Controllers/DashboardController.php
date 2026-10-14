@@ -85,10 +85,10 @@ class DashboardController extends Controller
             }
 
             $timeline = \Illuminate\Support\Facades\DB::table('bukti_pegawai as bp')
-                ->join('pegawai as p', 'bp.pegawai_id', '=', 'p.pegawai_id')
-                ->join('aktivitas_kompeten as ak', 'bp.aktivitas_id', '=', 'ak.aktivitas_id')
-                ->join('elemen_kompetensi as ek', 'ak.elemen_id', '=', 'ek.elemen_id')
-                ->join('unit_kompetensi as uk', 'ek.kode_unit', '=', 'uk.kode_unit')
+                ->join('geotrax_v4.pegawai_skkni as p', 'bp.pegawai_id', '=', 'p.pegawai_id') // <--- INI YANG DIUBAH
+                ->join('geotrax_v4.aktivitas_kompeten as ak', 'bp.aktivitas_id', '=', 'ak.aktivitas_id')
+                ->join('geotrax_v4.elemen_kompetensi as ek', 'ak.elemen_id', '=', 'ek.elemen_id')
+                ->join('geotrax_v4.unit_kompetensi as uk', 'ek.kode_unit', '=', 'uk.kode_unit')
                 ->whereIn('bp.pegawai_id', $bawahan_ids)
                 ->select('p.pegawai_nama', 'uk.judul_unit', 'bp.tanggal_upload')
                 ->orderBy('bp.tanggal_upload', 'desc')
@@ -129,14 +129,31 @@ class DashboardController extends Controller
     public function pegawai()
     {
         $pegawai = Auth::user();
+        $jabatan_pegawai = $pegawai->jabatan ?? '';
 
-        // 1. Tarik Data Statistik Total
-        $totalAktivitas = DB::table('aktivitas_kompeten')->count();
-        $totalUnit = DB::table('unit_kompetensi')->count();
-        $totalEvidenceWajib = DB::table('evidence_wajib')->count();
+        // 1. Hitung Target KUK Langsung dari Tabel (Sesuai Logika Pimpinan - Mengabaikan Sub-Rubrik)
+        $sql_target = "
+            SELECT COUNT(DISTINCT ak.aktivitas_id) as total_target
+            FROM geotrax_v4.aktivitas_kompeten ak
+            JOIN geotrax_v4.elemen_kompetensi ek ON ak.elemen_id = ek.elemen_id
+            JOIN geotrax_v4.unit_kompetensi uk ON ek.kode_unit = uk.kode_unit
+            WHERE uk.posisi_target ILIKE ?
+        ";
+        $result_target = DB::selectOne($sql_target, ["%{$jabatan_pegawai}%"]);
+        $totalEvidenceWajib = $result_target->total_target ?? 0;
         
-        // 2. Tarik Data Upload Pegawai Ini Saja
-        $totalUploadSaya = DB::table('bukti_pegawai')->where('pegawai_id', $pegawai->pegawai_id)->count();
+        // 2. Tarik Data Upload Pegawai Ini Saja (Menghitung KUK Dasar yang sudah diupload sebagian atau penuh)
+        // Kita hitung aktivitas_id dasar (tanpa mempedulikan _SUB_)
+        $sql_upload = "
+            SELECT COUNT(DISTINCT SPLIT_PART(bp.aktivitas_id, '_SUB_', 1)) as total_upload
+            FROM geotrax_v4.bukti_pegawai bp
+            JOIN geotrax_v4.aktivitas_kompeten ak ON SPLIT_PART(bp.aktivitas_id, '_SUB_', 1) = ak.aktivitas_id
+            JOIN geotrax_v4.elemen_kompetensi ek ON ak.elemen_id = ek.elemen_id
+            JOIN geotrax_v4.unit_kompetensi uk ON ek.kode_unit = uk.kode_unit
+            WHERE bp.pegawai_id = ? AND uk.posisi_target ILIKE ?
+        ";
+        $result_upload = DB::selectOne($sql_upload, [$pegawai->pegawai_id, "%{$jabatan_pegawai}%"]);
+        $totalUploadSaya = $result_upload->total_upload ?? 0;
         
         $sisaEvidence = max(0, $totalEvidenceWajib - $totalUploadSaya);
         $progress = ($totalEvidenceWajib > 0) ? round(($totalUploadSaya / $totalEvidenceWajib) * 100) : 0;
@@ -153,27 +170,24 @@ class DashboardController extends Controller
         // 4. Logika Pesan & Tombol Aksi
         $aktivitasDashboard = [];
         
-        // Cek Upload
         if ($totalUploadSaya == 0) {
             $aktivitasDashboard[] = ["icon" => "cloud-upload", "judul" => "Belum ada upload evidence", "deskripsi" => "Upload evidence pertama Anda untuk memulai proses penilaian."];
         } else {
-            $aktivitasDashboard[] = ["icon" => "check-circle-fill", "judul" => "Evidence berhasil diupload", "deskripsi" => "Anda telah mengupload {$totalUploadSaya} evidence."];
+            $aktivitasDashboard[] = ["icon" => "check-circle-fill", "judul" => "Evidence berhasil diupload", "deskripsi" => "Anda telah mengupload {$totalUploadSaya} KUK dari total target."];
         }
 
-        // Cek Progress
         if ($progress < 100) {
             $aktivitasDashboard[] = ["icon" => "clipboard-check", "judul" => "Penilaian belum selesai", "deskripsi" => "Lengkapi seluruh evidence yang masih belum diupload."];
-            $aksiText = ($progress == 0) ? "Upload Evidence" : "Lanjut Upload Evidence";
-            $aksiLink = "#"; // Nanti diganti ke route upload
+            $aksiText = ($progress == 0) ? "Mulai Upload Evidence" : "Lanjut Upload Evidence";
+            $aksiLink = route('pegawai.penilaian.list');
             $aksiIcon = "cloud-arrow-up";
         } else {
             $aktivitasDashboard[] = ["icon" => "clipboard-check-fill", "judul" => "Seluruh evidence telah lengkap", "deskripsi" => "Silakan menunggu proses review dari penilai."];
-            $aksiText = "Lihat Penilaian Saya";
-            $aksiLink = "#"; // Nanti diganti ke route penilaian
+            $aksiText = "Pantau Hasil Evaluasi";
+            $aksiLink = route('pegawai.hasil.index'); 
             $aksiIcon = "clipboard-check";
         }
 
-        // Cek Kompetensi
         if ($statusPenilaian == "Belum Dimulai") {
             $aktivitasDashboard[] = ["icon" => "award", "judul" => "Hasil kompetensi belum tersedia", "deskripsi" => "Nilai kompetensi akan muncul setelah seluruh proses penilaian selesai."];
         } else {
@@ -187,15 +201,30 @@ class DashboardController extends Controller
         if ($progress == 0) {
             $welcomeMessage = "Anda belum memulai proses penilaian kompetensi. Mulailah dengan mengupload evidence pertama Anda.";
         } elseif ($progress < 100) {
-            $welcomeMessage = "Progress penilaian Anda telah mencapai {$progress}%. Teruskan hingga seluruh evidence berhasil diupload.";
+            $welcomeMessage = "Progress pengumpulan evidence Anda telah mencapai {$progress}%. Teruskan hingga {$totalEvidenceWajib} KUK terpenuhi.";
         } else {
-            $welcomeMessage = "Selamat! Seluruh evidence telah berhasil diupload. Silakan menunggu proses review dari penilai.";
+            $welcomeMessage = "Selamat! Seluruh {$totalEvidenceWajib} evidence telah berhasil diupload. Silakan menunggu proses review/skoring dari pimpinan.";
+        }
+
+        // 6. MENGAMBIL INFO PERIODE AKTIF
+        $periodeAktif = DB::table('geotrax_v4.periode_penilaian')
+            ->where('nama_periode', $pegawai->jabatan)
+            ->where('status_aktif', 'Y')
+            ->first();
+
+        if ($periodeAktif && !empty($periodeAktif->tanggal_mulai) && strpos($periodeAktif->tanggal_mulai, '1970') === false) {
+            $tahun_periode = date('Y', strtotime($periodeAktif->tanggal_mulai));
+            $tanggal_mulai = date('d M Y', strtotime($periodeAktif->tanggal_mulai));
+            $tanggal_selesai = date('d M Y', strtotime($periodeAktif->tanggal_selesai));
+            $info_periode = "Periode Tahun {$tahun_periode} ({$tanggal_mulai} - {$tanggal_selesai})";
+        } else {
+            $info_periode = "Belum Ada Periode Aktif";
         }
 
         return view('pegawai.dashboard', compact(
             'pegawai', 'totalUploadSaya', 'totalEvidenceWajib', 'sisaEvidence', 
             'progress', 'statusPenilaian', 'aktivitasDashboard', 
-            'aksiText', 'aksiLink', 'aksiIcon', 'tanggalSekarang', 'welcomeMessage'
+            'aksiText', 'aksiLink', 'aksiIcon', 'tanggalSekarang', 'welcomeMessage', 'info_periode'
         ));
     }
 }

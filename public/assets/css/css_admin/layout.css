@@ -1,22 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg-body: #f1f5f9; /* Ini kunci background jadi abu-abu kebiruan soft */
-    --sidebar-bg-top: #1B2D46; /* Yankees Blue */
-    --sidebar-bg-bot: #0f1c2e; /* Darker Blue */
+    --bg-body: #dfe4ea;   /* <-- Warna background dipergelap agar kartu putih 'pop-up' */
+    --primary-color: #3e54a0; 
+    --text-main: #1e293b;     
+    --text-muted: #64748b;    
+    --white: #ffffff;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ================= BACKGROUND GLOBAL FIX ================= */
 body { 
     font-family: 'Poppins', sans-serif; 
     background-color: var(--bg-body) !important; 
-    color: #0f172a; 
+    color: var(--text-main); 
 }
 
 .app { 
@@ -26,61 +25,91 @@ body {
     background-color: var(--bg-body) !important; 
 }
 
-/* ================= CONTENT SHIFT ================= */
+/* ================= CONTENT AREA ================= */
 .main-content {
-    margin-left: 280px !important; /* Lebar sidebar */
-    padding: 20px 30px !important;
-    width: calc(100% - 280px);
+    margin-left: 260px !important; /* Jarak untuk sidebar (230px) + gap (40px) */
+    padding: 24px 32px !important;
+    width: calc(100% - 270px);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.sidebar-collapsed .main-content {
+    margin-left: 110px !important; /* Jarak untuk sidebar mini (70px) + gap (40px) */
+    width: calc(100% - 110px);
 }
 
 /* ================= SHADOW & CARD FIX ================= */
-.page-card, 
-.pegawai-kpi-card, 
-.progress-card, 
-.profile-summary, 
-.timeline-card, 
-.table-card, 
-
+.page-card, .pegawai-kpi-card, .progress-card, .profile-summary, .timeline-card, .table-card {
+    background: var(--white) !important;
+    border: none !important; 
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important; 
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
 .pegawai-kpi-card:hover {
     transform: translateY(-3px) !important;
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.1) !important;
+    box-shadow: 0 8px 25px rgba(62, 84, 160, 0.15) !important;
 }
 
-/* ================= MODERN SIDEBAR ================= */
+/* ================= MODERN FLOATING SIDEBAR ================= */
 .sidebar {
-    width: 280px;
-    background: #183851 !important;
-    color: white;
-    height: 100vh;
+    width: 230px; /* Dirampingkan sedikit */
+    background: var(--primary-color) !important;
+    color: var(--white);
+    height: calc(100vh - 40px);
     position: fixed;
-    left: 0;
-    top: 0;
+    left: 20px;
+    top: 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(62, 84, 160, 0.15);
+    
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 16px 14px; /* Padding dikurangi agar fit sempurna di layar */
     z-index: 1000;
-    box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* HEADER ATAS SIDEBAR */
+/* TOMBOL TOGGLE (Dibuat sejajar dengan logo agar rapi) */
+.sidebar-toggle-btn {
+    position: absolute;
+    right: -14px; 
+    top: 22px; /* Disejajarkan persis dengan titik tengah logo */
+    width: 28px;
+    height: 28px;
+    background: #ffffff;
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #f1f5f9;
+    z-index: 1001;
+    transition: 0.3s;
+    font-size: 14px;
+}
+.sidebar-toggle-btn:hover { transform: scale(1.1); color: #1e293b; }
+
+/* HEADER SIDEBAR */
 .sidebar-header {
     display: flex;
     align-items: center;
-    gap: 15px !important; /* Jarak antara ikon dan teks */
-    padding-top: 15px !important; /* INI SOLUSI BIAR GAK MEPET ATAS */
-    padding-bottom: 20px !important;
-    margin-bottom: 10px !important;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    gap: 10px !important;
+    padding-bottom: 12px !important; /* Dipersempit */
+    margin-bottom: 4px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .sidebar-logo {
-    width: 42px !important;
-    height: 42px !important;
-    background: rgba(214, 187, 128, 0.15); /* Efek kotak transparan warna emas */
+    width: 36px !important;
+    height: 36px !important;
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     display: flex;
     justify-content: center;
@@ -88,137 +117,90 @@ body {
     flex-shrink: 0;
 }
 
-.sidebar-logo i {
-    font-size: 22px !important;
-    color: #ebdbb6; /* Warna emas Burlywood senada dengan menu */
-}
+.sidebar-logo i { font-size: 18px !important; color: var(--white); }
+.sidebar-title-wrapper { display: flex; flex-direction: column; white-space: nowrap; overflow: hidden; transition: 0.3s; opacity: 1; }
+.sidebar-title { font-size: 13px !important; font-weight: 700; line-height: 1.2; color: var(--white); }
+.sidebar-subtitle { font-size: 9px !important; margin-top: 2px !important; color: rgba(255, 255, 255, 0.8); }
 
-.sidebar-logo img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.sidebar-title-wrapper {
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar-title {
-    font-size: 16px !important;
-    font-weight: 700;
-    line-height: 1.15;
-    margin-bottom: 2px;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-}
-
-.sidebar-subtitle {
-    font-size: 11px !important;
-    margin-top: 2px !important;
-    line-height: 1.4;
-    color: #cbd5e1;
-}
-
-/* SECTION MENU */
-.sidebar-menu {
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: none; /* Hilangkan scrollbar Firefox */
-}
-
-.sidebar-menu::-webkit-scrollbar {
-    display: none; /* Hilangkan scrollbar Chrome/Webkit */
-}
-
-.sidebar-menu ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
+/* MENU SIDEBAR */
+.sidebar-menu { flex: 1; overflow-y: hidden; } /* Scroll dimatikan sepenuhnya */
+.sidebar-menu ul { margin: 0; padding: 0; list-style: none; }
 
 .menu-section {
-    font-size: 11px !important;
-    color: #94a3b8;
-    font-weight: 700;
+    font-size: 10px !important;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
     letter-spacing: 1px;
-    margin: 12px 0 8px !important;
+    margin: 10px 0 4px 8px !important; /* Jarak section dipadatkan */
     text-transform: uppercase;
+    white-space: nowrap;
+    transition: 0.3s;
 }
 
-/* MENU ITEM */
-.sidebar-menu li {
-    margin-bottom: 5px !important;
-}
+.sidebar-menu li { margin-bottom: 2px !important; }
 
-.sidebar-menu a {
+/* UKURAN MENU DIPERKECIL AGAR FIT */
+.sidebar-menu a, .logout-link {
     display: flex;
     align-items: center;
-    gap: 14px;
-    height: 42px !important;
-    padding: 0 14px !important;
-    border-radius: 10px !important;
+    gap: 12px;
+    height: 36px !important; /* Tadinya 44px, dikecilkan jadi 36px */
+    padding: 0 12px !important;
+    border-radius: 50px !important;
     text-decoration: none;
-    color: #e2e8f0;
-    font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px !important;
     font-weight: 500;
-    transition: .3s ease;
+    transition: 0.2s ease;
+    white-space: nowrap;
 }
 
-.sidebar-menu a i {
-    font-size: 16px !important;
-    min-width: 20px;
-    text-align: center;
-}
+.sidebar-menu a i, .logout-link i { font-size: 16px !important; min-width: 22px; text-align: center; }
 
-/* HOVER MENU */
-.sidebar-menu a:hover {
-    background: rgba(255,255,255,.08);
-    transform: translateX(4px);
-    color: #fff;
-}
-
-/* ACTIVE MENU */
+.sidebar-menu a:hover { background: rgba(255, 255, 255, 0.15); color: var(--white); }
 .sidebar-menu a.active {
-    background: #ebdbb6 !important;
-    color: #0f172a !important; /* Teks dihitamkan sedikit agar terbaca di atas warna terang */
-    box-shadow: 0 4px 15px rgba(231, 218, 189, 0.45) !important; /* Format shadow diperbaiki */
-    font-weight: 700 !important;
+    background: var(--white) !important;
+    color: var(--primary-color) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
 }
+.sidebar-menu a.active i { color: var(--primary-color) !important; }
 
-/* Pastikan icon di menu aktif juga berwarna gelap */
-.sidebar-menu a.active i {
-    color: #0f172a !important;
-}
-
-/* FOOTER / LOGOUT */
+/* FOOTER LOGOUT */
 .sidebar-footer {
-    padding-top: 12px !important;
-    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 10px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
     margin-top: auto;
 }
+.logout-link:hover { background: #ef4444; color: white; }
 
-.logout-link {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    text-decoration: none;
-    color: #e2e8f0;
-    padding: 10px 14px !important;
-    border-radius: 10px;
-    transition: .3s;
-    font-size: 13px;
-    font-weight: 600;
+/* ================= KONDISI SAAT SIDEBAR DITUTUP (COLLAPSED) ================= */
+body.sidebar-collapsed .sidebar {
+    width: 70px; /* Sidebar jadi sangat mini (hanya icon) */
+    padding: 16px 10px;
 }
-
-.logout-link i {
-    font-size: 16px;
-    min-width: 20px;
-    text-align: center;
+body.sidebar-collapsed .sidebar-toggle-btn {
+    transform: rotate(180deg);
 }
-
-.logout-link:hover {
-    background: #ef4444;
-    color: white;
-    transform: translateX(4px);
+body.sidebar-collapsed .sidebar-title-wrapper,
+body.sidebar-collapsed .menu-section,
+body.sidebar-collapsed .menu-text {
+    opacity: 0;
+    width: 0;
+    display: none;
+}
+body.sidebar-collapsed .sidebar-menu a, 
+body.sidebar-collapsed .logout-link {
+    justify-content: center;
+    padding: 0 !important;
+    width: 36px; /* Membentuk lingkaran sempurna saat ditutup */
+    margin: 0 auto 4px auto !important;
+}
+body.sidebar-collapsed .sidebar-menu a i, 
+body.sidebar-collapsed .logout-link i {
+    margin: 0 !important;
+}
+body.sidebar-collapsed .sidebar-header {
+    justify-content: center;
+    padding-bottom: 12px !important;
 }
