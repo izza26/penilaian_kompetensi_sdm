@@ -128,44 +128,58 @@ Berikan jawabanmu DALAM FORMAT JSON murni tanpa markdown. Format wajib:
         try {
             // 1. Ambil array API Key dari .env yang dipisah koma
             $api_keys_string = trim(env('GEMINI_API_KEYS', env('GEMINI_API_KEY')));
-            $api_keys = explode(',', $api_keys_string);
-            
-            if (empty($api_keys) || empty($api_keys[0])) return ['skor' => 0, 'alasan' => 'Konfigurasi kunci sistem belum diatur.'];
+            $api_keys = array_values(array_filter(array_map('trim', explode(',', $api_keys_string))));
+
+            if (empty($api_keys)) return ['skor' => 0, 'alasan' => 'Konfigurasi kunci sistem belum diatur.'];
+
+            // 1b. Daftar model yang dicoba BERURUTAN.
+            //     Google sering menonaktifkan nama model lama (HTTP 404) dan
+            //     model populer sering overload (HTTP 503). Dengan daftar ini
+            //     sistem otomatis pindah model, jadi tidak langsung mati total.
+            //     Bisa ditimpa lewat env GEMINI_MODELS tanpa mengubah kode.
+            $models_string = trim(env('GEMINI_MODELS', 'gemini-3-flash-preview,gemini-3.1-flash-lite,gemini-3.5-flash'));
+            $models = array_values(array_filter(array_map('trim', explode(',', $models_string))));
+            if (empty($models)) $models = ['gemini-3-flash-preview'];
 
             $hasil_eksekusi = null;
+            $pesan_error_terakhir = '';
 
-            // 2. Looping (Rotasi) API Key
-            foreach ($api_keys as $key) {
-                $api_key = trim($key);
-                if (empty($api_key)) continue;
+            // 2. Looping ganda: model di lapisan luar, API Key di lapisan dalam
+            foreach ($models as $model) {
+                foreach ($api_keys as $key) {
+                    $api_key = trim($key);
+                    if (empty($api_key)) continue;
 
-                $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=' . $api_key;
+                    $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$api_key}";
 
-                // Hit API tanpa fitur 'retry' bawaan, karena kita kelola retry-nya sendiri pakai loop ini
-                $response = Http::withoutVerifying()->timeout(120)->withHeaders([
-                    'Content-Type' => 'application/json',
-                ])->post($url, [
-                    'contents' => [['parts' => [['text' => $prompt]]]],
-                    'generationConfig' => ['temperature' => 0.1, 'responseMimeType' => 'application/json']
-                ]);
+                    // Hit API tanpa fitur 'retry' bawaan, karena retry dikelola loop ini
+                    $response = Http::withoutVerifying()->timeout(120)->withHeaders([
+                        'Content-Type' => 'application/json',
+                    ])->post($url, [
+                        'contents' => [['parts' => [['text' => $prompt]]]],
+                        'generationConfig' => ['temperature' => 0.1, 'responseMimeType' => 'application/json']
+                    ]);
 
-                if ($response->successful()) {
-                    $hasil_eksekusi = $response->json();
-                    break; // Kunci sukses! Hentikan looping API Key.
-                } else {
+                    if ($response->successful()) {
+                        $hasil_eksekusi = $response->json();
+                        break 2; // Sukses! Hentikan seluruh looping.
+                    }
+
                     $status = $response->status();
+                    $pesan_error_terakhir = "model {$model} -> HTTP {$status}";
 
-                    // 429 (kuota habis) ATAU 503/500 (server Google sedang sibuk/overload)
-                    // -> coba API Key berikutnya / putaran berikutnya, JANGAN langsung gagal.
+                    // 429 (kuota habis) ATAU 500-504 (server Google overload)
+                    // -> coba API Key berikutnya; kalau habis, lanjut model berikutnya.
                     if (in_array($status, [429, 500, 502, 503, 504])) {
-                        \Illuminate\Support\Facades\Log::warning("Gemini status {$status}: Pindah ke API Key cadangan...");
+                        \Illuminate\Support\Facades\Log::warning("Gemini {$model} status {$status}: pindah ke kandidat berikutnya...");
                         continue;
                     }
 
-                    // 404 = nama model salah/kedaluwarsa (BUKAN masalah kuota, tidak perlu loop)
+                    // 404 = nama model salah/kedaluwarsa -> lewati model ini,
+                    // lanjut ke model berikutnya (bukan mati total seperti dulu).
                     if ($status == 404) {
-                        \Illuminate\Support\Facades\Log::error('Gemini API Error (404 Model): ' . $response->body());
-                        return ['skor' => 0, 'alasan' => 'Konfigurasi model AI salah (Error 404). Hubungi admin untuk memperbarui nama model di sistem.'];
+                        \Illuminate\Support\Facades\Log::error("Gemini API Error (404 Model {$model}): " . $response->body());
+                        break; // keluar dari loop API Key, lanjut ke model berikutnya
                     }
 
                     // 400/403 = format request salah atau API Key tidak valid
@@ -178,9 +192,9 @@ Berikan jawabanmu DALAM FORMAT JSON murni tanpa markdown. Format wajib:
                 }
             }
 
-            // 3. Jika looping selesai tapi $hasil_eksekusi masih kosong, artinya SEMUA kunci gagal (habis/server sibuk)
+            // 3. Semua kombinasi model + API Key sudah dicoba dan tetap gagal
             if (!$hasil_eksekusi) {
-                return ['skor' => 0, 'alasan' => 'Semua API Key gagal atau server AI sedang sibuk. Silakan coba lagi beberapa saat lagi.'];
+                return ['skor' => 0, 'alasan' => 'Semua API Key gagal atau server AI sedang sibuk. Silakan coba lagi beberapa saat lagi. (Detail: ' . $pesan_error_terakhir . ')'];
             }
 
             // 4. Proses JSON hasil balasan dari API Key yang berhasil
