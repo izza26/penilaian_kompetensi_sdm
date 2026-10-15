@@ -11,7 +11,7 @@
         .card-box { background: #ffffff; padding: 32px; border-radius: 24px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .card-title { font-size: 18px; font-weight: 700; color: #1e293b; border-bottom: 1px dashed #e2e8f0; padding-bottom: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px;}
         .card-title i { color: #3e54a0; }
-        
+
         .info-row { margin-bottom: 20px; }
         .info-label { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 0.5px;}
         .info-value { font-size: 13px; color: #334155; font-weight: 500; line-height: 1.6; background: #f8fafc; padding: 16px 20px; border-radius: 16px; border: 1px dashed #cbd5e1; }
@@ -23,7 +23,7 @@
         .slot-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 1px dashed #e2e8f0;}
         .slot-header h5 { margin: 0; font-size: 14px; color: #1e293b; font-weight: 700;}
         .format-badge { font-size: 10px; background: #f1f5f9; color: #64748b; padding: 6px 12px; border-radius: 50px; font-weight: 700; border: none; letter-spacing: 0.5px;}
-        
+
         /* Upload Form Baru */
         .upload-form { display: flex; flex-direction: column; gap: 12px; }
         .upload-controls { display: flex; gap: 12px; align-items: center; width: 100%; }
@@ -34,7 +34,7 @@
         .file-name-text { font-size: 12px; color: #64748b; overflow: hidden; text-overflow: ellipsis; max-width: 150px; white-space: nowrap; font-weight: 500;}
         .btn-upload-small { background: #3e54a0; color: white; border: none; padding: 0 20px; height: 38px; border-radius: 50px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;}
         .btn-upload-small:hover { background: #2b3a70; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(62, 84, 160, 0.2);}
-        
+
         .uploaded-file { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px 20px; display: flex; flex-direction: column; gap: 15px;}
         .uploaded-header { display: flex; align-items: center; justify-content: space-between; width: 100%;}
         .file-info-group { display: flex; align-items: center; gap: 12px; }
@@ -42,12 +42,12 @@
         .file-details a { font-size: 13px; font-weight: 700; color: #1e293b; text-decoration: none; display: block; margin-bottom: 2px;}
         .file-details a:hover { color: #3e54a0; text-decoration: underline;}
         .file-details small { font-size: 11px; color: #64748b; }
-        
+
         .badge { padding: 6px 14px; border-radius: 50px; font-size: 10px; font-weight: 700; white-space: nowrap; border: none; text-transform: uppercase; letter-spacing: 0.5px;}
         .badge-warning { background: #fffbeb; color: #d97706; }
         .badge-success { background: #ecfdf5; color: #059669; }
         .badge-danger { background: #fff1f2; color: #e11d48; }
-        
+
         .btn-delete { color: #e11d48; background: #fff1f2; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; transition: 0.2s;}
         .btn-delete:hover { background: #e11d48; color: white; transform: translateY(-2px);}
         .btn-toggle-preview { background: #f4f7fe; color: #3e54a0; border: none; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s;}
@@ -98,21 +98,21 @@
         <!-- AREA UPLOAD (Kanan) -->
         <div class="card-box">
             <div class="card-title"><i class="bi bi-cloud-arrow-up-fill"></i> Daftar Upload Evidence</div>
-            
+
             @if (!empty($detail->template_file))
                 <div style="background: #f4f7fe; border: 1px dashed #bfdbfe; padding: 20px; border-radius: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
                     <div><b style="color: #3e54a0; font-size: 13px; font-weight: 800;"><i class="bi bi-info-circle-fill"></i> Template Tersedia</b><br><span style="color: #64748b; font-size: 12px; font-weight: 500;">Gunakan format ini untuk dokumen evidence.</span></div>
                     <a href="{{ asset('uploads/templates/' . $detail->template_file) }}" target="_blank" style="background: #3e54a0; color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-size: 12px; font-weight: 700; transition: 0.2s; display: flex; gap: 6px; align-items: center;"><i class="bi bi-download"></i> Unduh Format</a>
                 </div>
             @endif
-            
+
             @foreach($slots as $index => $slot)
                 <div class="slot-box">
                     <div class="slot-header">
                         <h5><i class="bi bi-file-earmark-text-fill" style="color:#3e54a0; margin-right:6px;"></i> {{ $slot['nama'] }}</h5>
                         <span class="format-badge">{{ $slot['format'] }}</span>
                     </div>
-                    
+
                     @if ($slot['data'])
                         <!-- JIKA SUDAH UPLOAD -->
                         @php
@@ -141,7 +141,7 @@
                                     @endif
                                 </div>
                             </div>
-                            
+
                             <!-- Tombol & Area Preview Sesudah Upload -->
                             @if($is_image || $is_pdf)
                                 <button type="button" class="btn-toggle-preview" onclick="togglePreview('preview_after_{{ $index }}')"><i class="bi bi-eye-fill"></i> Tampilkan Preview Dokumen</button>
@@ -159,7 +159,7 @@
                         @if ($is_open)
                             <form method="POST" action="{{ route('pegawai.aktivitas.upload', $id) }}" enctype="multipart/form-data" class="upload-form">
                                 @csrf <input type="hidden" name="evidence_wajib_id" value="{{ $slot['id'] }}">
-                                
+
                                 <div class="upload-controls">
                                     <div class="file-input-wrapper">
                                         <input type="file" name="file_evidence" id="file_{{ $index }}" style="display:none;" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="previewBeforeUpload(this, 'name_{{ $index }}', 'preview_before_{{ $index }}')">
@@ -188,15 +188,15 @@
 function previewBeforeUpload(input, textId, previewBoxId) {
     const textElement = document.getElementById(textId);
     const previewBox = document.getElementById(previewBoxId);
-    
+
     if (input.files && input.files[0]) {
         const file = input.files[0];
         const fileURL = URL.createObjectURL(file);
         const fileType = file.type;
-        
+
         // Ubah teks nama file
         textElement.innerHTML = '<b style="color:#059669;"><i class="bi bi-check-circle-fill"></i> ' + file.name + '</b>';
-        
+
         // Buat preview jika format didukung
         previewBox.style.display = 'block';
         if (fileType.startsWith('image/')) {
@@ -207,7 +207,7 @@ function previewBeforeUpload(input, textId, previewBoxId) {
             previewBox.innerHTML = '<div style="padding: 20px; color: #64748b; font-weight: 500; font-size: 12px;"><i class="bi bi-file-earmark-check" style="font-size: 32px; color: #3e54a0; display: block; margin-bottom: 8px;"></i> File siap diunggah. <br>(Preview visual tidak didukung untuk format ini)</div>';
         }
     } else {
-        textElement.innerHTML = 'Belum ada file dipilih'; 
+        textElement.innerHTML = 'Belum ada file dipilih';
         previewBox.style.display = 'none';
         previewBox.innerHTML = '';
     }

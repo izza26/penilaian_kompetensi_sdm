@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
-    
+
     <style>
         .toolbar-card { background: #ffffff; border-radius: 24px; padding: 16px 24px; border: none; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); flex-wrap: wrap; }
         .toolbar-info { display: flex; align-items: center; gap: 12px; }
@@ -20,22 +20,22 @@
         /* --- CSS FILTER UK BUTTONS BARU (DISEMPURNAKAN) --- */
         .uk-filter-wrapper { margin-bottom: 24px; }
         .uk-filter-label { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;}
-        
+
         /* Align-items stretch memastikan semua kartu tingginya sama rata */
         .uk-filter-list { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; scroll-behavior: smooth; align-items: stretch; }
         .uk-filter-list::-webkit-scrollbar { height: 8px; }
         .uk-filter-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
+
         /* Lebar kartu ditambah, flex-direction column agar isinya bisa diatur atas-bawah */
         .uk-btn { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; min-width: 280px; max-width: 280px; text-align: left; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 8px;}
         .uk-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-color: #cbd5e1; }
         .uk-btn.active { border: 2px solid #3e54a0; background: #f8fafc; box-shadow: 0 0 0 3px rgba(62, 84, 160, 0.1); }
-        
+
         .uk-btn-title { font-size: 11px; font-weight: 800; color: #3e54a0; }
-        
+
         /* Flex-grow 1 membuat deskripsi memakan ruang kosong, line-clamp membatasi maks 3 baris */
         .uk-btn-desc { font-size: 13px; font-weight: 700; color: #1e293b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; flex-grow: 1; margin-bottom: 4px;}
-        
+
         /* Margin-top auto memaksa kotak stat selalu berada di bawah berapapun tinggi teksnya */
         .uk-btn-stat { font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; margin-top: auto;}
 
@@ -51,7 +51,7 @@
 
         /* QUICK NAVIGATION BUTTONS (TRANSPARAN / GHOST BUTTON) */
         .nav-quick-bar { display: none; background: transparent !important; padding: 0 0 16px 0; margin-bottom: 24px; box-shadow: none !important; border: none !important; overflow-x: auto; white-space: nowrap; gap: 10px; align-items: center;}
-        
+
         /* RAHASIA MENGHILANGKAN SCROLLBAR RAKSASA WINDOWS */
         .nav-quick-bar::-webkit-scrollbar { height: 8px; }
         .nav-quick-bar::-webkit-scrollbar-track { background: transparent; }
@@ -59,11 +59,11 @@
 
         .nav-quick-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #cbd5e1; background: transparent; color: #64748b; transition: 0.2s; text-decoration: none;}
         .nav-quick-btn:hover { background: #f8fafc; border-color: #94a3b8; color: #1e293b;}
-        
+
         /* Sudah Upload (Hijau Transparan) */
         .nav-quick-btn.nav-done { background: transparent; color: #059669; border-color: #10b981; }
         .nav-quick-btn.nav-done:hover { background: #ecfdf5; }
-        
+
         /* Belum Upload (Merah Transparan) */
         .nav-quick-btn.nav-pending { background: transparent; color: #e11d48; border-color: #fda4af; }
         .nav-quick-btn.nav-pending:hover { background: #fff1f2; }
@@ -71,25 +71,28 @@
         .unit-card { background: #ffffff; border-radius: 24px; border: none; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow: hidden; }
         .unit-header { background: #3e54a0; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
         .unit-header-left h3 { margin: 0; font-size: 16px; color: #ffffff; font-weight: 700; line-height: 1.4;}
-        
+
         .unit-header-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-upload-all { background: #ffffff; color: #3e54a0; border: none; padding: 9px 16px; border-radius: 50px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .btn-upload-all:hover { background: #e0e7ff; transform: translateY(-1px); }
+        .btn-upload-all:disabled { opacity: 0.65; cursor: wait; transform: none; }
         .stat-pill { background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 50px; font-size: 12px; color: white; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.2);}
         .stat-pill.success { background: #ecfdf5; color: #059669; border-color: #a7f3d0; font-weight: 700;}
         .stat-pill span { font-size: 10px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;}
         .stat-pill.success span { color: #10b981; }
         .stat-pill b { font-size: 14px; font-weight: 800;}
-        
+
         .elemen-section { border-bottom: 4px solid #e2e8f0; }
         .elemen-header { padding: 20px 24px; background-color: #f8fafc; }
         .elemen-kode { font-weight: 800; color: #3e54a0; font-size: 13px; margin-bottom: 4px; display: block; }
         .elemen-nama { font-weight: 700; color: #1e293b; font-size: 14px; margin: 0; }
-        
+
         .kuk-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-top: 1px dashed #cbd5e1; background-color: #ffffff; transition: 0.2s; gap: 24px; scroll-margin-top: 100px;}
         .kuk-item:hover { background-color: #f8fafc; }
         .kuk-text-container { flex: 1; display: flex; flex-direction: column; gap: 8px;}
         .kuk-text { font-size: 14px; color: #334155; font-weight: 500; line-height: 1.5; }
         .kuk-number { font-weight: 800; color: #3e54a0; margin-right: 4px; font-size: 15px;}
-        
+
         .upload-action-area { display: flex; align-items: center; gap: 12px; min-width: 380px; justify-content: flex-end; }
         .form-upload-inline { display: flex; align-items: center; gap: 8px; background: #f1f5f9; padding: 6px 6px 6px 14px; border-radius: 50px; border: 1px solid #cbd5e1; transition: 0.2s; flex: 1; }
         .form-upload-inline:hover { border-color: #3e54a0; background: #ffffff; box-shadow: 0 4px 15px rgba(62, 84, 160, 0.08); }
@@ -98,12 +101,12 @@
         .btn-browse:hover { background: #cbd5e1; }
         .btn-submit-cloud { background: #3e54a0; color: white; border: none; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; display: none; align-items: center; gap: 6px;}
         .btn-submit-cloud:hover { background: #2b3a70; }
-        
+
         .uploaded-state { display: flex; align-items: center; gap: 12px; background: #ecfdf5; border: 1px solid #10b981; padding: 6px 6px 6px 16px; border-radius: 50px; flex: 1; justify-content: space-between;}
         .uploaded-text { font-size: 12px; color: #059669; font-weight: 700; display: flex; align-items: center; gap: 6px;}
         .action-group { display: flex; gap: 6px; }
         .btn-circle { width: 30px; height: 30px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 13px; cursor: pointer; transition: 0.2s; }
-        
+
         .btn-preview-local { background: #ffffff; color: #059669; border: 1px solid #a7f3d0; display: none; }
         .btn-preview-local:hover { background: #059669; color: white; border-color: #059669; }
 
@@ -113,7 +116,7 @@
         .btn-delete:hover { background: #e11d48; color: white; border-color: #e11d48; }
 
         .badge-status-sm { padding: 4px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;}
-        
+
         .sub-items-container { background: #f8fafc; border-radius: 12px; padding: 0; border: 1px solid #e2e8f0; margin-top: 15px; overflow: hidden; scroll-margin-top: 100px;}
         .sub-item-header { padding: 12px 20px; background: #e2e8f0; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 1px;}
         .sub-item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-top: 1px dashed #cbd5e1; gap: 20px;}
@@ -125,8 +128,8 @@
         .excel-preview-table { width: 100%; border-collapse: collapse; font-size: 11px; color: #334155; }
         .excel-preview-table th, .excel-preview-table td { border: 1px solid #cbd5e1; padding: 8px 12px; white-space: nowrap; }
         .excel-preview-table tr:nth-child(even) { background-color: #f8fafc; }
-        
-        @media(max-width: 992px) { 
+
+        @media(max-width: 992px) {
             .kuk-item { flex-direction: column; align-items: flex-start; }
             .upload-action-area { width: 100%; justify-content: flex-start; margin-top: 10px; }
             .sub-item-row { flex-direction: column; align-items: flex-start; }
@@ -160,18 +163,18 @@
                         <i class="bi bi-bar-chart-fill"></i> Target: {{ $tot_target }} | Sudah: {{ $tot_sudah }} | Selisih: {{ $tot_selisih }}
                     </div>
                 </button>
-                
+
                 <!-- Tombol Per Unit Kompetensi -->
                 @foreach($dataGrouped as $unitKey => $elemenGroup)
-                    @php 
+                    @php
                         $parts = explode("|||", $unitKey);
-                        $kd_unit = $parts[1]; $jd_unit = $parts[2]; 
+                        $kd_unit = $parts[1]; $jd_unit = $parts[2];
                         $stats = $unitStats[$unitKey];
                         $selisih = $stats['target'] - $stats['uploaded'];
-                        
+
                         // Logika Warna
-                        if($stats['uploaded'] == 0) { $statusClass = 'uk-empty'; $icon = 'bi-x-circle-fill'; } 
-                        elseif($stats['uploaded'] < $stats['target']) { $statusClass = 'uk-partial'; $icon = 'bi-clock-history'; } 
+                        if($stats['uploaded'] == 0) { $statusClass = 'uk-empty'; $icon = 'bi-x-circle-fill'; }
+                        elseif($stats['uploaded'] < $stats['target']) { $statusClass = 'uk-partial'; $icon = 'bi-clock-history'; }
                         else { $statusClass = 'uk-complete'; $icon = 'bi-check-circle-fill'; }
                     @endphp
                     <button class="uk-btn {{ $statusClass }}" id="filter_btn_{{ $kd_unit }}" onclick="setFilterUnit('{{ $kd_unit }}')">
@@ -194,7 +197,7 @@
                 <a href="#kuk_{{ $nav['id'] }}" class="nav-quick-btn {{ $nav['is_uploaded'] ? 'nav-done' : 'nav-pending' }}" title="{{ $nav['tooltip'] }}">
                     @if($nav['is_uploaded'])
                         <i class="bi bi-check-circle-fill"></i>
-                    @endif 
+                    @endif
                     <!-- Hapus ikon seru, murni teks saja -->
                     {{ $nav['label'] }}
                 </a>
@@ -210,13 +213,13 @@
         </div>
     @else
         @foreach($dataGrouped as $unitKey => $elemenGroup)
-            @php 
+            @php
                 $parts = explode("|||", $unitKey);
-                $num = $parts[0]; $kd_unit = $parts[1]; $jd_unit = $parts[2]; 
+                $num = $parts[0]; $kd_unit = $parts[1]; $jd_unit = $parts[2];
                 $stats = $unitStats[$unitKey];
                 $selisih = $stats['target'] - $stats['uploaded'];
             @endphp
-            
+
             <div class="unit-card" data-unit="{{ $kd_unit }}">
                 <div class="unit-header">
                     <div class="unit-header-left">
@@ -225,6 +228,9 @@
                     </div>
                     <!-- STATISTIK TARGET & REALISASI YANG DIPISAH -->
                     <div class="unit-header-stats">
+                        @if($is_open)
+                            <button type="button" class="btn-upload-all" onclick="uploadAllInUnit(this)"><i class="bi bi-cloud-arrow-up-fill"></i> Upload Semua</button>
+                        @endif
                         @if($selisih == 0)
                             <div class="stat-pill success">
                                 <i class="bi bi-check-circle-fill" style="font-size: 16px;"></i>
@@ -243,24 +249,24 @@
                         @endif
                     </div>
                 </div>
-                
+
                 <div>
                     @foreach($elemenGroup as $elemenKey => $kukList)
-                        @php 
+                        @php
                             $elArr = explode("|||", $elemenKey);
                             $elKode = $elArr[0];
                             $elNama = $elArr[1];
                         @endphp
-                        
+
                         <div class="elemen-section">
                             <div class="elemen-header">
                                 <span class="elemen-kode">{{ $elKode }}</span>
                                 <h4 class="elemen-nama">{{ $elNama }}</h4>
                             </div>
-                            
+
                             <div>
                                 @foreach($kukList as $kuk)
-                                    @php 
+                                    @php
                                         $badgeClass = 'bg-secondary text-white';
                                         if ($kuk['status_asli'] == 'Kompeten' || $kuk['status_asli'] == 'Sudah Diunggah Lengkap') $badgeClass = 'bg-success text-white';
                                         elseif ($kuk['status_asli'] == 'Revisi' || $kuk['status_asli'] == 'Belum Lengkap') $badgeClass = 'bg-danger text-white';
@@ -271,7 +277,7 @@
                                     <div class="kuk-item" id="kuk_{{ $safe_id }}">
                                         <div class="kuk-text-container">
                                             <div class="kuk-text">
-                                                <span class="kuk-number">{{ $kuk['kuk_ke'] }}.</span> 
+                                                <span class="kuk-number">{{ $kuk['kuk_ke'] }}.</span>
                                                 {{ $kuk['teks_kuk'] }}
                                             </div>
                                             @if(!$kuk['is_bercabang'])
@@ -335,10 +341,10 @@
                                     @if($kuk['is_bercabang'])
                                         <div class="sub-items-container" id="kuk_{{ $safe_id }}">
                                             <div class="sub-item-header"><i class="bi bi-diagram-3-fill" style="margin-right: 6px;"></i> Detail Penugasan Multi-Cabang</div>
-                                            
+
                                             @foreach($kuk['sub_items'] as $sub)
-                                                @php 
-                                                    $safe_sub_id = \Illuminate\Support\Str::slug($sub['aktivitas_id']); 
+                                                @php
+                                                    $safe_sub_id = \Illuminate\Support\Str::slug($sub['aktivitas_id']);
                                                     $sub_file_url = '';
                                                     if ($sub['is_uploaded']) {
                                                         $fp = $sub['file_path'];
@@ -354,7 +360,7 @@
                                                         <span class="sub-item-title">{{ $sub['sub_judul'] }}</span>
                                                         <span class="sub-item-req"><i class="bi bi-file-earmark-text"></i> Wajib: {{ $sub['keterangan_evidence'] }}</span>
                                                     </div>
-                                                    
+
                                                     <div class="upload-action-area" id="action_wrapper_{{ $safe_sub_id }}" style="flex:1;">
                                                         <span class="badge-status-sm" style="background:#f1f5f9; color:#475569; margin-right:10px;">{{ $sub['status_asli'] }}</span>
                                                         <form id="form_upload_{{ $safe_sub_id }}" action="{{ route('pegawai.aktivitas.upload', $sub['aktivitas_id']) }}" method="POST" enctype="multipart/form-data" class="form-upload-inline" style="display: {{ $sub['is_uploaded'] ? 'none' : 'flex' }}" onsubmit="uploadAJAX(event, this, '{{ $safe_sub_id }}')">
@@ -402,7 +408,7 @@
 <script>
     // --- FITUR FILTER TOMBOL ---
     function setFilterUnit(selectedUnit) {
-        localStorage.setItem('geotrax_filter_unit', selectedUnit); 
+        localStorage.setItem('geotrax_filter_unit', selectedUnit);
 
         // Update Class Active pada Tombol Filter
         document.querySelectorAll('.uk-btn').forEach(btn => {
@@ -414,17 +420,17 @@
         // Muncul/Sembunyikan Card Unit Kompetensi
         let cards = document.querySelectorAll('.unit-card');
         cards.forEach(card => {
-            if (selectedUnit === 'ALL' || card.getAttribute('data-unit') === selectedUnit) { 
-                card.style.display = 'block'; 
-            } else { 
-                card.style.display = 'none'; 
+            if (selectedUnit === 'ALL' || card.getAttribute('data-unit') === selectedUnit) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
             }
         });
 
         // Muncul/Sembunyikan Navigasi Cepat
         let navBars = document.querySelectorAll('.nav-quick-bar');
-        navBars.forEach(nav => { nav.style.display = 'none'; }); 
-        
+        navBars.forEach(nav => { nav.style.display = 'none'; });
+
         if (selectedUnit !== 'ALL') {
             let activeNav = document.getElementById('nav_quick_' + selectedUnit);
             if (activeNav) activeNav.style.display = 'flex';
@@ -433,20 +439,20 @@
 
     window.onload = function() {
         let savedFilter = localStorage.getItem('geotrax_filter_unit') || 'ALL';
-        setFilterUnit(savedFilter); 
+        setFilterUnit(savedFilter);
     };
 
     function handleFileSelect(input, labelId, btnSubmitId, btnPrevLocalId) {
         let labelElem = document.getElementById(labelId);
         let btnSubmit = document.getElementById(btnSubmitId);
         let btnPrevLocal = document.getElementById(btnPrevLocalId);
-        let btnBrowse = input.nextElementSibling.nextElementSibling; 
+        let btnBrowse = input.nextElementSibling.nextElementSibling;
 
         if(input.files && input.files[0]) {
             labelElem.innerHTML = '<span style="color:#059669; font-weight:700;"><i class="bi bi-file-earmark-check"></i> ' + input.files[0].name + '</span>';
-            btnBrowse.style.display = 'none'; 
-            btnSubmit.style.display = 'inline-flex'; 
-            btnPrevLocal.style.display = 'inline-flex'; 
+            btnBrowse.style.display = 'none';
+            btnSubmit.style.display = 'inline-flex';
+            btnPrevLocal.style.display = 'inline-flex';
         } else {
             labelElem.innerHTML = '<i class="bi bi-paperclip"></i> Pilih Dokumen...';
             btnBrowse.style.display = 'inline-block';
@@ -458,13 +464,13 @@
     async function uploadAJAX(event, form, safe_id) {
         event.preventDefault();
         let formData = new FormData(form);
-        
+
         Swal.fire({ title: 'Mengupload Dokumen...', text: 'Mohon tunggu sebentar', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
 
         try {
             let res = await fetch(form.action, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: formData });
             let result = await res.json();
-            
+
             if(result.success) {
                 Swal.fire({icon: 'success', title: 'Sukses', text: 'Dokumen berhasil diunggah. Halaman akan dimuat ulang.', timer: 1500, showConfirmButton: false});
                 setTimeout(() => { window.location.reload(); }, 1000);
@@ -476,17 +482,75 @@
         }
     }
 
+    async function uploadAllInUnit(button) {
+        const unitCard = button.closest('.unit-card');
+        const forms = Array.from(unitCard.querySelectorAll('form.form-upload-inline')).filter(form => {
+            const input = form.querySelector('input[type="file"]');
+            return input && input.files && input.files.length > 0;
+        });
+
+        if (forms.length === 0) {
+            Swal.fire({ icon: 'info', title: 'Belum Ada File', text: 'Pilih file pada KUK yang ingin diunggah terlebih dahulu.' });
+            return;
+        }
+
+        const confirmed = await Swal.fire({
+            icon: 'question',
+            title: 'Upload Semua File?',
+            text: `${forms.length} file yang dipilih akan diunggah pada unit ini.`,
+            showCancelButton: true,
+            confirmButtonText: 'Upload Semua',
+            cancelButtonText: 'Batal'
+        });
+        if (!confirmed.isConfirmed) return;
+
+        button.disabled = true;
+        let uploaded = 0;
+        const failed = [];
+        Swal.fire({ title: `Mengupload 0 dari ${forms.length}...`, text: 'Mohon tunggu sebentar', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+
+        for (const form of forms) {
+            const input = form.querySelector('input[type="file"]');
+            try {
+                const res = await fetch(form.action, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+                    body: new FormData(form)
+                });
+                const result = await res.json();
+                if (!res.ok || !result.success) throw new Error(result.message || 'Upload gagal');
+                uploaded++;
+            } catch (error) {
+                failed.push(`${input.files[0].name}: ${error.message}`);
+            }
+            Swal.update({ title: `Mengupload ${uploaded + failed.length} dari ${forms.length}...` });
+        }
+
+        button.disabled = false;
+        if (failed.length === 0) {
+            Swal.fire({ icon: 'success', title: 'Berhasil!', text: `${uploaded} file berhasil diunggah.`, timer: 1800, showConfirmButton: false });
+            setTimeout(() => { window.location.reload(); }, 1200);
+        } else {
+            Swal.fire({
+                icon: uploaded > 0 ? 'warning' : 'error',
+                title: uploaded > 0 ? 'Sebagian Berhasil' : 'Upload Gagal',
+                html: `${uploaded} berhasil, ${failed.length} gagal.<br><small>${failed.join('<br>')}</small>`,
+                confirmButtonText: 'Mengerti'
+            }).then(() => { if (uploaded > 0) window.location.reload(); });
+        }
+    }
+
     async function deleteAJAX(event, form, safe_id) {
         event.preventDefault();
         if(!confirm('Yakin ingin menghapus dokumen ini dari Cloud?')) return;
-        
+
         Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
-        
+
         try {
             let formData = new FormData(form);
             let res = await fetch(form.action, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: formData });
             let result = await res.json();
-            
+
             if(result.success) {
                 Swal.fire({icon: 'success', title: 'Terhapus', text:'Dokumen terhapus. Halaman akan dimuat ulang.', timer: 1000, showConfirmButton: false});
                 setTimeout(() => { window.location.reload(); }, 800);
@@ -537,7 +601,7 @@
         }
 
         const ext = fileName.split('.').pop().toLowerCase();
-        
+
         Swal.fire({ title: 'Memuat Dokumen...', text: 'Mengambil data dari Cloud', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
 
         if (['xls', 'xlsx', 'csv'].includes(ext)) {
@@ -549,10 +613,10 @@
                 showModalPreview(fileName, XLSX.utils.sheet_to_html(workbook.Sheets[workbook.SheetNames[0]]));
             }).catch(() => showModalPreview(fileName, `<div style="color:#e11d48; text-align:center; padding:30px;"><i class="bi bi-exclamation-triangle-fill" style="font-size:40px; margin-bottom:10px; display:block;"></i> Gagal membaca file dari Cloud.</div>`));
         } else if (['jpg', 'jpeg', 'png'].includes(ext)) {
-            Swal.close(); 
+            Swal.close();
             showModalPreview(fileName, `<div style="text-align:center;"><img src="${fileUrl}" style="max-width:100%; max-height:60vh; border-radius:12px; border:1px solid #e2e8f0;"></div>`);
         } else if (ext === 'pdf') {
-            Swal.close(); 
+            Swal.close();
             showModalPreview(fileName, `<iframe src="${fileUrl}" style="width:100%; height:70vh; border:none; border-radius:12px; background:#e2e8f0;"></iframe>`);
         } else if (['doc', 'docx'].includes(ext)) {
             // UBAH 'url' menjadi 'fileUrl'
@@ -567,11 +631,11 @@
                         Swal.close();
                         // UBAH 'name' menjadi 'fileName'
                         showModalPreview(fileName, `<div style="background:#fff; padding:30px; border-radius:12px; font-family: 'Times New Roman'; line-height:1.6; border: 1px solid #cbd5e1;">${htmlContent}</div>`);
-                    }).catch(function(err) { 
+                    }).catch(function(err) {
                         // UBAH 'name' menjadi 'fileName'
-                        showModalPreview(fileName, `<div style="color:#e11d48; text-align:center; padding:30px;"><i class="bi bi-exclamation-triangle-fill" style="font-size:40px; margin-bottom:10px; display:block;"></i> Gagal membuat preview Word. File mungkin dikunci.</div>`); 
+                        showModalPreview(fileName, `<div style="color:#e11d48; text-align:center; padding:30px;"><i class="bi bi-exclamation-triangle-fill" style="font-size:40px; margin-bottom:10px; display:block;"></i> Gagal membuat preview Word. File mungkin dikunci.</div>`);
                     });
-            }).catch(() => 
+            }).catch(() =>
                 // UBAH 'name' menjadi 'fileName'
                 showModalPreview(fileName, `<div style="color:#e11d48; text-align:center; padding:30px;"><i class="bi bi-exclamation-triangle-fill" style="font-size:40px; margin-bottom:10px; display:block;"></i> Gagal mengambil file Word dari Cloud.</div>`)
             );
@@ -586,7 +650,7 @@
             width: '85%', showCloseButton: true, showConfirmButton: false, customClass: { popup: 'swal-wide-popup' }
         });
     }
-    
+
     // Smooth scroll untuk tombol navigasi
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
