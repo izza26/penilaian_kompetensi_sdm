@@ -54,6 +54,8 @@ class SyncRubrikSheet extends Command
                     ['Baris dilewati', $report['baris_dilewati']],
                     ['Baris ditulis', $report['baris_ditulis'] ?? 0],
                     ['Baris dipangkas', $report['baris_dipangkas'] ?? 0],
+                    ['Elemen KUK diupdate', ($report['elemen_kuk']['elemen_ditulis'] ?? 0) . ' elemen'],
+                    ['Aktivitas baru', ($report['aktivitas_kompeten']['aktivitas_baru'] ?? 0) . ' baris'],
                     ['Durasi', ($report['durasi_detik'] ?? 0) . ' s'],
                 ]
             );

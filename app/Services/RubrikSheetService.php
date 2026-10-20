@@ -600,6 +600,157 @@ class RubrikSheetService
     }
 
     // =====================================================================
+    // 4b. Sinkronisasi KUK Text ke elemen_kompetensi
+    // =====================================================================
+
+    /**
+     * Rekonstruksi dan update elemen_kompetensi.kriteria_unjuk_kerja
+     * dari data spreadsheet yang sudah di-resolve.
+     */
+    public function applyElemenKuk(array $rows, bool $dryRun = true): array
+    {
+        $usable = array_values(array_filter($rows, fn ($r) => $r['target_exists'] && $r['kode_unit'] && $r['elemen_kode'] && $r['no_kuk'] !== null));
+
+        // Kelompokkan per (kode_unit, elemen_kode)
+        $byElemen = [];
+        foreach ($usable as $r) {
+            $key = $r['kode_unit'] . '|' . $r['elemen_kode'];
+            $byElemen[$key][] = $r;
+        }
+
+        $report = [
+            'dry_run' => $dryRun,
+            'tabel' => $this->schema . '.elemen_kompetensi',
+            'elemen_target' => count($byElemen),
+            'elemen_ditulis' => 0,
+        ];
+
+        if ($dryRun || empty($byElemen)) {
+            return $report;
+        }
+
+        $now = date('Y-m-d H:i:s');
+        $tbl = $this->schema . '.elemen_kompetensi';
+        $nUpdated = 0;
+
+        foreach ($byElemen as $key => $rs) {
+            [$kodeUnit, $elemenKode] = explode('|', $key, 2);
+
+            // Ambil deskripsi unik per no_kuk (varian pertama saja)
+            $kukMap = [];
+            foreach ($rs as $r) {
+                $n = (int) $r['no_kuk'];
+                if (!isset($kukMap[$n])) {
+                    $desc = $r['deskripsi_kuk'] ?: $r['title'];
+                    // Bersihkan nomor di awal deskripsi
+                    $desc = preg_replace('/^\s*\d+(?:\.\d+)*[a-z]?\s*[.)]?\s*/u', '', $desc);
+                    $kukMap[$n] = $this->squash($desc);
+                }
+            }
+            ksort($kukMap);
+
+            // Rekonstruksi kriteria_unjuk_kerja
+            $lines = [];
+            foreach ($kukMap as $n => $desc) {
+                $lines[] = $n . '. ' . $desc;
+            }
+            $kriteria = implode("\n", $lines);
+
+            $updated = DB::table($tbl)
+                ->where('kode_unit', $kodeUnit)
+                ->where('kode_elemen_excel', $elemenKode)
+                ->update(['kriteria_unjuk_kerja' => $kriteria]);
+
+            if ($updated) {
+                $nUpdated++;
+            }
+        }
+
+        $report['elemen_ditulis'] = $nUpdated;
+
+        return $report;
+    }
+
+    // =====================================================================
+    // 4c. Sinkronisasi aktivitas_kompeten (insert missing rows)
+    // =====================================================================
+
+    /**
+     * Pastikan setiap KUK yang punya rubrik juga punya baris di aktivitas_kompeten.
+     * Insert baris baru bila aktivitas_id belum ada.
+     */
+    public function applyAktivitasKompeten(array $rows, bool $dryRun = true): array
+    {
+        $usable = array_values(array_filter($rows, fn ($r) => $r['target_exists'] && $r['aktivitas_id']));
+
+        // Ambil elemen_id mapping
+        $tblElem = $this->schema . '.elemen_kompetensi';
+        $elemenMap = [];
+        foreach (DB::table($tblElem)->select('elemen_id', 'kode_unit', 'kode_elemen_excel')->get() as $r) {
+            $key = $r->kode_unit . '|' . $r->kode_elemen_excel;
+            $elemenMap[$key] = $r->elemen_id;
+        }
+
+        // Cek aktivitas_id yang sudah ada
+        $tblAkt = $this->schema . '.aktivitas_kompeten';
+        $existingAkt = DB::table($tblAkt)->pluck('aktivitas_id')->flip()->toArray();
+
+        $toInsert = [];
+        $seen = [];
+        foreach ($usable as $r) {
+            $aid = $r['aktivitas_id'];
+            if (isset($existingAkt[$aid]) || isset($seen[$aid])) {
+                continue;
+            }
+            $seen[$aid] = true;
+
+            $key = $r['kode_unit'] . '|' . $r['elemen_kode'];
+            $elemenId = $elemenMap[$key] ?? null;
+            if (!$elemenId) {
+                continue;
+            }
+
+            $desc = $r['deskripsi_kuk'] ?: $r['title'];
+            $desc = preg_replace('/^\s*\d+(?:\.\d+)*[a-z]?\s*[.)]?\s*/u', '', $desc);
+
+            $toInsert[] = [
+                'aktivitas_id' => $aid,
+                'elemen_id' => $elemenId,
+                'detail_aktivitas' => $this->squash($desc),
+                'jumlah_evidence_wa' => 1,
+                'kriteria_kompetens' => $this->squash($desc),
+                'aktif' => 'Y',
+            ];
+        }
+
+        $report = [
+            'dry_run' => $dryRun,
+            'tabel' => $tblAkt,
+            'aktivitas_baru' => count($toInsert),
+        ];
+
+        if ($dryRun || empty($toInsert)) {
+            return $report;
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach (array_chunk($toInsert, 500) as $chunk) {
+                DB::table($tblAkt)->insert($chunk);
+            }
+            DB::commit();
+            $report['ok'] = true;
+        } catch (Throwable $e) {
+            DB::rollBack();
+            $report['ok'] = false;
+            $report['error'] = $e->getMessage();
+            Log::error('Aktivitas sync gagal: ' . $e->getMessage());
+        }
+
+        return $report;
+    }
+
+    // =====================================================================
     // 5. Orkestrasi
     // =====================================================================
 
@@ -617,6 +768,10 @@ class RubrikSheetService
         $ref = $this->loadReference();
         $rows = $this->resolve($blocks, $ref);
         $report = $this->apply($rows, $dryRun);
+
+        // Sinkronisasi KUK text dan aktivitas_kompeten
+        $report['elemen_kuk'] = $this->applyElemenKuk($rows, $dryRun);
+        $report['aktivitas_kompeten'] = $this->applyAktivitasKompeten($rows, $dryRun);
 
         $report['sumber'] = $localFile ? 'file-lokal' : 'google-spreadsheet';
         $report['berkas'] = basename($file);

@@ -202,13 +202,95 @@ class PegawaiAktivitasController extends Controller
         return view('pegawai.aktivitas.index', compact('periodeAktif', 'is_open', 'dataGrouped', 'unitStats', 'unitNavs', 'jabatan', 'pimpinan'));
     }
 
+    public function show($id)
+    {
+        $userLogin = Auth::user();
+        $pegawai = DB::table('geotrax_v4.pegawai_skkni')->where('username', $userLogin->username)->first();
+        if (!$pegawai) return redirect()->route('login')->with('error', 'Sesi login tidak valid.');
+
+        $jabatan = $this->getJabatanFormal($pegawai->jabatan ?? 'Belum Ada Jabatan');
+
+        $periodeAktif = DB::table('geotrax_v4.periode_penilaian')
+            ->where('nama_periode', $jabatan)
+            ->where('status_aktif', 'Y')
+            ->first();
+        $is_open = ($periodeAktif) ? true : false;
+
+        // Detail aktivitas + elemen + unit
+        $detail = DB::table('geotrax_v4.aktivitas_kompeten as a')
+            ->leftJoin('geotrax_v4.elemen_kompetensi as e', 'e.elemen_id', '=', 'a.elemen_id')
+            ->leftJoin('geotrax_v4.unit_kompetensi as uk', 'uk.kode_unit', '=', 'e.kode_unit')
+            ->select(
+                'a.aktivitas_id', 'a.detail_aktivitas', 'a.jumlah_evidence_wa',
+                'a.kriteria_kompetens', 'a.template_file',
+                'e.kode_elemen_excel', 'e.elemen_kompetensi',
+                'uk.kode_unit', 'uk.judul_unit'
+            )
+            ->where('a.aktivitas_id', $id)
+            ->first();
+
+        if (!$detail) {
+            return redirect()->route('aktivitas.index')->with('error', 'Aktivitas tidak ditemukan.');
+        }
+
+        // Ambil rubrik skor untuk aktivitas ini
+        $rubrikRows = DB::table('geotrax_v4.rubrik_skor')
+            ->where('aktivitas_id', $id)
+            ->orderBy('rubik_id', 'asc')
+            ->get();
+
+        // Ambil bukti pegawai untuk aktivitas ini
+        $buktiList = DB::table('geotrax_v4.bukti_pegawai')
+            ->where('pegawai_id', $pegawai->pegawai_id)
+            ->where('aktivitas_id', $id)
+            ->orderBy('bukti_id', 'asc')
+            ->get();
+
+        // Build slots
+        $slots = [];
+        if ($rubrikRows->isEmpty()) {
+            // Fallback: 1 slot tanpa rubrik
+            $bukti = $buktiList->first();
+            $slots[] = [
+                'id' => 0,
+                'nama' => 'Evidence Utama',
+                'format' => 'PDF / DOC / JPG',
+                'data' => $bukti ?: null,
+            ];
+        } else {
+            foreach ($rubrikRows as $idx => $rubrik) {
+                $subId = $id . '_SUB_' . $idx;
+                $bukti = $buktiList->firstWhere('aktivitas_id', $subId);
+
+                // Tentukan nama slot dari varian rubrik
+                $namaSlot = 'Evidence ' . ($idx + 1);
+                if (preg_match('/\((.*?)\)/', $rubrik->skor_1 ?? '', $match)) {
+                    $namaSlot = ucwords($match[1]);
+                }
+
+                // Tentukan format dari jenis_file
+                $format = $rubrik->jenis_file ?: 'PDF / DOC / JPG';
+
+                $slots[] = [
+                    'id' => $subId,
+                    'nama' => $namaSlot,
+                    'format' => $format,
+                    'data' => $bukti ?: null,
+                ];
+            }
+        }
+
+        return view('pegawai.aktivitas.show', compact('detail', 'id', 'is_open', 'slots'));
+    }
+
     public function upload(Request $request, $id)
     {
         $userLogin = Auth::user();
         $pegawai = DB::table('geotrax_v4.pegawai_skkni')->where('username', $userLogin->username)->first();
         $request->validate(['file_evidence' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx|max:5120']);
 
-        $clean_id = trim($id); 
+        // Gunakan evidence_wajib_id (sub_id) kalau ada, fallback ke route id
+        $clean_id = trim($request->input('evidence_wajib_id', $id));
         $file = $request->file('file_evidence');
         $nama_file_baru = "EVI_" . $pegawai->pegawai_id . "_" . time() . "_" . rand(10,99) . "." . $file->getClientOriginalExtension();
         
