@@ -82,7 +82,7 @@
         .stat-pill.success span { color: #10b981; }
         .stat-pill b { font-size: 14px; font-weight: 800;}
 
-        .elemen-section { border-bottom: 4px solid #e2e8f0; }
+        .elemen-section { border-bottom: 4px solid #e2e8f0; scroll-margin-top: 100px; }
         .elemen-header { padding: 20px 24px; background-color: #f8fafc; }
         .elemen-kode { font-weight: 800; color: #3e54a0; font-size: 13px; margin-bottom: 4px; display: block; }
         .elemen-nama { font-weight: 700; color: #1e293b; font-size: 14px; margin: 0; }
@@ -194,7 +194,7 @@
         <div class="nav-quick-bar" id="nav_quick_{{ $unitKd }}">
             <span style="font-size: 11px; font-weight: 800; color: #434c5a; margin-right: 8px;">NAVIGASI CEPAT:</span>
             @foreach($navItems as $nav)
-                <a href="#kuk_{{ $nav['id'] }}" class="nav-quick-btn {{ $nav['is_uploaded'] ? 'nav-done' : 'nav-pending' }}" title="{{ $nav['tooltip'] }}">
+                <a href="#elemen_{{ $nav['id'] }}" class="nav-quick-btn {{ $nav['is_uploaded'] ? 'nav-done' : 'nav-pending' }}" title="{{ $nav['tooltip'] }}">
                     @if($nav['is_uploaded'])
                         <i class="bi bi-check-circle-fill"></i>
                     @endif
@@ -256,9 +256,10 @@
                             $elArr = explode("|||", $elemenKey);
                             $elKode = $elArr[0];
                             $elNama = $elArr[1];
+                            $safe_el_id = \Illuminate\Support\Str::slug($elKode);
                         @endphp
 
-                        <div class="elemen-section">
+                        <div class="elemen-section" id="elemen_{{ $safe_el_id }}">
                             <div class="elemen-header">
                                 <span class="elemen-kode">{{ $elKode }}</span>
                                 <h4 class="elemen-nama">{{ $elNama }}</h4>
@@ -654,10 +655,14 @@
     // Smooth scroll untuk tombol navigasi
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            const targetId = this.getAttribute('href').substring(1);
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                e.preventDefault();
+                targetEl.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
         });
     });
 </script>

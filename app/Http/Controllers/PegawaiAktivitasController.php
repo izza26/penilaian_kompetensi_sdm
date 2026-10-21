@@ -100,6 +100,15 @@ class PegawaiAktivitasController extends Controller
                 $rubrik_list = $grouped_rubrik[$aktivitas_id] ?? [];
                 $rubrik_count = count($rubrik_list);
 
+                // FILTER: Lewati KUK yang tidak punya rubrik di tabel rubrik_skor.
+                // KUK tanpa rubrik adalah "prosedur" yang tidak perlu ditampilkan.
+                // $kuk_ke tetap dinaikkan di sini agar aktivitas_id KUK selanjutnya
+                // tetap sesuai dengan yang tersimpan di database.
+                if ($rubrik_count === 0) {
+                    $kuk_ke++;
+                    continue;
+                }
+
                 if ($rubrik_count > 1) {
                     $sub_items = [];
                     $semua_upload = true; 
@@ -154,13 +163,6 @@ class PegawaiAktivitasController extends Controller
                         'catatan_reviewer' => '-'
                     ];
 
-                    $unitNavs[$row->kode_unit][] = [
-                        'id' => \Illuminate\Support\Str::slug($aktivitas_id), 
-                        'label' => "KUK $kuk_ke", 
-                        'is_uploaded' => $semua_upload ? 1 : 0,
-                        'tooltip' => "Terkumpul $jumlah_upload_cabang dari $rubrik_count dokumen"
-                    ];
-
                 } else {
                     // KUK TUNGGAL
                     $bukti = $semua_bukti->get($aktivitas_id); 
@@ -187,15 +189,73 @@ class PegawaiAktivitasController extends Controller
                         'tgl_upload' => $bukti->tanggal_upload ?? null,
                         'catatan_reviewer' => $bukti->catatan_penilai ?? '-' 
                     ];
-
-                    $unitNavs[$row->kode_unit][] = [
-                        'id' => \Illuminate\Support\Str::slug($aktivitas_id), 
-                        'label' => "KUK $kuk_ke", 
-                        'is_uploaded' => $bukti ? 1 : 0,
-                        'tooltip' => $bukti ? "Dokumen Tersimpan" : "Belum Diunggah"
-                    ];
                 }
                 $kuk_ke++;
+            }
+        }
+
+        // GENERATE NAVIGASI CEPAT PER AKTIVITAS / ELEMEN KOMPETENSI
+        $unitNavs = [];
+        foreach ($elemen_raw as $row) {
+            if (!isset($unitNavs[$row->kode_unit])) {
+                $unitNavs[$row->kode_unit] = [];
+            }
+        }
+
+        foreach ($dataGrouped as $unitKey => $elemenGroup) {
+            $parts = explode("|||", $unitKey);
+            $kd_unit = $parts[1];
+            $unitNavs[$kd_unit] = [];
+
+            foreach ($elemenGroup as $elemenKey => $kukList) {
+                $elArr = explode("|||", $elemenKey);
+                $elKode = $elArr[0]; // contoh: "R.91MUS02.001.3-4"
+                $elNama = $elArr[1] ?? 'Aktivitas';
+
+                // Ambil nomor aktivitas (dari angka setelah tanda strip terakhir pada kode elemen)
+                if (preg_match('/-(\d+)$/', $elKode, $matches)) {
+                    $elNum = $matches[1];
+                } else {
+                    $elNum = preg_replace('/[^0-9]/', '', $elKode);
+                }
+
+                $label = "Aktivitas " . $elNum;
+                $navId = \Illuminate\Support\Str::slug($elKode);
+
+                // Hitung total target dan yang sudah diunggah untuk aktivitas ini
+                $elTarget = 0;
+                $elUploaded = 0;
+
+                foreach ($kukList as $kuk) {
+                    if (!empty($kuk['is_bercabang'])) {
+                        foreach ($kuk['sub_items'] as $sub) {
+                            $elTarget++;
+                            if (!empty($sub['is_uploaded'])) {
+                                $elUploaded++;
+                            }
+                        }
+                    } else {
+                        $elTarget++;
+                        if (!empty($kuk['is_uploaded'])) {
+                            $elUploaded++;
+                        }
+                    }
+                }
+
+                $isComplete = ($elTarget > 0 && $elUploaded >= $elTarget);
+
+                $tooltip = $isComplete 
+                    ? "Selesai ($elUploaded/$elTarget dokumen) - $elNama" 
+                    : "Tersimpan $elUploaded dari $elTarget dokumen - $elNama";
+
+                $unitNavs[$kd_unit][] = [
+                    'id' => $navId,
+                    'label' => $label,
+                    'is_uploaded' => $isComplete ? 1 : 0,
+                    'tooltip' => $tooltip,
+                    'uploaded_count' => $elUploaded,
+                    'target_count' => $elTarget
+                ];
             }
         }
 

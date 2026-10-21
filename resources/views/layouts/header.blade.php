@@ -1,21 +1,32 @@
 <style>
-    /* HEADER UTAMA: MODERN CARD */
+    /* HEADER UTAMA: KARTU NGAMBANG, SELALU STICKY */
     .top-header {
         display: flex; justify-content: space-between; align-items: center;
         padding: 16px 28px; min-height: auto;
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        margin-top: 24px;    /* jarak visual dari atas saat halaman belum di-scroll */
         margin-bottom: 24px;
         border: none;
         border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        /* STICKY: nempel di atas, top:0 agar tidak ada celah */
+        position: sticky;
+        top: 0;
+        z-index: 999;
     }
 
-    /* KELAS KHUSUS FLOATING/STICKY (HANYA AKTIF JIKA ADA TOMBOL KEMBALI) */
-    .top-header.is-floating {
-        position: sticky;
-        top: 24px;
-        z-index: 999;
-        backdrop-filter: blur(10px);
+    /* Penutup celah di atas header saat sticky agar konten di bawah tidak tembus */
+    .top-header::before {
+        content: '';
+        position: absolute;
+        top: -24px;       /* menutupi celah 24px di atas */
+        left: -10px;
+        right: -10px;
+        height: 24px;
+        background-color: #dfe4ea; /* sama dengan --bg-body di layout.css */
+        z-index: -1;
     }
 
     .header-left, .header-right { display: flex; align-items: center; gap: 16px; height: 100%; }
@@ -53,7 +64,7 @@
 </style>
 
 <!-- KONDISI KELAS IS-FLOATING DITAMBAHKAN DI SINI -->
-<div class="top-header @hasSection('back_url') is-floating @endif">
+<div class="top-header">
     <div class="header-left">
         @hasSection('back_url')
             <a href="@yield('back_url')" class="btn-back-minimal" title="Kembali">
